@@ -19,9 +19,9 @@ defmodule Blog.PostsFixtures do
     post
   end
 
-  @doc """
-  Generate a post.
-  """
+  # @doc """
+  # Generate a post.
+  # """
   # def post_fixture(attrs \\ %{}) do
   #   {:ok, post} =
   #     attrs
