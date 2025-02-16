@@ -19,7 +19,7 @@ Let me know if you want to contribute
 The overall project should follow this structure
 ```mermaid
 erDiagram
-User{
+User {
   string username
   string email
   string password
@@ -27,23 +27,23 @@ User{
   naive_datetime confirmed at
 }
 
-Post{
+Post {
 string title
 text context
 date published_on
 boolean visibility
 }
 
-Tag{
+Tag {
   string name
 }
 
-Comment{
+Comment {
   text content
   id post_id
 }
 
-CoverImage{
+CoverImage {
   text url
   id post_id
 }
