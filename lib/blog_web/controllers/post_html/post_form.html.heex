@@ -3,7 +3,9 @@
     Oops, something went wrong! Please check the errors below.
   </.error>
   <.input field={f[:title]} type="text" label="Title" />
-  <.input field={f[:body]} type="text" label="Body" />
+  <.input field={f[:content]} type="text" label="Content" />
+  <.input field={f[:published_on]} type="date" label="Published on" />
+  <.input field={f[:visibility]} type="checkbox" label="Visibility" />
   <:actions>
     <.button>Save Post</.button>
   </:actions>

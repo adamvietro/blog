@@ -1,18 +1,55 @@
 # Blog
+Name
+**Blog Server.**
 
-To start your Phoenix server:
+**Summary**
+This will be a project to show how to build a blog website. This should have quite a fe w steps and require a lot of knowledge of the Phoenix library as well as Ecto.
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+Once done you should be able to: add tags, create a comment, add a cover image, as well as create a blog.
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+**Technologies**
+Phoenix
+Elixir
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+**Contributors**
+Me
+Let me know if you want to contribute
 
-## Learn more
+**Diagram**
+The overall project should follow this structure
+```mermaid
+erDiagram
+User{
+  string username
+  string email
+  string password
+  string hashed_password
+  naive_datetime confirmed at
+}
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+Post{
+string title
+text context
+date published_on
+boolean visibility
+}
+
+Tag{
+  string name
+}
+
+Comment{
+  text content
+  id post_id
+}
+
+CoverImage{
+  text url
+  id post_id
+}
+
+User |0--0 Post: ""
+Post }0--){ Tag: ""
+Post ||--0{ Comment: ""
+Post ||--|| CoverImage: ""
+```

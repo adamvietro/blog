@@ -18,4 +18,21 @@ defmodule Blog.PostsFixtures do
 
     post
   end
+
+  @doc """
+  Generate a post.
+  """
+  def post_fixture(attrs \\ %{}) do
+    {:ok, post} =
+      attrs
+      |> Enum.into(%{
+        content: "some content",
+        published_on: ~D[2025-02-15],
+        title: "some title",
+        visibility: true
+      })
+      |> Blog.Posts.create_post()
+
+    post
+  end
 end
