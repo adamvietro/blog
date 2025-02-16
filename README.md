@@ -16,7 +16,7 @@ Me
 Let me know if you want to contribute
 
 **Diagram**
-The overall project should follow this structure
+The overall project should follow this structure.
 ```mermaid
 erDiagram
 User {
@@ -24,18 +24,19 @@ User {
   string email
   string password
   string hashed_password
-  naive_datetime confirmed at
+  naive_datetime confirmed_at
 }
 
 Post {
-string title
-text context
-date published_on
-boolean visibility
+    string title
+    text content
+    date published_on
+    boolean visibility
 }
 
-Tag {
-  string name
+CoverImage {
+    text url
+    id post_id
 }
 
 Comment {
@@ -43,13 +44,12 @@ Comment {
   id post_id
 }
 
-CoverImage {
-  text url
-  id post_id
+Tag {
+    string name
 }
 
-User |0--0 Post: ""
-Post }0--){ Tag: ""
-Post ||--0{ Comment: ""
+User |O--O{ Post: ""
+Post }O--O{ Tag: ""
+Post ||--O{ Comment: ""
 Post ||--|| CoverImage: ""
 ```
