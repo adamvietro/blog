@@ -18,7 +18,13 @@ defmodule BlogWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    post "/post", PostController, :post
+    get "/posts", PostController, :index
+    get "/posts/new", PostController, :new
+    post "/post", PostController, :create
+    get "/posts/:id", PostController, :show
+    post "/post/:id/edit", PostController, :edit
+    post "/post/:id", PostController, :update
+    delete "/post/:id", PostController, :delete
   end
 
   # Other scopes may use custom stacks.

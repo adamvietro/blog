@@ -4,16 +4,19 @@ defmodule BlogWeb.PostController do
   alias Blog.Posts
   alias Blog.Posts.Post
 
+  @spec index(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def index(conn, _params) do
     posts = Posts.list_posts()
     render(conn, :index, posts: posts)
   end
 
+  @spec new(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def new(conn, _params) do
     changeset = Posts.change_post(%Post{})
     render(conn, :new, changeset: changeset)
   end
 
+  @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(conn, %{"post" => post_params}) do
     case Posts.create_post(post_params) do
       {:ok, post} ->
@@ -26,6 +29,7 @@ defmodule BlogWeb.PostController do
     end
   end
 
+  @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
     post = Posts.get_post!(id)
     render(conn, :show, post: post)
