@@ -101,4 +101,22 @@ defmodule Blog.Posts do
   def change_post(%Post{} = post, attrs \\ %{}) do
     Post.changeset(post, attrs)
   end
+
+  @doc """
+  Returns a list of posts that match or partially match the given search field.
+
+  ## Examples
+      iex> search_posts(title)
+      [%Post{}, ...]
+
+  """
+  def search_posts(search_field) do
+    Enum.reduce(list_posts(), [], fn post, ids ->
+      if post.title =~ search_field do
+        [post | ids]
+      else
+        ids
+      end
+    end)
+  end
 end

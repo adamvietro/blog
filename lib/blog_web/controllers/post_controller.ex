@@ -42,6 +42,7 @@ defmodule BlogWeb.PostController do
     render(conn, :edit, post: post, changeset: changeset)
   end
 
+  @spec update(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def update(conn, %{"id" => id, "post" => post_params}) do
     post = Posts.get_post!(id)
 
@@ -56,6 +57,7 @@ defmodule BlogWeb.PostController do
     end
   end
 
+  @spec delete(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def delete(conn, %{"id" => id}) do
     post = Posts.get_post!(id)
     {:ok, _post} = Posts.delete_post(post)
@@ -64,4 +66,20 @@ defmodule BlogWeb.PostController do
     |> put_flash(:info, "Post deleted successfully.")
     |> redirect(to: ~p"/posts")
   end
+
+  # def search(conn, %{"title" => title}) do
+  #   ids =
+  #     Enum.reduce(Posts.list_posts(), [], fn post, list ->
+  #       if post.title =~ title do
+  #         [post.id | list]
+  #       end
+  #     end)
+
+  #   matching_posts =
+  #     Enum.map(ids, fn id ->
+  #       Posts.get_post!(id)
+  #     end)
+
+  #   render(conn, :search, post: matching_posts)
+  # end
 end

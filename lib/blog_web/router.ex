@@ -25,6 +25,7 @@ defmodule BlogWeb.Router do
     post "/posts/:id/edit", PostController, :edit
     post "/posts/:id", PostController, :update
     delete "/posts/:id", PostController, :delete
+    get "/posts/search/:title", SearchController, :search
   end
 
   # Other scopes may use custom stacks.
