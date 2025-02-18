@@ -1,21 +1,11 @@
-
 <.link
-  navigate={~p"/search"}
+  navigate={~p"/posts"}
   class="bg-cyan-500 hover:bg-cyan-400 text-2xl p-4 mt-4 rounded-full inline-block"
 >
-  Search
+  Posts
 </.link>
 
-<.header>
-  Listing Posts
-  <:actions>
-    <.link href={~p"/posts/new"}>
-      <.button>New Post</.button>
-    </.link>
-  </:actions>
-</.header>
-
-<.table id="posts" rows={@posts} row_click={&JS.navigate(~p"/posts/#{&1}")}>
+<.table id="posts" rows={@post} row_click={&JS.navigate(~p"/posts/#{&1}")}>
   <:col :let={post} label="Title">{post.title}</:col>
   <:col :let={post} label="Content">{post.content}</:col>
   <:col :let={post} label="Published on">{post.published_on}</:col>

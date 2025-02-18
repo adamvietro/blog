@@ -1,21 +1,16 @@
 defmodule BlogWeb.SearchController do
   use BlogWeb, :controller
 
-  alias Blog.Posts
+  # alias Blog.Posts
 
-  def search(conn, %{"title" => title}) do
-    ids =
-      Enum.reduce(Posts.list_posts(), [], fn post, list ->
-        if post.title =~ title do
-          [post.id | list]
-        end
-      end)
+  # def search(conn, %{"title" => title}) do
+  #   matching_posts = Posts.search_posts(title)
 
-    matching_posts =
-      Enum.map(ids, fn id ->
-        Posts.get_post!(id)
-      end)
+  #   render(conn, :search_form, post: matching_posts)
+  # end
 
-    render(conn, :search, post: matching_posts)
+  def search(conn, _param) do
+
+    render(conn, :search)
   end
 end

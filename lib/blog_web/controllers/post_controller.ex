@@ -67,19 +67,15 @@ defmodule BlogWeb.PostController do
     |> redirect(to: ~p"/posts")
   end
 
-  # def search(conn, %{"title" => title}) do
-  #   ids =
-  #     Enum.reduce(Posts.list_posts(), [], fn post, list ->
-  #       if post.title =~ title do
-  #         [post.id | list]
-  #       end
-  #     end)
+  @spec search(Plug.Conn.t(), any()) :: Plug.Conn.t()
+  def search(conn, %{"title" => title}) do
+    matching_posts = Posts.search_posts(title)
 
-  #   matching_posts =
-  #     Enum.map(ids, fn id ->
-  #       Posts.get_post!(id)
-  #     end)
+    render(conn, :search_results, post: matching_posts)
+  end
 
-  #   render(conn, :search, post: matching_posts)
-  # end
+  def search(conn, _param) do
+    render(conn, :search_form)
+  end
+
 end
