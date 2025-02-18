@@ -42,6 +42,12 @@ defmodule BlogWeb.PostController do
     render(conn, :edit, post: post, changeset: changeset)
   end
 
+  # def get(conn) do
+  #   post = Posts.get_post!(id)
+  #   changeset = Posts.change_post(post)
+  #   render(conn, :edit, post: post, changeset: changeset)
+  # end
+
   @spec update(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def update(conn, %{"id" => id, "post" => post_params}) do
     post = Posts.get_post!(id)
