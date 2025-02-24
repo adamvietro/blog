@@ -3,8 +3,18 @@ defmodule BlogWeb.PostControllerTest do
 
   import Blog.PostsFixtures
 
-  @create_attrs %{title: "some title", content: "some content", published_on: ~D[2025-02-15], visibility: true}
-  @update_attrs %{title: "some updated title", content: "some updated content", published_on: ~D[2025-02-16], visibility: false}
+  @create_attrs %{
+    title: "some title",
+    content: "some content",
+    published_on: ~D[2025-02-15],
+    visibility: true
+  }
+  @update_attrs %{
+    title: "some updated title",
+    content: "some updated content",
+    published_on: ~D[2025-02-16],
+    visibility: false
+  }
   @invalid_attrs %{title: nil, content: nil, published_on: nil, visibility: nil}
 
   describe "index" do
@@ -60,7 +70,7 @@ defmodule BlogWeb.PostControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn, post: post} do
       conn = put(conn, ~p"/posts/#{post}", post: @invalid_attrs)
-      assert html_response(conn, 200) =~ "Edit Post"
+      assert html_response(conn, 404) =~ "Not Found"
     end
   end
 
@@ -80,5 +90,52 @@ defmodule BlogWeb.PostControllerTest do
   defp create_post(_) do
     post = post_fixture()
     %{post: post}
+  end
+
+  describe "search" do
+    alias Blog.Posts, as: Posts
+
+    test "search_posts/1 filters posts by partial and case-sensitive title" do
+      post = post_fixture(title: "Title")
+
+      # non-matching
+      assert Posts.search_posts("Non-Matching") == []
+      # exact match
+      assert Posts.search_posts("Title") == [post]
+      # partial match end
+      assert Posts.search_posts("tle") == [post]
+      # partial match front
+      assert Posts.search_posts("Titl") == [post]
+      # partial match middle
+      assert Posts.search_posts("itl") == [post]
+      # case insensitive lower
+      assert Posts.search_posts("title") == []
+      # case insensitive upper
+      assert Posts.search_posts("TITLE") == []
+      # case insensitive and partial match
+      assert Posts.search_posts("ITL") == []
+      # empty
+      assert Posts.search_posts("") == [post]
+    end
+  end
+
+  describe "html request search" do
+    test "search for posts - non-matching", %{conn: conn} do
+      post = post_fixture(title: "some title")
+      conn = get(conn, ~p"/search", title: "Non-Matching")
+      refute html_response(conn, 200) =~ post.title
+    end
+
+    test "search for posts - exact match", %{conn: conn} do
+      post = post_fixture(title: "some title")
+      conn = get(conn, ~p"/search", title: "some title")
+      assert html_response(conn, 200) =~ post.title
+    end
+
+    test "search for posts - partial match", %{conn: conn} do
+      post = post_fixture(title: "some title")
+      conn = get(conn, ~p"/search", title: "itl")
+      assert html_response(conn, 200) =~ post.title
+    end
   end
 end
