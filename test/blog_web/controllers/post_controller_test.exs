@@ -70,7 +70,7 @@ defmodule BlogWeb.PostControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn, post: post} do
       conn = put(conn, ~p"/posts/#{post}", post: @invalid_attrs)
-      assert html_response(conn, 404) =~ "Not Found"
+      assert html_response(conn, 200) =~ "Edit Post"
     end
   end
 

@@ -22,6 +22,7 @@ defmodule BlogWeb.Router do
     get "/posts/new", PostController, :new
     post "/posts", PostController, :create
     get "/posts/:id", PostController, :show
+    put "/posts/:id", PostController, :put
     get "/posts/:id/edit", PostController, :edit
     post "/posts/:id", PostController, :update
     delete "/posts/:id", PostController, :delete
