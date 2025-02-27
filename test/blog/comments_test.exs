@@ -3,6 +3,8 @@ defmodule Blog.CommentsTest do
 
   alias Blog.Comments
 
+  alias Blog.Posts, as: Posts
+
   describe "comments" do
     alias Blog.Comments.Comment
 
@@ -54,6 +56,33 @@ defmodule Blog.CommentsTest do
     test "change_comment/1 returns a comment changeset" do
       comment = comment_fixture()
       assert %Ecto.Changeset{} = Comments.change_comment(comment)
+    end
+  end
+
+  describe "Post and comments" do
+    alias Blog.Comments.Comment
+
+    import Blog.PostsFixtures
+    import Blog.CommentsFixtures
+
+    test "get_post!/1 returns the post with given id and associated comments" do
+      post = post_fixture()
+      comment = comment_fixture(post_id: post.id)
+      assert Posts.get_post!(post.id).comments == [comment]
+    end
+
+    test "create_comment/1 with valid data creates a comment" do
+      post = post_fixture()
+      valid_attrs = %{content: "some content", post_id: post.id}
+
+      assert {:ok, %Comment{} = comment} = Comments.create_comment(valid_attrs)
+      assert comment.content == "some content"
+      assert comment.post_id == post.id
+    end
+
+    test "get_post!/1 returns the post with given id" do
+      post = post_fixture()
+      assert Posts.get_post!(post.id) == Repo.preload(post, :comments)
     end
   end
 end
