@@ -104,6 +104,7 @@ defmodule Blog.Posts do
 
   @doc """
   Returns a list of posts that match or partially match the given search field.
+  Also has a check for the visibility field.
 
   ## Examples
       iex> search_posts(title)
@@ -112,7 +113,7 @@ defmodule Blog.Posts do
   """
   def search_posts(search_field) do
     Enum.reduce(list_posts(), [], fn post, ids ->
-      if post.title =~ search_field do
+      if post.title =~ search_field and post.visibility do
         [post | ids]
       else
         ids
