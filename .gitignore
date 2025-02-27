@@ -37,3 +37,9 @@ npm-debug.log
 
 #ignore the Journal
 Journal
+
+# ignore devenv artifacts
+.devenv/
+
+# ignore vscode settings
+.vscode
