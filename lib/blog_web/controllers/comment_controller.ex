@@ -21,17 +21,15 @@ defmodule BlogWeb.CommentController do
 
       {:error, %Ecto.Changeset{} = comment_changeset} ->
         post = Posts.get_post!(comment_params["post_id"])
+
         # re-render the post show page with a comment changeset that the page uses to display errors.
         render(conn, :show, post: post, comment_changeset: comment_changeset)
     end
   end
 
   def show(conn, %{"id" => id}) do
-    Comments.get_comment!(id)
+    comment = Comments.get_comment!(id)
 
-    # Repo.preload(post, :comments)
-
-    render(conn, :show)
+    render(conn, :show, comment: comment)
   end
-
 end

@@ -6,6 +6,11 @@
       <.button>Edit post</.button>
     </.link>
   </:actions>
+  <:actions>
+  <.link href={~p"/posts/#{@post}/comments"}>
+    <.button>Comments</.button>
+  </.link>
+</:actions>
 </.header>
 
 <.list>
@@ -14,5 +19,8 @@
   <:item title="Published on">{@post.published_on}</:item>
   <:item title="Visibility">{@post.visibility}</:item>
 </.list>
+
+
+
 
 <.back navigate={~p"/posts"}>Back to posts</.back>

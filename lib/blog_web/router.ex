@@ -28,8 +28,8 @@ defmodule BlogWeb.Router do
     delete "/posts/:id", PostController, :delete
     get "/search/:title", PostController, :search
     get "/search", PostController, :search
-    get "/comments/:id", CommentController, :show
-    post "comments/:id", CommentController, :create
+    get "/posts/:id/comments", CommentController, :show
+    post "/posts/:id/comments", CommentController, :create
 
 
   end

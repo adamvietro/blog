@@ -1,0 +1,8 @@
+<.table id="comment" rows={@comment}>
+  <:col :let={comment} label="comment">{comment.content}</:col>
+  <:action :let={post}>
+    <.link href={~p"/posts/#{post}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
