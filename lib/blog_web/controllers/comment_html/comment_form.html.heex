@@ -1,0 +1,7 @@
+<.simple_form :let={f} for={@changeset} action={~p"/comments"}>
+  <.input type="hidden" field={f[:post_id]} value={@post.id} />
+  <.input field={f[:content]} type="text" label="Content" />
+  <:actions>
+    <.button>Comment</.button>
+  </:actions>
+</.simple_form>
