@@ -31,7 +31,7 @@ defmodule BlogWeb.CommentController do
 
   def create(conn, %{"comment" => comment_params, "post_id" => post_id}) do
     case Comments.create_comment(Map.put(comment_params, "post_id", post_id)) do
-      {:ok, comment} ->
+      {:ok, _comment} ->
         conn
         |> put_flash(:info, "Comment created successfully.")
         |> redirect(to: ~p"/posts/#{post_id}")
@@ -45,13 +45,13 @@ defmodule BlogWeb.CommentController do
   @spec new(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def new(conn, %{"post_id" => id}) do
     changeset = Comments.change_comment(%Comment{})
-    render(conn, :create, changeset: changeset, id: id)
+    render(conn, :create, changeset: changeset, post_id: id)
   end
 
   def show(conn, %{"post_id" => id}) do
     post = Posts.get_post!(id)
     comments = Repo.preload(post, :comments)
 
-    render(conn, :show, comment: comments.comments)
+    render(conn, :show, comment: comments)
   end
 end
