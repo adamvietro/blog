@@ -3,6 +3,6 @@
   <:subtitle>Use this form to manage post records in your database.</:subtitle>
 </.header>
 
-<.comment_form changeset={@changeset} post_id ={@post_id} action={~p"/posts/#{@post_id}/comments/new"} />
+<.comment_form changeset={@changeset} id={@id} action={~p"/posts/#{@id}/comments/new"} />
 
 <.back navigate={~p"/posts"}>Back to posts</.back>

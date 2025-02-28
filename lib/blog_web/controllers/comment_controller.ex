@@ -7,13 +7,11 @@ defmodule BlogWeb.CommentController do
   alias Blog.Comments
 
   @moduledoc """
-    get "/comments/:id", CommentController, :show
-    post "/comments/:id", CommentCOntroller, :new
-
-    Be sure to add the new controllers and then the html style sheets.
+  Add the documentation here please.
   """
 
   # def create(conn, %{"comment" => comment_params}) do
+  #   IO.inspect(comment_params)
   #   case Comments.create_comment(comment_params) do
   #     {:ok, comment} ->
   #       conn
@@ -29,12 +27,13 @@ defmodule BlogWeb.CommentController do
   #   end
   # end
 
-  def create(conn, %{"comment" => comment_params, "post_id" => post_id}) do
-    case Comments.create_comment(Map.put(comment_params, "post_id", post_id)) do
-      {:ok, _comment} ->
+  def create(conn, %{"comment" => comment_params, "id" => post_id}) do
+    updated = Map.put(comment_params, "post_id", post_id)
+    case Comments.create_comment(updated) do
+      {:ok, comment} ->
         conn
         |> put_flash(:info, "Comment created successfully.")
-        |> redirect(to: ~p"/posts/#{post_id}")
+        |> redirect(to: ~p"/posts/#{comment.post_id}")
 
       {:error, %Ecto.Changeset{} = comment_changeset} ->
         post = Posts.get_post!(post_id)
@@ -43,15 +42,18 @@ defmodule BlogWeb.CommentController do
   end
 
   @spec new(Plug.Conn.t(), any()) :: Plug.Conn.t()
-  def new(conn, %{"post_id" => id}) do
+  def new(conn, %{"id" => id}) do
     changeset = Comments.change_comment(%Comment{})
-    render(conn, :create, changeset: changeset, post_id: id)
+    render(conn, :create, changeset: changeset, id: id)
   end
 
-  def show(conn, %{"post_id" => id}) do
+  def show(conn, %{"id" => id}) do
     post = Posts.get_post!(id)
     comments = Repo.preload(post, :comments)
+    comment_list = Enum.map(comments.comments, fn comment ->
+      comment.content
+    end)
 
-    render(conn, :show, comment: comments)
+    render(conn, :show, comment: comment_list)
   end
 end

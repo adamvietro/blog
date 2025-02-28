@@ -1,3 +1,11 @@
+<.header>
+  <:actions>
+    <.link href={~p"/posts/#{@conn.params["id"]}"}>
+      <.button>Posts</.button>
+    </.link>
+  </:actions>
+</.header>
+
 <.table id="comment" rows={@comment}>
   <:col :let={comment} label="comment">{comment}</:col>
   <:action :let={post}>
