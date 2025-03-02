@@ -1,0 +1,12 @@
+<.header>
+  Edit comment {@comment.id}
+  <:subtitle>Use this form to manage comment records in your database.</:subtitle>
+</.header>
+
+<.comment_form
+  changeset={@changeset}
+  id={@comment.id}
+  action={~p"/posts/#{@comment.post_id}/comments/#{@comment.id}/edit"}
+/>
+
+<.back navigate={~p"/posts/#{@comment.post_id}/comments/"}>Back to posts</.back>

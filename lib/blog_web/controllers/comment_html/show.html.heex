@@ -1,16 +1,25 @@
 <.header>
   <:actions>
     <.link href={~p"/posts/#{@conn.params["id"]}"}>
-      <.button>Posts</.button>
+      <.button>Post</.button>
     </.link>
   </:actions>
+  <:actions>
+  <.link href={~p"/posts/#{@conn.params["id"]}/comments/new"}>
+    <.button>Add Comment</.button>
+  </.link>
+</:actions>
 </.header>
+
 
 <.table id="comment" rows={@comment}>
   <:col :let={comment} label="comment">{comment["comment"]}</:col>
   <:action :let={comment}>
     <.link href={~p"/posts/#{@conn.params["id"]}/comments/#{comment["id"]}"} method="delete" data-confirm="Are you sure?">
       Delete
+    </.link>
+    <.link href={~p"/posts/#{@conn.params["id"]}/comments/#{comment["id"]}/edit"}>
+      <.button>Edit</.button>
     </.link>
   </:action>
 </.table>

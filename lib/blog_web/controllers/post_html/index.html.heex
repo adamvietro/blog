@@ -1,4 +1,3 @@
-
 <.link
   navigate={~p"/search"}
   class="bg-cyan-500 hover:bg-cyan-400 text-2xl p-4 mt-4 rounded-full inline-block"
@@ -24,7 +23,7 @@
     <div class="sr-only">
       <.link navigate={~p"/posts/#{post}"}>Show</.link>
     </div>
-    <.link navigate={~p"/posts/#{post}/edit"}>Edit</.link>
+    <.link navigate={~p"/posts/#{post}/edit"}>Edit </.link>
   </:action>
   <:action :let={post}>
     <.link href={~p"/posts/#{post}"} method="delete" data-confirm="Are you sure?">
