@@ -6,29 +6,9 @@ defmodule BlogWeb.CommentController do
   alias Blog.Posts
   alias Blog.Comments
 
-  @moduledoc """
-  Add the documentation here please.
-  """
-
-  # def create(conn, %{"comment" => comment_params}) do
-  #   IO.inspect(comment_params)
-  #   case Comments.create_comment(comment_params) do
-  #     {:ok, comment} ->
-  #       conn
-  #       |> put_flash(:info, "Comment created successfully.")
-  #       # redirect to the post show page where the comment form is rendered
-  #       |> redirect(to: ~p"/posts/#{comment.post_id}")
-
-  #     {:error, %Ecto.Changeset{} = comment_changeset} ->
-  #       post = Posts.get_post!(comment_params["post_id"])
-
-  #       # re-render the post show page with a comment changeset that the page uses to display errors.
-  #       render(conn, :create, post: post, comment_changeset: comment_changeset)
-  #   end
-  # end
-
   def create(conn, %{"comment" => comment_params, "id" => post_id}) do
     updated = Map.put(comment_params, "post_id", post_id)
+
     case Comments.create_comment(updated) do
       {:ok, comment} ->
         conn
@@ -47,13 +27,29 @@ defmodule BlogWeb.CommentController do
     render(conn, :create, changeset: changeset, id: id)
   end
 
+  @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
-    post = Posts.get_post!(id)
-    comments = Repo.preload(post, :comments)
-    comment_list = Enum.map(comments.comments, fn comment ->
-      comment.content
-    end)
+    post =
+      Posts.get_post!(id)
+      |> Repo.preload(:comments)
+
+    comment_list =
+      Enum.map(post.comments, fn comment ->
+        %{"id" => comment.id, "comment" => comment.content}
+      end)
+
+    # IO.inspect(comment_list)
 
     render(conn, :show, comment: comment_list)
+  end
+
+  @spec delete(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def delete(conn, %{"id" => _id, "comment_id" => comment_id}) do
+    comment = Comments.get_comment!(comment_id)
+    {:ok, _post} = Comments.delete_comment(comment)
+
+    conn
+    |> put_flash(:info, "Comment deleted successfully.")
+    |> redirect(to: ~p"/posts")
   end
 end

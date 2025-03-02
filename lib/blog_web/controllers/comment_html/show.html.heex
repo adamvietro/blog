@@ -7,9 +7,9 @@
 </.header>
 
 <.table id="comment" rows={@comment}>
-  <:col :let={comment} label="comment">{comment}</:col>
-  <:action :let={post}>
-    <.link href={~p"/posts/#{post}"} method="delete" data-confirm="Are you sure?">
+  <:col :let={comment} label="comment">{comment["comment"]}</:col>
+  <:action :let={comment}>
+    <.link href={~p"/posts/#{@conn.params["id"]}/comments/#{comment["id"]}"} method="delete" data-confirm="Are you sure?">
       Delete
     </.link>
   </:action>

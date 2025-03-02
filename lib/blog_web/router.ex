@@ -31,6 +31,7 @@ defmodule BlogWeb.Router do
     get "/posts/:id/comments", CommentController, :show
     post "/posts/:id/comments/new", CommentController, :create
     get "/posts/:id/comments/new", CommentController, :new
+    delete "/posts/:id/comments/:comment_id", CommentController, :delete
 
 
   end
