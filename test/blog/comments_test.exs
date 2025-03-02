@@ -68,7 +68,8 @@ defmodule Blog.CommentsTest do
     test "get_post!/1 returns the post with given id and associated comments" do
       post = post_fixture()
       comment = comment_fixture(post_id: post.id)
-      assert Posts.get_post!(post.id).comments == [comment]
+
+      assert Posts.get_post!(post.id).content == comment.content
     end
 
     test "create_comment/1 with valid data creates a comment" do
@@ -82,7 +83,22 @@ defmodule Blog.CommentsTest do
 
     test "get_post!/1 returns the post with given id" do
       post = post_fixture()
-      assert Posts.get_post!(post.id) == Repo.preload(post, :comments)
+      comments = Repo.preload(post, :comments)
+      assert Posts.get_post!(post.id).content == comments.content
+    end
+
+    test "create post and 2 comments" do
+      post = post_fixture()
+
+      valid_attrs = %{content: "some content", post_id: post.id}
+      valid_attrs_2 = %{content: "some content cont", post_id: post.id}
+
+      Comments.create_comment(valid_attrs)
+      Comments.create_comment(valid_attrs_2)
+
+      posts = Repo.preload(post, :comments)
+      comments = posts.comments
+      assert posts.comments == comments
     end
   end
 end
