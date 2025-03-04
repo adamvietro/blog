@@ -6,10 +6,30 @@ defmodule BlogWeb.CommentController do
   alias Blog.Posts
   alias Blog.Comments
 
-  def create(conn, %{"comment" => comment_params, "id" => post_id}) do
-    updated = Map.put(comment_params, "post_id", post_id)
+  plug :require_user_owns_post when action in [:edit, :update, :delete]
 
-    case Comments.create_comment(updated) do
+  # Typically Goes At The Bottom Of The File
+  defp require_user_owns_post(conn, _params) do
+    post_id = String.to_integer(conn.path_params["id"])
+    post = Posts.get_post!(post_id)
+
+    if conn.assigns[:current_user].id == post.user_id do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You can only edit or delete your own posts.")
+      |> redirect(to: ~p"/posts/#{post_id}")
+      |> halt()
+    end
+  end
+
+  def create(conn, %{"comment" => comment_params, "id" => post_id}) do
+    IO.inspect(comment_params)
+    comment_params = Map.put(comment_params, "post_id", post_id)
+    comment_params = Map.put(comment_params, "user_id", conn.assigns[:current_user].id)
+    IO.inspect(comment_params)
+
+    case Comments.create_comment(comment_params) do
       {:ok, comment} ->
         conn
         |> put_flash(:info, "Comment created successfully.")
@@ -41,13 +61,21 @@ defmodule BlogWeb.CommentController do
     render(conn, :show, comment: comment_list)
   end
 
-  def delete(conn, %{"id" => _id, "comment_id" => comment_id}) do
+  def delete(conn, %{"id" => id, "comment_id" => comment_id}) do
     comment = Comments.get_comment!(comment_id)
-    {:ok, _post} = Comments.delete_comment(comment)
 
-    conn
-    |> put_flash(:info, "Comment deleted successfully.")
-    |> redirect(to: ~p"/posts")
+    if conn.assigns[:current_user].id == comment.user_id do
+      {:ok, _post} = Comments.delete_comment(comment)
+
+      conn
+      |> put_flash(:info, "Comment deleted successfully.")
+      |> redirect(to: ~p"/posts")
+    else
+      conn
+      |> put_flash(:error, "You can only delete your own comments.")
+      |> redirect(to: ~p"/posts/#{id}/comments")
+      |> halt()
+    end
   end
 
   @spec edit(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -66,14 +94,23 @@ defmodule BlogWeb.CommentController do
       Map.update!(comment_params, "post_id", fn _existing -> id end)
       |> Map.put("id", comment_id)
 
-    case Comments.update_comment(comment, comment_params) do
-      {:ok, comment} ->
-        conn
-        |> put_flash(:info, "Comment updated successfully.")
-        |> redirect(to: ~p"/posts/#{comment.post_id}/comments/")
+    if conn.assigns[:current_user].id == comment.user_id do
+      case Comments.update_comment(comment, comment_params) do
+        {:ok, comment} ->
+          conn
+          |> put_flash(:info, "Comment updated successfully.")
+          |> redirect(to: ~p"/posts/#{comment.post_id}/comments/")
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, comment: comment, changeset: changeset)
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, :edit, comment: comment, changeset: changeset)
+      end
+    else
+      conn
+      |> put_flash(:error, "You can only update your own comments.")
+      |> redirect(to: ~p"/posts/#{id}/comments")
+      |> halt()
     end
+
+
   end
 end

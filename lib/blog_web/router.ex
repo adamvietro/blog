@@ -18,7 +18,7 @@ defmodule BlogWeb.Router do
   end
 
   scope "/", BlogWeb do
-    pipe_through :browser
+    pipe_through [:browser, :require_authenticated_user]
 
     get "/", PageController, :home
     get "/posts", PostController, :index
@@ -37,8 +37,6 @@ defmodule BlogWeb.Router do
     delete "/posts/:id/comments/:comment_id", CommentController, :delete
     get "/posts/:id/comments/:comment_id/edit", CommentController, :edit
     put "/posts/:id/comments/:comment_id/edit", CommentController, :update
-
-
   end
 
   # Other scopes may use custom stacks.

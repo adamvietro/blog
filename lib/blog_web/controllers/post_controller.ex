@@ -4,6 +4,23 @@ defmodule BlogWeb.PostController do
   alias Blog.Posts
   alias Blog.Posts.Post
 
+  plug :require_user_owns_post when action in [:edit, :update, :delete]
+
+  # Typically Goes At The Bottom Of The File
+  defp require_user_owns_post(conn, _params) do
+    post_id = String.to_integer(conn.path_params["id"])
+    post = Posts.get_post!(post_id)
+
+    if conn.assigns[:current_user].id == post.user_id do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You can only edit or delete your own posts.")
+      |> redirect(to: ~p"/posts/#{post_id}")
+      |> halt()
+    end
+  end
+
   @spec index(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def index(conn, _params) do
     posts = Posts.list_posts()
@@ -18,6 +35,8 @@ defmodule BlogWeb.PostController do
 
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(conn, %{"post" => post_params}) do
+    post_params = Map.put(post_params, "user_id", conn.assigns[:current_user].id)
+
     case Posts.create_post(post_params) do
       {:ok, post} ->
         conn
@@ -46,14 +65,21 @@ defmodule BlogWeb.PostController do
   def put(conn, %{"id" => id, "post" => post_params}) do
     post = Posts.get_post!(id)
 
-    case Posts.update_post(post, post_params) do
-      {:ok, post} ->
-        conn
-        |> put_flash(:info, "Post updated successfully.")
-        |> redirect(to: ~p"/posts/#{post}")
+    if conn.assigns[:current_user].id == post.user_id do
+      case Posts.update_post(post, post_params) do
+        {:ok, post} ->
+          conn
+          |> put_flash(:info, "Post updated successfully.")
+          |> redirect(to: ~p"/posts/#{post}")
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, post: post, changeset: changeset)
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, :edit, post: post, changeset: changeset)
+      end
+    else
+      conn
+      |> put_flash(:error, "You can only edit your own posts.")
+      |> redirect(to: ~p"/posts/#{id}")
+      |> halt()
     end
   end
 
@@ -92,5 +118,4 @@ defmodule BlogWeb.PostController do
   def search(conn, _param) do
     render(conn, :search_form)
   end
-
 end

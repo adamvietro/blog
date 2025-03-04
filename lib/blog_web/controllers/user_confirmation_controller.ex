@@ -21,7 +21,7 @@ defmodule BlogWeb.UserConfirmationController do
       "If your email is in our system and it has not been confirmed yet, " <>
         "you will receive an email with instructions shortly."
     )
-    |> redirect(to: ~p"/")
+    |> redirect(to: ~p"/users/log_in")
   end
 
   def edit(conn, %{"token" => token}) do
@@ -35,7 +35,7 @@ defmodule BlogWeb.UserConfirmationController do
       {:ok, _} ->
         conn
         |> put_flash(:info, "User confirmed successfully.")
-        |> redirect(to: ~p"/")
+        |> redirect(to: ~p"/posts")
 
       :error ->
         # If there is a current user and the account was already confirmed,
@@ -44,12 +44,12 @@ defmodule BlogWeb.UserConfirmationController do
         # a warning message.
         case conn.assigns do
           %{current_user: %{confirmed_at: confirmed_at}} when not is_nil(confirmed_at) ->
-            redirect(conn, to: ~p"/")
+            redirect(conn, to: ~p"/posts")
 
           %{} ->
             conn
             |> put_flash(:error, "User confirmation link is invalid or it has expired.")
-            |> redirect(to: ~p"/")
+            |> redirect(to: ~p"/users/log_in")
         end
     end
   end
