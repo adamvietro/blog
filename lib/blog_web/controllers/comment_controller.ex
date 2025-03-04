@@ -24,10 +24,8 @@ defmodule BlogWeb.CommentController do
   end
 
   def create(conn, %{"comment" => comment_params, "id" => post_id}) do
-    IO.inspect(comment_params)
     comment_params = Map.put(comment_params, "post_id", post_id)
     comment_params = Map.put(comment_params, "user_id", conn.assigns[:current_user].id)
-    IO.inspect(comment_params)
 
     case Comments.create_comment(comment_params) do
       {:ok, comment} ->
@@ -110,7 +108,5 @@ defmodule BlogWeb.CommentController do
       |> redirect(to: ~p"/posts/#{id}/comments")
       |> halt()
     end
-
-
   end
 end
