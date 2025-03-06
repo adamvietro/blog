@@ -25,7 +25,7 @@ defmodule BlogWeb.UserConfirmationControllerTest do
           "user" => %{"email" => user.email}
         })
 
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn) == ~p"/users/log_in"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
                "If your email is in our system"
@@ -41,7 +41,7 @@ defmodule BlogWeb.UserConfirmationControllerTest do
           "user" => %{"email" => user.email}
         })
 
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn) == ~p"/users/log_in"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
                "If your email is in our system"
@@ -55,7 +55,7 @@ defmodule BlogWeb.UserConfirmationControllerTest do
           "user" => %{"email" => "unknown@example.com"}
         })
 
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn) == ~p"/users/log_in"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
                "If your email is in our system"
@@ -83,7 +83,7 @@ defmodule BlogWeb.UserConfirmationControllerTest do
         end)
 
       conn = post(conn, ~p"/users/confirm/#{token}")
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn) == ~p"/posts"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
                "User confirmed successfully"
@@ -94,7 +94,7 @@ defmodule BlogWeb.UserConfirmationControllerTest do
 
       # When not logged in
       conn = post(conn, ~p"/users/confirm/#{token}")
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn) == ~p"/users/log_in"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) =~
                "User confirmation link is invalid or it has expired"
@@ -105,13 +105,13 @@ defmodule BlogWeb.UserConfirmationControllerTest do
         |> log_in_user(user)
         |> post(~p"/users/confirm/#{token}")
 
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn) == ~p"/posts"
       refute Phoenix.Flash.get(conn.assigns.flash, :error)
     end
 
     test "does not confirm email with invalid token", %{conn: conn, user: user} do
       conn = post(conn, ~p"/users/confirm/oops")
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn) == ~p"/users/log_in"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) =~
                "User confirmation link is invalid or it has expired"

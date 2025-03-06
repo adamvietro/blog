@@ -18,10 +18,17 @@ defmodule BlogWeb.Router do
   end
 
   scope "/", BlogWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through :browser
 
     get "/", PageController, :home
     get "/posts", PostController, :index
+    get "/search/:title", PostController, :search
+    get "/search", PostController, :search
+  end
+
+  scope "/", BlogWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
     get "/posts/new", PostController, :new
     post "/posts", PostController, :create
     get "/posts/:id", PostController, :show
@@ -29,8 +36,6 @@ defmodule BlogWeb.Router do
     get "/posts/:id/edit", PostController, :edit
     post "/posts/:id", PostController, :edit
     delete "/posts/:id", PostController, :delete
-    get "/search/:title", PostController, :search
-    get "/search", PostController, :search
     get "/posts/:id/comments", CommentController, :show
     post "/posts/:id/comments/new", CommentController, :create
     get "/posts/:id/comments/new", CommentController, :new
