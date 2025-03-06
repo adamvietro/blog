@@ -16,10 +16,10 @@
   <:col :let={comment} label="user">{comment["user_id"]}</:col>
   <:col :let={comment} label="comment">{comment["comment"]}</:col>
   <:action :let={comment}>
-    <.link href={~p"/posts/#{@conn.params["id"]}/comments/#{comment["id"]}"} method="delete" data-confirm="Are you sure?">
+    <.link href={~p"/posts/#{comment["post_id"]}/comments/#{comment["id"]}"} method="delete" data-confirm="Are you sure?">
       Delete
     </.link>
-    <.link href={~p"/posts/#{@conn.params["id"]}/comments/#{comment["id"]}/edit"}>
+    <.link href={~p"/posts/#{comment["post_id"]}/comments/#{comment["id"]}/edit"}>
       <.button>Edit</.button>
     </.link>
   </:action>

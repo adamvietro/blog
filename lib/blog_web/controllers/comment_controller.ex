@@ -53,7 +53,12 @@ defmodule BlogWeb.CommentController do
 
     comment_list =
       Enum.map(post.comments, fn comment ->
-        %{"id" => comment.id, "comment" => comment.content}
+        %{
+          "id" => comment.id,
+          "comment" => comment.content,
+          "user_id" => comment.user_id,
+          "post_id" => comment.post_id
+        }
       end)
 
     render(conn, :show, comment: comment_list)

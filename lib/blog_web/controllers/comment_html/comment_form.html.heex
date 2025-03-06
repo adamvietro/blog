@@ -1,6 +1,6 @@
 <.simple_form :let={f} for={@changeset} action={@action}>
   <.input field={f[:content]} type="text" label="Content" />
-  <.input type="hidden" field={f[:post_id]} value={@id} />
+  <.input field={f[:post_id]} type="hidden" value={@__given__.id} />
   <:actions>
     <.button>Commit</.button>
   </:actions>
