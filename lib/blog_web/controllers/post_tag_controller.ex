@@ -10,16 +10,16 @@ defmodule BlogWeb.Post_TagController do
   end
 
   def new(conn, _params) do
-    changeset = Post_Tags.change_post__tag(%Post_Tag{})
+    changeset = Post_Tags.change_post_tag(%Post_Tag{})
     render(conn, :new, changeset: changeset)
   end
 
-  def create(conn, %{"post__tag" => post__tag_params}) do
-    case Post_Tags.create_post__tag(post__tag_params) do
-      {:ok, post__tag} ->
+  def create(conn, %{"post_tag" => post_tag_params}) do
+    case Post_Tags.create_post_tag(post_tag_params) do
+      {:ok, post_tag} ->
         conn
         |> put_flash(:info, "Post  tag created successfully.")
-        |> redirect(to: ~p"/post_tags/#{post__tag}")
+        |> redirect(to: ~p"/post_tags/#{post_tag}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
@@ -27,33 +27,33 @@ defmodule BlogWeb.Post_TagController do
   end
 
   def show(conn, %{"id" => id}) do
-    post__tag = Post_Tags.get_post__tag!(id)
-    render(conn, :show, post__tag: post__tag)
+    post_tag = Post_Tags.get_post_tag!(id)
+    render(conn, :show, post_tag: post_tag)
   end
 
   def edit(conn, %{"id" => id}) do
-    post__tag = Post_Tags.get_post__tag!(id)
-    changeset = Post_Tags.change_post__tag(post__tag)
-    render(conn, :edit, post__tag: post__tag, changeset: changeset)
+    post_tag = Post_Tags.get_post_tag!(id)
+    changeset = Post_Tags.change_post_tag(post_tag)
+    render(conn, :edit, post_tag: post_tag, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "post__tag" => post__tag_params}) do
-    post__tag = Post_Tags.get_post__tag!(id)
+  def update(conn, %{"id" => id, "post_tag" => post_tag_params}) do
+    post_tag = Post_Tags.get_post_tag!(id)
 
-    case Post_Tags.update_post__tag(post__tag, post__tag_params) do
-      {:ok, post__tag} ->
+    case Post_Tags.update_post_tag(post_tag, post_tag_params) do
+      {:ok, post_tag} ->
         conn
         |> put_flash(:info, "Post  tag updated successfully.")
-        |> redirect(to: ~p"/post_tags/#{post__tag}")
+        |> redirect(to: ~p"/post_tags/#{post_tag}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, post__tag: post__tag, changeset: changeset)
+        render(conn, :edit, post_tag: post_tag, changeset: changeset)
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    post__tag = Post_Tags.get_post__tag!(id)
-    {:ok, _post__tag} = Post_Tags.delete_post__tag(post__tag)
+    post_tag = Post_Tags.get_post_tag!(id)
+    {:ok, _post_tag} = Post_Tags.delete_post_tag(post_tag)
 
     conn
     |> put_flash(:info, "Post  tag deleted successfully.")
