@@ -8,14 +8,14 @@
 </.header>
 
 <.table id="post_tags" rows={@post_tags} row_click={&JS.navigate(~p"/post_tags/#{&1}")}>
-  <:action :let={post__tag}>
+  <:action :let={post_tag}>
     <div class="sr-only">
-      <.link navigate={~p"/post_tags/#{post__tag}"}>Show</.link>
+      <.link navigate={~p"/post_tags/#{post_tag}"}>Show</.link>
     </div>
-    <.link navigate={~p"/post_tags/#{post__tag}/edit"}>Edit</.link>
+    <.link navigate={~p"/post_tags/#{post_tag}/edit"}>Edit</.link>
   </:action>
-  <:action :let={post__tag}>
-    <.link href={~p"/post_tags/#{post__tag}"} method="delete" data-confirm="Are you sure?">
+  <:action :let={post_tag}>
+    <.link href={~p"/post_tags/#{post_tag}"} method="delete" data-confirm="Are you sure?">
       Delete
     </.link>
   </:action>

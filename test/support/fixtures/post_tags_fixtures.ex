@@ -5,16 +5,16 @@ defmodule Blog.Post_TagsFixtures do
   """
 
   @doc """
-  Generate a post__tag.
+  Generate a post_tag.
   """
-  def post__tag_fixture(attrs \\ %{}) do
-    {:ok, post__tag} =
+  def post_tag_fixture(attrs \\ %{}) do
+    {:ok, post_tag} =
       attrs
       |> Enum.into(%{
 
       })
-      |> Blog.Post_Tags.create_post__tag()
+      |> Blog.Post_Tags.create_post_tag()
 
-    post__tag
+    post_tag
   end
 end

@@ -14,16 +14,16 @@ defmodule BlogWeb.Post_TagControllerTest do
     end
   end
 
-  describe "new post__tag" do
+  describe "new post_tag" do
     test "renders form", %{conn: conn} do
       conn = get(conn, ~p"/post_tags/new")
       assert html_response(conn, 200) =~ "New Post  tag"
     end
   end
 
-  describe "create post__tag" do
+  describe "create post_tag" do
     test "redirects to show when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/post_tags", post__tag: @create_attrs)
+      conn = post(conn, ~p"/post_tags", post_tag: @create_attrs)
 
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == ~p"/post_tags/#{id}"
@@ -33,52 +33,52 @@ defmodule BlogWeb.Post_TagControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, ~p"/post_tags", post__tag: @invalid_attrs)
+      conn = post(conn, ~p"/post_tags", post_tag: @invalid_attrs)
       assert html_response(conn, 200) =~ "New Post  tag"
     end
   end
 
-  describe "edit post__tag" do
-    setup [:create_post__tag]
+  describe "edit post_tag" do
+    setup [:create_post_tag]
 
-    test "renders form for editing chosen post__tag", %{conn: conn, post__tag: post__tag} do
-      conn = get(conn, ~p"/post_tags/#{post__tag}/edit")
+    test "renders form for editing chosen post_tag", %{conn: conn, post_tag: post_tag} do
+      conn = get(conn, ~p"/post_tags/#{post_tag}/edit")
       assert html_response(conn, 200) =~ "Edit Post  tag"
     end
   end
 
-  describe "update post__tag" do
-    setup [:create_post__tag]
+  describe "update post_tag" do
+    setup [:create_post_tag]
 
-    test "redirects when data is valid", %{conn: conn, post__tag: post__tag} do
-      conn = put(conn, ~p"/post_tags/#{post__tag}", post__tag: @update_attrs)
-      assert redirected_to(conn) == ~p"/post_tags/#{post__tag}"
+    test "redirects when data is valid", %{conn: conn, post_tag: post_tag} do
+      conn = put(conn, ~p"/post_tags/#{post_tag}", post_tag: @update_attrs)
+      assert redirected_to(conn) == ~p"/post_tags/#{post_tag}"
 
-      conn = get(conn, ~p"/post_tags/#{post__tag}")
+      conn = get(conn, ~p"/post_tags/#{post_tag}")
       assert html_response(conn, 200)
     end
 
-    test "renders errors when data is invalid", %{conn: conn, post__tag: post__tag} do
-      conn = put(conn, ~p"/post_tags/#{post__tag}", post__tag: @invalid_attrs)
+    test "renders errors when data is invalid", %{conn: conn, post_tag: post_tag} do
+      conn = put(conn, ~p"/post_tags/#{post_tag}", post_tag: @invalid_attrs)
       assert html_response(conn, 200) =~ "Edit Post  tag"
     end
   end
 
-  describe "delete post__tag" do
-    setup [:create_post__tag]
+  describe "delete post_tag" do
+    setup [:create_post_tag]
 
-    test "deletes chosen post__tag", %{conn: conn, post__tag: post__tag} do
-      conn = delete(conn, ~p"/post_tags/#{post__tag}")
+    test "deletes chosen post_tag", %{conn: conn, post_tag: post_tag} do
+      conn = delete(conn, ~p"/post_tags/#{post_tag}")
       assert redirected_to(conn) == ~p"/post_tags"
 
       assert_error_sent 404, fn ->
-        get(conn, ~p"/post_tags/#{post__tag}")
+        get(conn, ~p"/post_tags/#{post_tag}")
       end
     end
   end
 
-  defp create_post__tag(_) do
-    post__tag = post__tag_fixture()
-    %{post__tag: post__tag}
+  defp create_post_tag(_) do
+    post_tag = post_tag_fixture()
+    %{post_tag: post_tag}
   end
 end

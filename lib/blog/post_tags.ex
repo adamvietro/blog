@@ -22,16 +22,16 @@ defmodule Blog.Post_Tags do
   end
 
   @doc """
-  Gets a single post__tag.
+  Gets a single post_tag.
 
   Raises `Ecto.NoResultsError` if the Post  tag does not exist.
 
   ## Examples
 
-      iex> get_post__tag!(123)
+      iex> get_post_tag!(123)
       %Post_Tag{}
 
-      iex> get_post__tag!(456)
+      iex> get_post_tag!(456)
       ** (Ecto.NoResultsError)
 
   """
@@ -45,7 +45,7 @@ defmodule Blog.Post_Tags do
       iex> create_post_tag(%{field: value})
       {:ok, %Post_Tag{}}
 
-      iex> create_post__tag(%{field: bad_value})
+      iex> create_post_tag(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
@@ -56,14 +56,14 @@ defmodule Blog.Post_Tags do
   end
 
   @doc """
-  Updates a post__tag.
+  Updates a post_tag.
 
   ## Examples
 
-      iex> update_post_tag(post__tag, %{field: new_value})
+      iex> update_post_tag(post_tag, %{field: new_value})
       {:ok, %Post_Tag{}}
 
-      iex> update_post__tag(post__tag, %{field: bad_value})
+      iex> update_post_tag(post_tag, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
@@ -74,7 +74,7 @@ defmodule Blog.Post_Tags do
   end
 
   @doc """
-  Deletes a post__tag.
+  Deletes a post_tag.
 
   ## Examples
 
