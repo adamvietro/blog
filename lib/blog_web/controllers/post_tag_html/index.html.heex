@@ -1,0 +1,22 @@
+<.header>
+  Listing Post tags
+  <:actions>
+    <.link href={~p"/post_tags/new"}>
+      <.button>New Post  tag</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="post_tags" rows={@post_tags} row_click={&JS.navigate(~p"/post_tags/#{&1}")}>
+  <:action :let={post__tag}>
+    <div class="sr-only">
+      <.link navigate={~p"/post_tags/#{post__tag}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/post_tags/#{post__tag}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={post__tag}>
+    <.link href={~p"/post_tags/#{post__tag}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

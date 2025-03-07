@@ -1,0 +1,14 @@
+<.header>
+  Post  tag {@post__tag.id}
+  <:subtitle>This is a post__tag record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/post_tags/#{@post__tag}/edit"}>
+      <.button>Edit post__tag</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+</.list>
+
+<.back navigate={~p"/post_tags"}>Back to post_tags</.back>

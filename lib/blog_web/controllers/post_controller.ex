@@ -94,21 +94,6 @@ defmodule BlogWeb.PostController do
     end
   end
 
-  # @spec update(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  # def update(conn, %{"id" => id, "post" => post_params}) do
-  #   post = Posts.get_post!(id)
-
-  #   case Posts.update_post(post, post_params) do
-  #     {:ok, post} ->
-  #       conn
-  #       |> put_flash(:info, "Post updated successfully.")
-  #       |> redirect(to: ~p"/posts/#{post}")
-
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       render(conn, :edit, post: post, changeset: changeset)
-  #   end
-  # end
-
   @spec delete(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def delete(conn, %{"id" => id}) do
     post = Posts.get_post!(id)
