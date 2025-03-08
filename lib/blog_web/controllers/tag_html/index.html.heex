@@ -1,3 +1,10 @@
+<.link
+  navigate={~p"/tags/search"}
+  class="bg-cyan-500 hover:bg-cyan-400 text-2xl p-4 mt-4 rounded-full inline-block"
+>
+  Search
+</.link>
+
 <.header>
   Listing Tags
   <:actions>
@@ -7,17 +14,14 @@
   </:actions>
 </.header>
 
-<.table id="tags" rows={@tags} row_click={&JS.navigate(~p"/tags/#{&1}")}>
+<.table id="tags" rows={@tags}>
   <:col :let={tag} label="Tag">{tag.tag}</:col>
-  <:action :let={tag}>
-    <div class="sr-only">
-      <.link navigate={~p"/tags/#{tag}"}>Show</.link>
-    </div>
-    <.link navigate={~p"/tags/#{tag}/edit"}>Edit</.link>
-  </:action>
   <:action :let={tag}>
     <.link href={~p"/tags/#{tag}"} method="delete" data-confirm="Are you sure?">
       Delete
     </.link>
   </:action>
 </.table>
+
+
+<.back navigate={~p"/posts"}>Back to posts</.back>

@@ -24,6 +24,14 @@ defmodule BlogWeb.Router do
     get "/posts", PostController, :index
     get "/search/:title", PostController, :search
     get "/search", PostController, :search
+    get "/tags/new", TagController, :new
+    post "/tags", TagController, :create
+    get "/tags", TagController, :index
+    put "/tags/:id", TagController, :put
+    get "/tags/search", TagController, :search
+    delete "/tags/:id", TagController, :delete
+
+
   end
 
   scope "/", BlogWeb do

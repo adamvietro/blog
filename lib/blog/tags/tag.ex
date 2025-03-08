@@ -3,8 +3,8 @@ defmodule Blog.Tags.Tag do
   import Ecto.Changeset
 
   schema "tags" do
-    field :name, :string
-    many_to_many :posts, Blog.Posts.Post, join_through: "posts_tags"
+    field :tag, :string
+    many_to_many :posts, Blog.Posts.Post, join_through: "post_tags", on_replace: :delete
 
     timestamps()
   end
@@ -12,7 +12,8 @@ defmodule Blog.Tags.Tag do
   @doc false
   def changeset(tag, attrs) do
     tag
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:tag])
+    |> validate_required([:tag])
+    |> unique_constraint(:tag)
   end
 end

@@ -19,7 +19,7 @@ defmodule BlogWeb.TagController do
       {:ok, tag} ->
         conn
         |> put_flash(:info, "Tag created successfully.")
-        |> redirect(to: ~p"/tags/#{tag}")
+        |> redirect(to: ~p"/tags/")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
@@ -58,5 +58,10 @@ defmodule BlogWeb.TagController do
     conn
     |> put_flash(:info, "Tag deleted successfully.")
     |> redirect(to: ~p"/tags")
+  end
+
+  def search(conn, _params) do
+    tags = Tags.list_tags()
+    render(conn, :search, tags: tags)
   end
 end

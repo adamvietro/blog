@@ -3,11 +3,8 @@ defmodule Blog.Post_Tags.Post_Tag do
   import Ecto.Changeset
 
   schema "post_tags" do
-
     field :post_id, :id
     field :tag_id, :id
-
-    timestamps(type: :utc_datetime)
   end
 
   @doc false

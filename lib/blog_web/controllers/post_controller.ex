@@ -1,6 +1,8 @@
 defmodule BlogWeb.PostController do
   use BlogWeb, :controller
 
+  import Blog.Tags
+
   alias Blog.Posts
   alias Blog.Posts.Post
 
@@ -19,6 +21,13 @@ defmodule BlogWeb.PostController do
       |> redirect(to: ~p"/posts/#{post_id}")
       |> halt()
     end
+  end
+
+  defp tag_options(selected_ids \\ []) do
+    list_tags()
+    |> Enum.map(fn tag ->
+      [key: tag.tag, value: tag.id, selected: tag.id in selected_ids]
+    end)
   end
 
   @spec index(Plug.Conn.t(), any()) :: Plug.Conn.t()
@@ -46,28 +55,53 @@ defmodule BlogWeb.PostController do
 
   @spec new(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def new(conn, _params) do
+    tags = tag_options()
     changeset = Posts.change_post(%Post{})
-    render(conn, :new, changeset: changeset)
+
+    render(conn, :new, changeset: changeset, tags: tags)
   end
 
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(conn, %{"post" => post_params}) do
     post_params = Map.put(post_params, "user_id", conn.assigns[:current_user].id)
 
-    case Posts.create_post(post_params) do
-      {:ok, post} ->
-        conn
-        |> put_flash(:info, "Post created successfully.")
-        |> redirect(to: ~p"/posts/#{post}")
+    IO.inspect(post_params)
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :new, changeset: changeset)
+    if post_params["tag_ids"] == nil do
+      case Posts.create_post(post_params) do
+        {:ok, post} ->
+          conn
+          |> put_flash(:info, "Post created successfully.")
+          |> redirect(to: ~p"/posts/#{post}")
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          tags = tag_options()
+          render(conn, :new, changeset: changeset, tags: tags)
+      end
+    else
+      tags =
+        Enum.map(post_params["tag_ids"], fn tag_id ->
+          %{post_id: post_params["user_id"], tag_id: String.to_integer(tag_id)}
+        end)
+      IO.inspect(tags)
+
+      case Posts.create_post(post_params, tags) do
+        {:ok, post} ->
+          conn
+          |> put_flash(:info, "Post created successfully.")
+          |> redirect(to: ~p"/posts/#{post}")
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          tags = tag_options()
+          render(conn, :new, changeset: changeset, tags: tags)
+      end
     end
   end
 
   @spec edit(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def edit(conn, %{"id" => id}) do
     post = Posts.get_post!(id)
+
     changeset = Posts.change_post(post)
     render(conn, :edit, post: post, changeset: changeset)
   end
