@@ -27,7 +27,7 @@ defmodule BlogWeb.PostController do
   defp tag_options(selected_ids \\ []) do
     list_tags()
     |> Enum.map(fn tag ->
-      [key: tag.tag, value: tag.id, selected: tag.id in selected_ids]
+      [key: tag.name, value: tag.id, selected: tag.id in selected_ids]
     end)
   end
 

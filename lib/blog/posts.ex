@@ -52,7 +52,7 @@ defmodule Blog.Posts do
   def create_post(attrs \\ %{}, tags \\ []) do
     %Post{}
     |> Post.changeset(attrs, tags)
-    |> Repo.insert(returning: false)
+    |> Repo.insert()
   end
 
   @doc """

@@ -12,5 +12,6 @@ defmodule Blog.Post_Tags.Post_Tag do
     post_tag
     |> cast(attrs, [:post_id, :tag_id])
     |> validate_required([:post_id, :tag_id])
+
   end
 end

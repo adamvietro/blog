@@ -3,7 +3,7 @@ defmodule Blog.Repo.Migrations.CreateTags do
 
   def change do
     create table(:tags) do
-      add :tag, :string
+      add :name, :string
 
       timestamps(type: :utc_datetime)
     end
