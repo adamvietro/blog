@@ -3,6 +3,7 @@ defmodule BlogWeb.PostController do
 
   import Blog.Tags
 
+  alias Blog.Repo
   alias Blog.Posts
   alias Blog.Posts.Post
 
@@ -101,6 +102,8 @@ defmodule BlogWeb.PostController do
   @spec edit(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def edit(conn, %{"id" => id}) do
     post = Posts.get_post!(id)
+    |> Repo.preload([:tags])
+    IO.inspect(post)
 
     changeset = Posts.change_post(post)
     render(conn, :edit, post: post, changeset: changeset)

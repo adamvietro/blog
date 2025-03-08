@@ -4,7 +4,7 @@ defmodule Blog.Post_TagsTest do
   alias Blog.Post_Tags
 
   describe "post_tags" do
-    alias Blog.PostTags.PostTag
+    alias Blog.Post_Tags.Post_Tag
 
     import Blog.Post_TagsFixtures
 
