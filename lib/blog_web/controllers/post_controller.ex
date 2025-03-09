@@ -2,9 +2,6 @@ defmodule BlogWeb.PostController do
   use BlogWeb, :controller
 
   import Blog.Tags
-  import Ecto
-  alias Blog.Post_Tags
-  alias Blog.Post_Tags.Post_Tag
 
   alias Blog.Repo
   alias Blog.Tags
@@ -32,9 +29,10 @@ defmodule BlogWeb.PostController do
 
   @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
-    post = Posts.get_post!(id)
-    |> Repo.preload([:tags])
-    |> IO.inspect()
+    post =
+      Posts.get_post!(id)
+      |> Repo.preload([:tags])
+
     render(conn, :show, post: post)
   end
 
@@ -49,6 +47,7 @@ defmodule BlogWeb.PostController do
   def create(conn, %{"post" => post_params}) do
     tags = Map.get(post_params, "tag_ids", []) |> Enum.map(&Tags.get_tag!/1)
     post_params = Map.put(post_params, "user_id", conn.assigns[:current_user].id)
+
     case Posts.create_post(post_params, tags) do
       {:ok, post} ->
         conn
@@ -64,9 +63,12 @@ defmodule BlogWeb.PostController do
   end
 
   def edit(conn, %{"id" => id}) do
-    post = Posts.get_post!(id)
-    |> Repo.preload([:tags, :comments])
-    changeset = Posts.change_post(post, post["tags"])
+    post =
+      Posts.get_post!(id)
+      |> Repo.preload([:tags])
+      |> IO.inspect()
+
+    changeset = Posts.change_post(post)
 
     render(conn, :edit,
       post: post,
@@ -75,55 +77,23 @@ defmodule BlogWeb.PostController do
     )
   end
 
-  # @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  # def create(conn, %{"post" => post_params}) do
-  #   post_params = Map.put(post_params, "user_id", conn.assigns[:current_user].id)
-
-  #   IO.inspect(post_params)
-
-  #   tags =
-  #     Enum.map(post_params["tag_ids"], fn tag_id ->
-  #       %{post_id: post_params["user_id"], tag_id: String.to_integer(tag_id)}
-  #     end)
-  #     # tags =
-  #     #   post_params["tag_ids"]
-  #     # |> Post_Tag.changeset(%{})
-
-  #   IO.inspect(tags)
-
-  #   case Posts.create_post(post_params, tags) do
-  #     {:ok, post} ->
-  #       conn
-  #       |> put_flash(:info, "Post created successfully.")
-  #       |> redirect(to: ~p"/posts/#{post}")
-
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       tags = tag_options()
-  #       render(conn, :new, changeset: changeset, tags: tags)
-  #   end
-  # end
-
-  # @spec edit(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  # def edit(conn, %{"id" => id}) do
-  #   post = Posts.get_post!(id)
-
-  #   changeset = Posts.change_post(post)
-  #   render(conn, :edit, post: post, changeset: changeset)
-  # end
-
   @spec put(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def put(conn, %{"id" => id, "post" => post_params}) do
-    post = Posts.get_post!(id)
+    post =
+      Posts.get_post!(id)
+      |> Repo.preload([:tags])
+
+    tags = Map.get(post_params, "tag_ids", []) |> Enum.map(&Tags.get_tag!/1)
 
     if conn.assigns[:current_user].id == post.user_id do
-      case Posts.update_post(post, post_params) do
+      case Posts.update_post(post, post_params, tags) do
         {:ok, post} ->
           conn
           |> put_flash(:info, "Post updated successfully.")
           |> redirect(to: ~p"/posts/#{post}")
 
         {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, :edit, post: post, changeset: changeset)
+          render(conn, :edit, post: post, changeset: changeset, tags: tag_options())
       end
     else
       conn

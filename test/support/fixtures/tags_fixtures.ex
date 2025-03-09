@@ -11,7 +11,7 @@ defmodule Blog.TagsFixtures do
     {:ok, tag} =
       attrs
       |> Enum.into(%{
-        tag: "some tag"
+        name: "some tag"
       })
       |> Blog.Tags.create_tag()
 

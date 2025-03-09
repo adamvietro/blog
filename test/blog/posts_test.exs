@@ -13,18 +13,27 @@ defmodule Blog.PostsTest do
 
     test "list_posts/0 returns all posts" do
       user = user_fixture()
-      post = post_fixture(user_id: user.id)
-      assert Posts.list_posts() == [post]
+
+      post =
+        post_fixture(user_id: user.id)
+        |> Repo.preload([:tags])
+
+      assert Posts.list_posts() |> Repo.preload([:tags]) == [post]
     end
 
     test "get_post!/1 returns the post with given id" do
       user = user_fixture()
-      post = post_fixture(user_id: user.id)
-      assert Posts.get_post!(post.id) == post
+
+      post =
+        post_fixture(user_id: user.id)
+        |> Repo.preload([:tags])
+
+      assert Posts.get_post!(post.id) |> Repo.preload([:tags]) == post
     end
 
     test "create_post/1 with valid data creates a post" do
       user = user_fixture()
+
       valid_attrs = %{
         title: "some title",
         content: "some content",
@@ -64,9 +73,13 @@ defmodule Blog.PostsTest do
 
     test "update_post/2 with invalid data returns error changeset" do
       user = user_fixture()
-      post = post_fixture(user_id: user.id)
+
+      post =
+        post_fixture(user_id: user.id)
+        |> Repo.preload([:tags])
+
       assert {:error, %Ecto.Changeset{}} = Posts.update_post(post, @invalid_attrs)
-      assert post == Posts.get_post!(post.id)
+      assert post == Posts.get_post!(post.id) |> Repo.preload([:tags])
     end
 
     test "delete_post/1 deletes the post" do

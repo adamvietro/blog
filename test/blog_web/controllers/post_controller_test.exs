@@ -1,6 +1,9 @@
 defmodule BlogWeb.PostControllerTest do
   use BlogWeb.ConnCase
 
+  alias Blog.Repo, as: Repo
+
+
   import Blog.PostsFixtures
   import Blog.AccountsFixtures
 
@@ -8,13 +11,13 @@ defmodule BlogWeb.PostControllerTest do
     title: "some title",
     content: "some content",
     published_on: ~D[2025-02-15],
-    visibility: true,
+    visibility: true
   }
   @update_attrs %{
     title: "some updated title",
     content: "some updated content",
     published_on: ~D[2025-02-16],
-    visibility: false,
+    visibility: false
   }
 
   @invalid_attrs %{title: nil, content: nil, published_on: nil, visibility: nil}
@@ -109,18 +112,21 @@ defmodule BlogWeb.PostControllerTest do
 
     test "search_posts/1 filters posts by partial and case-sensitive title" do
       user = user_fixture()
-      post = post_fixture(user_id: user.id, title: "Title")
+
+      post =
+        post_fixture(user_id: user.id, title: "Title")
+        |> Repo.preload([:tags])
 
       # non-matching
       assert Posts.search_posts("Non-Matching") == []
       # exact match
-      assert Posts.search_posts("Title") == [post]
+      assert Posts.search_posts("Title") |> Repo.preload([:tags]) == [post]
       # partial match end
-      assert Posts.search_posts("tle") == [post]
+      assert Posts.search_posts("tle") |> Repo.preload([:tags]) == [post]
       # partial match front
-      assert Posts.search_posts("Titl") == [post]
+      assert Posts.search_posts("Titl") |> Repo.preload([:tags]) == [post]
       # partial match middle
-      assert Posts.search_posts("itl") == [post]
+      assert Posts.search_posts("itl") |> Repo.preload([:tags]) == [post]
       # case insensitive lower
       assert Posts.search_posts("title") == []
       # case insensitive upper
@@ -128,7 +134,7 @@ defmodule BlogWeb.PostControllerTest do
       # case insensitive and partial match
       assert Posts.search_posts("ITL") == []
       # empty
-      assert Posts.search_posts("") == [post]
+      assert Posts.search_posts("") |> Repo.preload([:tags]) == [post]
     end
   end
 

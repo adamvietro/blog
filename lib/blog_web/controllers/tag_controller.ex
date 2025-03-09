@@ -60,8 +60,20 @@ defmodule BlogWeb.TagController do
     |> redirect(to: ~p"/tags")
   end
 
+  def search(conn, %{"tag" => tag}) do
+    tags = Tags.get_tag!(tag)
+
+    render(conn, :search_results, post: tags)
+  end
+
   def search(conn, _params) do
-    tags = Tags.list_tags()
-    render(conn, :search, tags: tags)
+    render(conn, :search, tag_options: tag_options())
+  end
+
+  defp tag_options(selected_ids \\ []) do
+    Tags.list_tags()
+    |> Enum.map(fn tag ->
+      [key: tag.name, value: tag.id, selected: tag.id in selected_ids]
+    end)
   end
 end
