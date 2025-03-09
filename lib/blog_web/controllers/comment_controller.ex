@@ -8,21 +8,6 @@ defmodule BlogWeb.CommentController do
 
   plug :require_user_owns_post when action in [:edit, :update, :delete]
 
-  # Typically Goes At The Bottom Of The File
-  defp require_user_owns_post(conn, _params) do
-    post_id = String.to_integer(conn.path_params["id"])
-    post = Posts.get_post!(post_id)
-
-    if conn.assigns[:current_user].id == post.user_id do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You can only edit or delete your own posts.")
-      |> redirect(to: ~p"/posts/#{post_id}")
-      |> halt()
-    end
-  end
-
   def create(conn, %{"comment" => comment_params, "id" => post_id}) do
     comment_params = Map.put(comment_params, "post_id", post_id)
     comment_params = Map.put(comment_params, "user_id", conn.assigns[:current_user].id)
@@ -111,6 +96,20 @@ defmodule BlogWeb.CommentController do
       conn
       |> put_flash(:error, "You can only update your own comments.")
       |> redirect(to: ~p"/posts/#{id}/comments")
+      |> halt()
+    end
+  end
+
+  defp require_user_owns_post(conn, _params) do
+    post_id = String.to_integer(conn.path_params["id"])
+    post = Posts.get_post!(post_id)
+
+    if conn.assigns[:current_user].id == post.user_id do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You can only edit or delete your own posts.")
+      |> redirect(to: ~p"/posts/#{post_id}")
       |> halt()
     end
   end

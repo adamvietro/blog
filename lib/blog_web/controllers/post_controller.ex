@@ -2,34 +2,16 @@ defmodule BlogWeb.PostController do
   use BlogWeb, :controller
 
   import Blog.Tags
+  import Ecto
+  alias Blog.Post_Tags
+  alias Blog.Post_Tags.Post_Tag
 
   alias Blog.Repo
+  alias Blog.Tags
   alias Blog.Posts
   alias Blog.Posts.Post
 
   plug :require_user_owns_post when action in [:edit, :update, :delete]
-
-  # Typically Goes At The Bottom Of The File
-  defp require_user_owns_post(conn, _params) do
-    post_id = String.to_integer(conn.path_params["id"])
-    post = Posts.get_post!(post_id)
-
-    if conn.assigns[:current_user].id == post.user_id do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You can only edit or delete your own posts.")
-      |> redirect(to: ~p"/posts/#{post_id}")
-      |> halt()
-    end
-  end
-
-  defp tag_options(selected_ids \\ []) do
-    list_tags()
-    |> Enum.map(fn tag ->
-      [key: tag.name, value: tag.id, selected: tag.id in selected_ids]
-    end)
-  end
 
   @spec index(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def index(conn, _params) do
@@ -51,6 +33,8 @@ defmodule BlogWeb.PostController do
   @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
     post = Posts.get_post!(id)
+    |> Repo.preload([:tags])
+    |> IO.inspect()
     render(conn, :show, post: post)
   end
 
@@ -62,52 +46,70 @@ defmodule BlogWeb.PostController do
     render(conn, :new, changeset: changeset, tags: tags)
   end
 
-  @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(conn, %{"post" => post_params}) do
+    tags = Map.get(post_params, "tag_ids", []) |> Enum.map(&Tags.get_tag!/1)
     post_params = Map.put(post_params, "user_id", conn.assigns[:current_user].id)
+    case Posts.create_post(post_params, tags) do
+      {:ok, post} ->
+        conn
+        |> put_flash(:info, "Post created successfully.")
+        |> redirect(to: ~p"/posts/#{post}")
 
-    IO.inspect(post_params)
-
-    if post_params["tag_ids"] == nil do
-      case Posts.create_post(post_params) do
-        {:ok, post} ->
-          conn
-          |> put_flash(:info, "Post created successfully.")
-          |> redirect(to: ~p"/posts/#{post}")
-
-        {:error, %Ecto.Changeset{} = changeset} ->
-          tags = tag_options()
-          render(conn, :new, changeset: changeset, tags: tags)
-      end
-    else
-      tags =
-        Enum.map(post_params["tag_ids"], fn tag_id ->
-          %{post_id: post_params["user_id"], tag_id: String.to_integer(tag_id)}
-        end)
-      IO.inspect(tags)
-
-      case Posts.create_post(post_params, tags) do
-        {:ok, post} ->
-          conn
-          |> put_flash(:info, "Post created successfully.")
-          |> redirect(to: ~p"/posts/#{post}")
-
-        {:error, %Ecto.Changeset{} = changeset} ->
-          tags = tag_options()
-          render(conn, :new, changeset: changeset, tags: tags)
-      end
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, :new,
+          changeset: changeset,
+          tags: tag_options()
+        )
     end
   end
 
-  @spec edit(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def edit(conn, %{"id" => id}) do
     post = Posts.get_post!(id)
-    |> Repo.preload([:tags])
-    IO.inspect(post)
+    |> Repo.preload([:tags, :comments])
+    changeset = Posts.change_post(post, post["tags"])
 
-    changeset = Posts.change_post(post)
-    render(conn, :edit, post: post, changeset: changeset)
+    render(conn, :edit,
+      post: post,
+      changeset: changeset,
+      tags: tag_options()
+    )
   end
+
+  # @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  # def create(conn, %{"post" => post_params}) do
+  #   post_params = Map.put(post_params, "user_id", conn.assigns[:current_user].id)
+
+  #   IO.inspect(post_params)
+
+  #   tags =
+  #     Enum.map(post_params["tag_ids"], fn tag_id ->
+  #       %{post_id: post_params["user_id"], tag_id: String.to_integer(tag_id)}
+  #     end)
+  #     # tags =
+  #     #   post_params["tag_ids"]
+  #     # |> Post_Tag.changeset(%{})
+
+  #   IO.inspect(tags)
+
+  #   case Posts.create_post(post_params, tags) do
+  #     {:ok, post} ->
+  #       conn
+  #       |> put_flash(:info, "Post created successfully.")
+  #       |> redirect(to: ~p"/posts/#{post}")
+
+  #     {:error, %Ecto.Changeset{} = changeset} ->
+  #       tags = tag_options()
+  #       render(conn, :new, changeset: changeset, tags: tags)
+  #   end
+  # end
+
+  # @spec edit(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  # def edit(conn, %{"id" => id}) do
+  #   post = Posts.get_post!(id)
+
+  #   changeset = Posts.change_post(post)
+  #   render(conn, :edit, post: post, changeset: changeset)
+  # end
 
   @spec put(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def put(conn, %{"id" => id, "post" => post_params}) do
@@ -147,5 +149,26 @@ defmodule BlogWeb.PostController do
       |> redirect(to: ~p"/posts/#{id}")
       |> halt()
     end
+  end
+
+  defp require_user_owns_post(conn, _params) do
+    post_id = String.to_integer(conn.path_params["id"])
+    post = Posts.get_post!(post_id)
+
+    if conn.assigns[:current_user].id == post.user_id do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You can only edit or delete your own posts.")
+      |> redirect(to: ~p"/posts/#{post_id}")
+      |> halt()
+    end
+  end
+
+  defp tag_options(selected_ids \\ []) do
+    list_tags()
+    |> Enum.map(fn tag ->
+      [key: tag.name, value: tag.id, selected: tag.id in selected_ids]
+    end)
   end
 end

@@ -11,7 +11,7 @@ defmodule Blog.Posts.Post do
 
     has_many :comments, Blog.Comments.Comment
     belongs_to :user, Blog.Accounts.User
-    many_to_many :tags, Blog.Post_Tags.Post_Tag, join_through: "post_tags", on_replace: :delete
+    many_to_many :tags, Blog.Tags.Tag, join_through: "post_tags", on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end
