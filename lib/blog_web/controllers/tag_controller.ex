@@ -19,7 +19,7 @@ defmodule BlogWeb.TagController do
       {:ok, _tag} ->
         conn
         |> put_flash(:info, "Tag created successfully.")
-        |> redirect(to: ~p"/tags/")
+        |> redirect(to: ~p"/tags")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)

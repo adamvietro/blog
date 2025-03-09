@@ -66,7 +66,6 @@ defmodule BlogWeb.PostController do
     post =
       Posts.get_post!(id)
       |> Repo.preload([:tags])
-      |> IO.inspect()
 
     changeset = Posts.change_post(post)
 
@@ -106,6 +105,7 @@ defmodule BlogWeb.PostController do
   @spec delete(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def delete(conn, %{"id" => id}) do
     post = Posts.get_post!(id)
+    |> Repo.preload([:tags])
 
     if conn.assigns[:current_user].id == post.user_id do
       {:ok, _post} = Posts.delete_post(post)
