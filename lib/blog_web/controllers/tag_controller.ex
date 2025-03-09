@@ -3,6 +3,8 @@ defmodule BlogWeb.TagController do
 
   alias Blog.Tags
   alias Blog.Tags.Tag
+  alias Blog.Posts
+  alias Blog.Repo
 
   def index(conn, _params) do
     tags = Tags.list_tags()
@@ -60,10 +62,26 @@ defmodule BlogWeb.TagController do
     |> redirect(to: ~p"/tags")
   end
 
-  def search(conn, %{"tag" => tag}) do
-    tags = Tags.get_tag!(tag)
+  def search(conn, %{"tag" => search_tag}) do
+    posts =
+      Posts.list_posts()
+      |> Repo.preload([:tags])
 
-    render(conn, :search_results, post: tags)
+    post =
+      Enum.map(posts, fn post ->
+        tags =
+          Enum.map(post.tags, fn tag ->
+            tag.id
+          end)
+
+        if String.to_integer(search_tag) in tags do
+          post
+        else
+        end
+      end)
+      |> Enum.filter(&(&1 != nil))
+
+    render(conn, :search_results, post: post)
   end
 
   def search(conn, _params) do
