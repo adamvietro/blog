@@ -22,13 +22,13 @@ defmodule BlogWeb.Router do
 
     get "/", PageController, :home
     get "/posts", PostController, :index
-    get "/search/:title", PostController, :search
+    # get "/search/:title", PostController, :search
     get "/search", PostController, :search
     get "/tags/new", TagController, :new
     post "/tags", TagController, :create
     get "/tags", TagController, :index
     get "/tags/search", TagController, :search
-    get "/tags/search/:tag", TagController, :search
+    # get "/tags/search/:tag", TagController, :search
     put "/tags/:id", TagController, :put
     delete "/tags/:id", TagController, :delete
 

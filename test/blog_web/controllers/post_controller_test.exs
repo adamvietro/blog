@@ -3,9 +3,9 @@ defmodule BlogWeb.PostControllerTest do
 
   alias Blog.Repo, as: Repo
 
-
   import Blog.PostsFixtures
   import Blog.AccountsFixtures
+  import Blog.TagsFixtures
 
   @create_attrs %{
     title: "some title",
@@ -106,10 +106,6 @@ defmodule BlogWeb.PostControllerTest do
   describe "search" do
     alias Blog.Posts, as: Posts
 
-    import Blog.AccountsFixtures
-    import Blog.PostsFixtures
-    import Blog.AccountsFixtures
-
     test "search_posts/1 filters posts by partial and case-sensitive title" do
       user = user_fixture()
 
@@ -158,6 +154,65 @@ defmodule BlogWeb.PostControllerTest do
       post = post_fixture(user_id: user.id, title: "some title")
       conn = get(conn, ~p"/search", title: "itl")
       assert html_response(conn, 200) =~ post.title
+    end
+  end
+
+  describe "Create with tags add comment then delete a Post" do
+    alias Blog.Posts
+    alias Blog.Posts.Post
+    alias Blog.Comments
+    alias Blog.Comments.Comment
+
+    test "create_post/1 with tags", %{conn: conn} do
+      user = user_fixture()
+      tag1 = tag_fixture()
+      tag2 = tag_fixture(%{name: "some other tag"})
+
+      valid_attrs1 = %{
+        content: "some content",
+        title: "post 1",
+        user_id: user.id,
+        published_on: ~D[2025-02-15]
+      }
+
+      valid_attrs2 = %{
+        content: "some content",
+        title: "post 2",
+        user_id: user.id,
+        published_on: ~D[2025-02-15]
+      }
+
+      conn = conn |> log_in_user(user)
+
+      assert {:ok, %Post{} = post1} = Posts.create_post(valid_attrs1, [tag1, tag2])
+      assert {:ok, %Post{} = post2} = Posts.create_post(valid_attrs2, [tag1])
+
+      assert Repo.preload(post1, :tags).tags == [tag1, tag2]
+      assert Repo.preload(post2, :tags).tags == [tag1]
+
+      assert Repo.preload(tag1, posts: [:tags]).posts == [post1, post2]
+      assert Repo.preload(tag2, posts: [:tags]).posts == [post1]
+
+      valid_comment1 = %{content: "some content", post_id: post1.id, user_id: user.id}
+      valid_comment2 = %{content: "some other content", post_id: post1.id, user_id: user.id}
+
+      assert {:ok, %Comment{} = _comment} = Comments.create_comment(valid_comment1)
+      assert {:ok, %Comment{} = _comment} = Comments.create_comment(valid_comment2)
+
+      conn |> delete(~p"/posts/#{post1}")
+      assert redirected_to(conn) == ~p"/posts"
+    end
+
+    test "a user cannot delete another user's post", %{conn: conn} do
+      post_user = user_fixture()
+      other_user = user_fixture()
+      post = post_fixture(user_id: post_user.id)
+      conn = conn |> log_in_user(other_user) |> delete(~p"/posts/#{post}")
+
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) =~
+               "You can only edit or delete your own posts."
+
+      assert redirected_to(conn) == ~p"/posts/#{post}"
     end
   end
 end
