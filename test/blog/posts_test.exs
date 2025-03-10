@@ -1,10 +1,10 @@
 defmodule Blog.PostsTest do
   use Blog.DataCase
 
-  alias Blog.Posts, as: Posts
-
   describe "posts" do
     alias Blog.Posts.Post
+    alias Blog.Posts, as: Posts
+    alias Blog.Posts.CoverImage
 
     import Blog.PostsFixtures
     import Blog.AccountsFixtures
@@ -93,6 +93,40 @@ defmodule Blog.PostsTest do
       user = user_fixture()
       post = post_fixture(user_id: user.id)
       assert %Ecto.Changeset{} = Posts.change_post(post)
+    end
+
+    test "create_post/1 post titles must be unique" do
+      user = user_fixture()
+      post = post_fixture(user_id: user.id)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Posts.create_post(%{content: "some content", title: post.title})
+    end
+
+    test "create_post/1 with image" do
+      valid_attrs = %{
+        content: "some content",
+        title: "some title",
+        cover_image: %{
+          url: "https://www.example.com/image.png"
+        },
+        visible: true,
+        published_on: DateTime.utc_now(),
+        user_id: user_fixture().id
+      }
+
+      assert {:ok, %Post{} = post} = Posts.create_post(valid_attrs)
+
+      assert %CoverImage{url: "https://www.example.com/image.png"} =
+               Repo.preload(post, :cover_image).cover_image
+    end
+
+    test "update_post/1 add an image" do
+      user = user_fixture()
+      post = post_fixture(user_id: user.id)
+
+      assert {:ok, %Post{} = post} = Posts.update_post(post, %{cover_image: %{url: "https://www.example.com/image2.png"}})
+      assert post.cover_image.url == "https://www.example.com/image2.png"
     end
   end
 end

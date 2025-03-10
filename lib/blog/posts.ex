@@ -52,7 +52,6 @@ defmodule Blog.Posts do
   def create_post(attrs \\ %{}, tags \\ []) do
     %Post{}
     |> Post.changeset(attrs, tags)
-    |> IO.inspect()
     |> Repo.insert()
   end
 
@@ -102,6 +101,7 @@ defmodule Blog.Posts do
   """
   def change_post(%Post{} = post, attrs \\ %{}, tags \\ []) do
     post
+    |> Repo.preload(:cover_image)
     |> Post.changeset(attrs, tags)
   end
 
