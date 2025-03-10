@@ -7,6 +7,10 @@
   <.input field={f[:published_on]} type="date" label="Published on" value={Date.utc_today()} />
   <.input field={f[:visibility]} type="checkbox" label="Visibility" />
   <.input field={f[:tag_ids]} type="select" label="Tags" multiple={true} options={@tags} />
+  <.inputs_for :let={cover_image} field={f[:cover_image]}>
+    <.input type="text" field={cover_image[:url]} label="Cover Image URL" />
+  </.inputs_for>
+
   <:actions>
     <.button>Save Post</.button>
   </:actions>

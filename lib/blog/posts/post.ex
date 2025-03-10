@@ -21,6 +21,7 @@ defmodule Blog.Posts.Post do
   def changeset(post, attrs, tags \\ []) do
     post
     |> cast(attrs, [:title, :content, :published_on, :visibility, :user_id])
+    |> cast_assoc(:cover_image)
     |> validate_required([:title, :content, :published_on, :visibility])
     |> unsafe_validate_unique(:title, Blog.Repo)
     |> unique_constraint(:title, message: "Unique titles only")

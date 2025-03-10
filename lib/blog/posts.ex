@@ -70,6 +70,7 @@ defmodule Blog.Posts do
   """
   def update_post(%Post{} = post, attrs, tags \\ []) do
     post
+    |> Repo.preload([:cover_image])
     |> Post.changeset(attrs, tags)
     |> Repo.update()
   end

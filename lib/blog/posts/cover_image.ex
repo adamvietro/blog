@@ -13,8 +13,8 @@ defmodule Blog.Posts.CoverImage do
   @doc false
   def changeset(cover_image, attrs) do
     cover_image
-    |> cast(attrs, [:cover_image])
-    |> validate_required([:cover_image])
+    |> cast(attrs, [:url])
+    |> validate_required([:url])
 
   end
 end

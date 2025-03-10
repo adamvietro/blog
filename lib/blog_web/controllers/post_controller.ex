@@ -31,7 +31,7 @@ defmodule BlogWeb.PostController do
   def show(conn, %{"id" => id}) do
     post =
       Posts.get_post!(id)
-      |> Repo.preload([:tags])
+      |> Repo.preload([:tags, :cover_image])
 
     render(conn, :show, post: post)
   end

@@ -27,6 +27,11 @@
   <:item title="Tags">
     {Enum.map(@post.tags, & &1.name) |> Enum.join(", ")}
   </:item>
+  <:item title="Image">
+    <%= if @post.cover_image do %>
+      <img src={@post.cover_image.url} />
+    <% end %>
+  </:item>
 </.list>
 
 <.back navigate={~p"/posts"}>Back to posts</.back>
