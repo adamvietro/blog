@@ -51,7 +51,7 @@ Tag {
 }
 
 User |O--O{ Post: ""
-Post }O--O{ Tag: ""
+Post }O--O{ Tag: "Many-to-Many"
 Post ||--O{ Comment: ""
 Post ||--|| CoverImage: ""
 ```
