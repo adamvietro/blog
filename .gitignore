@@ -43,3 +43,18 @@ Journal
 
 # ignore vscode settings
 .vscode
+
+
+.dockerignore
+
+
+Dockerfile
+
+
+lib/blog/release.ex
+
+
+rel/*
+
+
+.github/workflows/continuous-integration.yml
