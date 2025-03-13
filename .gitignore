@@ -49,6 +49,3 @@ Journal
 
 # release fil that users will create
 lib/blog/release.ex
-
-# rel folder
-/rel/*
