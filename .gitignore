@@ -44,17 +44,14 @@ Journal
 # ignore vscode settings
 .vscode
 
-
+# ignore docker files
 .dockerignore
 
-
+# Dockerfile
 Dockerfile
 
-
+# release fil that users will create
 lib/blog/release.ex
 
-
-rel/*
-
-
-.github/workflows/continuous-integration.yml
+# rel folder
+/rel/*

@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <img src="https://www.shecodes.io/assets/backgrounds/vectors-68d3246d3ce91acc9d2cea09a5a41aa072c9b3df4cfc2904028ff7c5c6428d44.png" />
+    <image>
+      <img src="https://www.shecodes.io/assets/backgrounds/vectors-68d3246d3ce91acc9d2cea09a5a41aa072c9b3df4cfc2904028ff7c5c6428d44.png" />
+    </image>
     <h1>
       Welcome to my blog site. This was a very fun project that took some time to full understand.<br /><br />
     </h1>
@@ -52,8 +54,10 @@
   </body>
 
   <footer>
-  <br /><br /><br /><br />
+    <br /><br /><br /><br />
+
     <img
+      class="low_image"
       src="https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fuuo9fxl96owi7avgzvhf.png"
       style="width:700px;height:400px;"
     />
@@ -89,7 +93,12 @@
     margin-right:auto;
   }
 
-  img{
+  .low_image{
+    object-fit: contain;
+    max-width: 50%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
     margin-left:auto;
     margin-right:auto;
   }
