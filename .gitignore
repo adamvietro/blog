@@ -46,6 +46,3 @@ Journal
 
 # ignore docker files
 .dockerignore
-
-# release fil that users will create
-lib/blog/release.ex
