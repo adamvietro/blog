@@ -1,19 +1,30 @@
-<.table id="posts" rows={@post} row_click={&JS.navigate(~p"/posts/#{&1}")}>
-  <:col :let={post} label="Title">{post.title}</:col>
-  <:col :let={post} label="Content">{post.content}</:col>
-  <:col :let={post} label="Published on">{post.published_on}</:col>
-  <:col :let={post} label="Visibility">{post.visibility}</:col>
-  <:action :let={post}>
-    <div class="sr-only">
-      <.link navigate={~p"/posts/#{post}"}>Show</.link>
-    </div>
-    <.link navigate={~p"/posts/#{post}/edit"} method='post'>Edit</.link>
-  </:action>
-  <:action :let={post}>
-    <.link href={~p"/posts/#{post}"} method="delete" data-confirm="Are you sure?">
-      Delete
-    </.link>
-  </:action>
-</.table>
-
-<.back navigate={~p"/posts"}>Back to posts</.back>
+<body>
+  <.table id="posts" rows={@post} row_click={&JS.navigate(~p"/posts/#{&1}")}>
+    <%!-- <:col :let={post} label="User">{post.user_id}</:col>
+    <:col :let={post} label="Post Id">{post.id}</:col> --%>
+    <:col :let={post} label="Title">
+      <a href={~p"/posts/#{post}"} class="block w-full h-full">{post.title}</a>
+    </:col>
+    <:col :let={post} label="Content">
+      <a href={~p"/posts/#{post}"} class="block w-full h-full">{post.content}</a>
+    </:col>
+    <:col :let={post} label="Published on">
+      <a href={~p"/posts/#{post}"} class="block w-full h-full">{post.published_on}</a>
+    </:col>
+    <:action :let={post}>
+      <div class="sr-only">
+        <.link navigate={~p"/posts/#{post}"}>Show</.link>
+      </div>
+      <%= if assigns[:current_user] && post.user_id == assigns[:current_user].id do %>
+        <.link navigate={~p"/posts/#{post}/edit"}>Edit </.link>
+      <% end %>
+    </:action>
+    <:action :let={post}>
+      <%= if assigns[:current_user] && post.user_id == assigns[:current_user].id do %>
+        <.link href={~p"/posts/#{post}"} method="delete" data-confirm="Are you sure?">
+          Delete
+        </.link>
+      <% end %>
+    </:action>
+  </.table>
+</body>

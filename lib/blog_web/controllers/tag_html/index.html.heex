@@ -1,9 +1,11 @@
 <.header>
   Listing Tags
   <:actions>
-    <.link href={~p"/tags/new"}>
-      <.button>New Tag</.button>
-    </.link>
+    <%= if assigns[:current_user] do %>
+      <.link href={~p"/tags/new"}>
+        <.button>New Tag</.button>
+      </.link>
+    <% end %>
   </:actions>
 </.header>
 

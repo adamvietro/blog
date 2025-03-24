@@ -2,19 +2,25 @@
   Post {@post.id}
   <:subtitle>This is a post record from your database.</:subtitle>
   <:actions>
-    <.link href={~p"/posts/#{@post}/edit"}>
-      <.button>Edit post</.button>
-    </.link>
+    <%= if assigns[:current_user] && @post.user_id == assigns[:current_user].id do %>
+      <.link href={~p"/posts/#{@post}/edit"}>
+        <.button>Edit post</.button>
+      </.link>
+    <% end %>
   </:actions>
   <:actions>
-    <.link href={~p"/posts/#{@post}/comments"}>
-      <.button>Comments</.button>
-    </.link>
+    <%= if assigns[:current_user] do %>
+      <.link href={~p"/posts/#{@post}/comments"}>
+        <.button>Comments</.button>
+      </.link>
+    <% end %>
   </:actions>
   <:actions>
-    <.link href={~p"/posts/#{@post}/comments/new"}>
-      <.button>Add Comment</.button>
-    </.link>
+    <%= if assigns[:current_user] do %>
+      <.link href={~p"/posts/#{@post}/comments/new"}>
+        <.button>Add Comment</.button>
+      </.link>
+    <% end %>
   </:actions>
 </.header>
 

@@ -23,23 +23,24 @@ defmodule BlogWeb.Router do
     get "/", PageController, :home
     get "/posts", PostController, :index
     get "/search", PostController, :search
-    get "/tags/new", TagController, :new
-    post "/tags", TagController, :create
     get "/tags", TagController, :index
     get "/tags/search", TagController, :search
-    put "/tags/:id", TagController, :put
-    delete "/tags/:id", TagController, :delete
-
-
-
-
   end
 
   scope "/", BlogWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    get "/posts/new", PostController, :new
+    get "/tags/new", TagController, :new
+    post "/tags", TagController, :create
+    put "/tags/:id", TagController, :put
+    delete "/tags/:id", TagController, :delete
+  end
+
+  scope "/", BlogWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
     post "/posts", PostController, :create
+    get "/posts/new", PostController, :new
     get "/posts/:id", PostController, :show
     put "/posts/:id", PostController, :put
     get "/posts/:id/edit", PostController, :edit
