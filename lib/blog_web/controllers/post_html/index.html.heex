@@ -39,4 +39,29 @@
       <% end %>
     </:action>
   </.table>
+
+  <button id="load-more-btn" class="mt-4 p-2 bg-blue-500 text-white rounded">More Posts</button>
 </body>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let posts = document.querySelectorAll("#posts tbody tr");
+    let loadMoreBtn = document.getElementById("load-more-btn");
+    let visibleCount = 5; // Show first 5 posts initially
+
+    // Hide all posts beyond the first 5
+    posts.forEach((post, index) => {
+      if (index >= visibleCount) post.style.display = "none";
+    });
+
+    loadMoreBtn.addEventListener("click", function () {
+      let hiddenPosts = Array.from(posts).filter(post => post.style.display === "none");
+
+      // Show 5 more posts
+      hiddenPosts.slice(0, 5).forEach(post => (post.style.display = "table-row"));
+
+      // Hide button if no more posts
+      if (hiddenPosts.length <= 5) loadMoreBtn.style.display = "none";
+    });
+  });
+</script>

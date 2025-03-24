@@ -6,7 +6,9 @@
       <a href={~p"/posts/#{post}"} class="block w-full h-full">{post.title}</a>
     </:col>
     <:col :let={post} label="Content">
-      <a href={~p"/posts/#{post}"} class="block w-full h-full">{post.content}</a>
+      <a href={~p"/posts/#{post}"} class="block w-full h-full">
+        {String.slice(post.content, 0, 50)}{if String.length(post.content) > 50, do: "..."}
+      </a>
     </:col>
     <:col :let={post} label="Published on">
       <a href={~p"/posts/#{post}"} class="block w-full h-full">{post.published_on}</a>
