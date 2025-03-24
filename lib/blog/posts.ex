@@ -106,7 +106,7 @@ defmodule Blog.Posts do
   end
 
   @doc """
-  Returns a list of posts that match or partially match the given search field.
+  Returns a list of posts that match (title or content) or partially match the given search field.
   Also has a check for the visibility field.
 
   ## Examples
@@ -115,11 +115,21 @@ defmodule Blog.Posts do
 
   """
   def search_posts(search_field) do
+    search_field = String.downcase(search_field)
+
     Enum.reduce(list_posts(), [], fn post, ids ->
-      if post.title =~ search_field and post.visibility do
-        [post | ids]
-      else
-        ids
+      post_title = String.downcase(post.title)
+      comment_field = String.downcase(post.content)
+
+      cond do
+        post_title =~ search_field and post.visibility ->
+          [post | ids]
+
+        search_field =~ comment_field and post.visibility ->
+          [post | ids]
+
+        true ->
+          ids
       end
     end)
   end

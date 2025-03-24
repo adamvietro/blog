@@ -1,20 +1,3 @@
-  <image>
-    <img src="https://www.shecodes.io/assets/backgrounds/vectors-68d3246d3ce91acc9d2cea09a5a41aa072c9b3df4cfc2904028ff7c5c6428d44.png" />
-  </image>
-
-<header>
-  <div class="topnavcontainer">
-    <.link navigate={~p"/posts"} class="link bg-gray-400 hover:bg-gray-200">Posts</.link>
-    <.link navigate={~p"/tags"} class="link bg-gray-400 hover:bg-gray-200">Tags</.link>
-    <.link navigate={~p"/search"} class="link bg-gray-400 hover:bg-gray-200">Post Search</.link>
-    <.link navigate={~p"/tags/search"} class="link bg-gray-400 hover:bg-gray-200">
-      Tag Search
-    </.link>
-    <.link navigate={~p"/posts/new"} class="link bg-gray-400 hover:bg-gray-200">New Post</.link>
-    <.link navigate={~p"/tags/new"} class="link bg-gray-400 hover:bg-gray-200">New Tag</.link>
-  </div>
-</header>
-
 <.header>
   Listing Posts
   <:actions>
@@ -43,22 +26,3 @@
     </:action>
   </.table>
 </body>
-
-<style>
-  .topnavcontainer {
-    align-items: center;
-    justify-content: center;
-    display:flex;
-    border: 2px solid rgb(95 97 110);
-    background:gray;
-  }
-
-  .link{
-    padding:5px;
-    margin:3px;
-  }
-
-  font {
-    padding-left: 10%;
-  }
-</style>

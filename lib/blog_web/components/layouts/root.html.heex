@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="[scrollbar-gutter:stable]">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="csrf-token" content={get_csrf_token()} />
-    <.live_title default="Blog" suffix=" · Phoenix Framework">
-      {assigns[:page_title]}
-    </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
@@ -53,6 +47,50 @@
         </li>
       <% end %>
     </ul>
+    <image>
+      <img
+        class="top_image"
+        src="https://www.shecodes.io/assets/backgrounds/vectors-68d3246d3ce91acc9d2cea09a5a41aa072c9b3df4cfc2904028ff7c5c6428d44.png"
+      />
+    </image>
+    <div class="topnavcontainer">
+      <.link navigate={~p"/"} class="link bg-gray-400 hover:bg-gray-200">Home</.link>
+      <.link navigate={~p"/posts"} class="link bg-gray-400 hover:bg-gray-200">Posts</.link>
+      <.link navigate={~p"/tags"} class="link bg-gray-400 hover:bg-gray-200">Tags</.link>
+      <.link navigate={~p"/search"} class="link bg-gray-400 hover:bg-gray-200">Post Search</.link>
+      <.link navigate={~p"/tags/search"} class="link bg-gray-400 hover:bg-gray-200">
+        Tag Search
+      </.link>
+      <.link navigate={~p"/posts/new"} class="link bg-gray-400 hover:bg-gray-200">New Post</.link>
+      <.link navigate={~p"/tags/new"} class="link bg-gray-400 hover:bg-gray-200">New Tag</.link>
+    </div>
     {@inner_content}
   </body>
 </html>
+
+<style>
+  .topnavcontainer {
+    align-items: center;
+    justify-content: center;
+    display:flex;
+    border: 2px solid rgb(95 97 110);
+    background:gray;
+    margin: auto;
+    max-width: fit-content;
+  }
+
+  .link{
+    padding:5px;
+    margin:3px;
+  }
+
+  font {
+    padding-left: 10%;
+  }
+
+  .top_image {
+    display: block;
+    margin: auto;
+    width: 100%;
+  }
+</style>

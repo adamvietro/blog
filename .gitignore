@@ -46,3 +46,6 @@ Journal
 
 # ignore docker files
 .dockerignore
+
+# Remove the tests for now.
+continuous-integration.yml
