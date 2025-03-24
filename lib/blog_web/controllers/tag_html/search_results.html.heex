@@ -1,34 +1,155 @@
 <body>
-  <.table id="posts" rows={@post} row_click={&JS.navigate(~p"/posts/#{&1}")}>
-    <%!-- <:col :let={post} label="User">{post.user_id}</:col>
-    <:col :let={post} label="Post Id">{post.id}</:col> --%>
-    <:col :let={post} label="Title">
-      <a href={~p"/posts/#{post}"} class="block w-full h-full">{post.title}</a>
-    </:col>
-    <:col :let={post} label="Content">
-      <a href={~p"/posts/#{post}"} class="block w-full h-full">
-        {String.slice(post.content, 0, 50)}{if String.length(post.content) > 50, do: "..."}
-      </a>
-    </:col>
-    <:col :let={post} label="Published on">
-      <a href={~p"/posts/#{post}"} class="block w-full h-full">{post.published_on}</a>
-    </:col>
-    <:action :let={post}>
-      <div class="sr-only">
-        <.link navigate={~p"/posts/#{post}"}>Show</.link>
-      </div>
-      <%= if assigns[:current_user] && post.user_id == assigns[:current_user].id do %>
-        <.link navigate={~p"/posts/#{post}/edit"}>Edit </.link>
+  <table id="posts">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Content</th>
+        <th>Published on</th>
+        <th>Actions</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for post <- @posts do %>
+        <tr>
+          <!-- Title -->
+          <td>
+            <a class="title" href={~p"/posts/#{post.id}"} class="block w-full h-full">
+              {post.title}
+            </a>
+          </td>
+          
+<!-- Content (truncated) -->
+          <td>
+            <a href={~p"/posts/#{post.id}"} class="block w-full h-full">
+              {String.slice(post.content, 0, 50)}{if String.length(post.content) > 50, do: "..."}
+            </a>
+          </td>
+          
+<!-- Published On -->
+          <td>
+            <a href={~p"/posts/#{post.id}"} class="block w-full h-full">{post.published_on}</a>
+          </td>
+
+          <td>
+            <div class="sr-only">
+              <a href={~p"/posts/#{post.id}"} class="link">Show</a>
+            </div>
+            <%= if assigns[:current_user] && post.user_id == assigns[:current_user].id do %>
+              <a href={~p"/posts/#{post.id}/edit"}>Edit</a>
+            <% end %>
+          </td>
+
+          <td>
+            <%= if assigns[:current_user] && post.user_id == assigns[:current_user].id do %>
+              <a
+                href={~p"/posts/#{post.id}"}
+                method="delete"
+                data-confirm="Are you sure?"
+                class="link"
+              >
+                Delete
+              </a>
+            <% end %>
+          </td>
+        </tr>
       <% end %>
-    </:action>
-    <:action :let={post}>
-      <%= if assigns[:current_user] && post.user_id == assigns[:current_user].id do %>
-        <.link href={~p"/posts/#{post}"} method="delete" data-confirm="Are you sure?">
-          Delete
-        </.link>
-      <% end %>
-    </:action>
-  </.table>
+    </tbody>
+  </table>
+
+  <button id="load-more-btn" class="mt-4 p-2 bg-blue-500 text-white rounded">More Posts</button>
 </body>
 
-<.back navigate={~p"/posts"}>Back to posts</.back>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let posts = document.querySelectorAll("#posts tbody tr");
+    let loadMoreBtn = document.getElementById("load-more-btn");
+    let visibleCount = 5; // Show first 5 posts initially
+
+    // Hide all posts beyond the first 5
+    posts.forEach((post, index) => {
+      if (index >= visibleCount) post.style.display = "none";
+    });
+
+    loadMoreBtn.addEventListener("click", function () {
+      let hiddenPosts = Array.from(posts).filter(post => post.style.display === "none");
+
+      // Show 5 more posts
+      hiddenPosts.slice(0, 5).forEach(post => (post.style.display = "table-row"));
+
+      // Hide button if no more posts
+      if (hiddenPosts.length <= 5) loadMoreBtn.style.display = "none";
+    });
+  });
+</script>
+
+<style>
+  .title {
+  font-weight: bold;
+  }
+
+  .overflow-y-auto {
+    overflow-y: auto;
+  }
+
+  .sm\:overflow-visible {
+    overflow: visible;
+  }
+
+  /* Table Styles */
+  table {
+    width: 40rem;
+    margin-top: 2.75rem; /* mt-11 */
+  }
+
+  .sm\:w-full {
+    width: 100%;
+  }
+
+  /* Table Header */
+  thead {
+    font-size: 0.875rem; /* text-sm */
+    text-align: left;
+    line-height: 1.5rem; /* leading-6 */
+    color: #6b7280; /* text-zinc-500 */
+  }
+
+  th {
+    padding: 0;
+    padding-bottom: 1rem; /* pb-4 */
+    padding-right: 1.5rem; /* pr-6 */
+    font-weight: 400; /* font-normal */
+  }
+
+  /* Table Body */
+  tbody {
+    position: relative;
+    border-top: 1px solid #d1d5db; /* border-zinc-200 */
+    color: #374151; /* text-zinc-700 */
+    font-size: 0.875rem; /* text-sm */
+    line-height: 1.5rem; /* leading-6 */
+  }
+
+  tr {
+    position: relative;
+    display: table-row;
+    border-bottom: 1px solid #e5e7eb; /* divide-zinc-100 */
+  }
+
+  /* Hover Effect on Rows */
+  tr.group:hover {
+    background-color: #f9fafb; /* hover:bg-zinc-50 */
+  }
+
+  /* Table Data Cells */
+  td {
+    position: relative;
+    padding: 0;
+  }
+
+  /* Action Buttons */
+  td.relative.w-14.p-0 {
+    width: 3.5rem;
+    padding: 0;
+  }
+</style>

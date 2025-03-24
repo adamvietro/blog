@@ -81,7 +81,7 @@ defmodule BlogWeb.TagController do
       end)
       |> Enum.filter(&(&1 != nil))
 
-    render(conn, :search_results, post: post)
+    render(conn, :search_results, posts: post)
   end
 
   def search(conn, _params) do

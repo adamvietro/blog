@@ -20,7 +20,7 @@ defmodule BlogWeb.PostController do
   def search(conn, %{"title" => title}) do
     matching_posts = Posts.search_posts(title)
 
-    render(conn, :search_results, post: matching_posts)
+    render(conn, :search_results, posts: matching_posts)
   end
 
   def search(conn, _param) do
