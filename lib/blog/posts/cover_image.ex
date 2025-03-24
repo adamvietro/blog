@@ -14,7 +14,7 @@ defmodule Blog.Posts.CoverImage do
   def changeset(cover_image, attrs) do
     cover_image
     |> cast(attrs, [:url])
-    |> validate_required([:url])
+    # |> validate_required([:url])
 
   end
 end
