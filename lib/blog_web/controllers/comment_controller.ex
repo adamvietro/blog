@@ -6,7 +6,7 @@ defmodule BlogWeb.CommentController do
   alias Blog.Posts
   alias Blog.Comments
 
-  plug :require_user_owns_post when action in [:edit, :update, :delete]
+  plug :require_user_owns_comment when action in [:edit, :update, :delete]
 
   def create(conn, %{"comment" => comment_params, "id" => post_id}) do
     comment_params = Map.put(comment_params, "post_id", post_id)
@@ -57,7 +57,7 @@ defmodule BlogWeb.CommentController do
 
       conn
       |> put_flash(:info, "Comment deleted successfully.")
-      |> redirect(to: ~p"/posts")
+      |> redirect(to: ~p"/posts/#{id}/comments")
     else
       conn
       |> put_flash(:error, "You can only delete your own comments.")
@@ -95,21 +95,21 @@ defmodule BlogWeb.CommentController do
     else
       conn
       |> put_flash(:error, "You can only update your own comments.")
-      |> redirect(to: ~p"/posts/#{id}/comments")
+      |> redirect(to: ~p"/posts/#{comment.post_id}/comments")
       |> halt()
     end
   end
 
-  defp require_user_owns_post(conn, _params) do
-    post_id = String.to_integer(conn.path_params["id"])
-    post = Posts.get_post!(post_id)
+  defp require_user_owns_comment(conn, _params) do
+    comment_id = String.to_integer(conn.path_params["comment_id"])
+    comment = Comments.get_comment!(comment_id)
 
-    if conn.assigns[:current_user].id == post.user_id do
+    if conn.assigns[:current_user].id == comment.user_id do
       conn
     else
       conn
-      |> put_flash(:error, "You can only edit or delete your own posts.")
-      |> redirect(to: ~p"/posts/#{post_id}")
+      |> put_flash(:error, "You can only edit or delete your own comments.")
+      |> redirect(to: ~p"/posts/#{conn.path_params["id"]}")
       |> halt()
     end
   end
