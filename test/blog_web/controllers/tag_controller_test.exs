@@ -20,6 +20,8 @@ defmodule BlogWeb.TagControllerTest do
 
   describe "new tag" do
     test "renders form", %{conn: conn} do
+      user = user_fixture()
+      conn = log_in_user(conn, user)
       conn = get(conn, ~p"/tags/new")
       assert html_response(conn, 200) =~ "New Tag"
     end
@@ -27,11 +29,15 @@ defmodule BlogWeb.TagControllerTest do
 
   describe "create tag" do
     test "renders errors when data is invalid", %{conn: conn} do
+      user = user_fixture()
+      conn = log_in_user(conn, user)
       conn = post(conn, ~p"/tags", tag: @invalid_attrs)
       assert html_response(conn, 200) =~ "New Tag"
     end
 
     test "creates new tag with valid data", %{conn: conn} do
+      user = user_fixture()
+      conn = log_in_user(conn, user)
       conn = post(conn, ~p"/tags", tag: @create_attrs)
       assert redirected_to(conn) == ~p"/tags"
     end
@@ -41,6 +47,9 @@ defmodule BlogWeb.TagControllerTest do
     setup [:create_tag]
 
     test "deletes chosen tag", %{conn: conn, tag: tag} do
+      user = user_fixture()
+      conn = log_in_user(conn, user)
+
       conn = delete(conn, ~p"/tags/#{tag}")
       assert redirected_to(conn) == ~p"/tags"
     end

@@ -125,11 +125,11 @@ defmodule BlogWeb.PostControllerTest do
       # partial match middle
       assert Posts.search_posts("itl") |> Repo.preload([:tags]) == [post]
       # case insensitive lower
-      assert Posts.search_posts("title") == []
+      assert Posts.search_posts("title") |> Repo.preload([:tags]) == [post]
       # case insensitive upper
-      assert Posts.search_posts("TITLE") == []
+      assert Posts.search_posts("TITLE") |> Repo.preload([:tags]) == [post]
       # case insensitive and partial match
-      assert Posts.search_posts("ITL") == []
+      assert Posts.search_posts("ITL") |> Repo.preload([:tags]) == [post]
       # empty
       assert Posts.search_posts("") |> Repo.preload([:tags]) == [post]
     end
