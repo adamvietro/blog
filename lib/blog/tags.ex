@@ -18,7 +18,10 @@ defmodule Blog.Tags do
 
   """
   def list_tags do
-    Repo.all(Tag)
+    from(t in Tag,
+    order_by: [asc: :name]
+    )
+    |> Repo.all()
   end
 
   @doc """

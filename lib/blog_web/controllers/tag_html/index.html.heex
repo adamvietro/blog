@@ -11,9 +11,9 @@
 
 <.table id="tags" rows={@tags}>
   <:col :let={tag} label="Tag">{tag.name}</:col>
-  <:action :let={tag}>
+  <%!-- <:action :let={tag}>
     <.link href={~p"/tags/#{tag}"} method="delete" data-confirm="Are you sure?">
       Delete
     </.link>
-  </:action>
+  </:action> --%>
 </.table>
