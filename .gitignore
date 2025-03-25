@@ -48,4 +48,4 @@ Journal
 .dockerignore
 
 # Remove the tests for now.
-continuous-integration.yml
+.github/workflows/continuous-integration.yml
