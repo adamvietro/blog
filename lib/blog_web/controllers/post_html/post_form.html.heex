@@ -3,7 +3,7 @@
     Oops, something went wrong! Please check the errors below.
   </.error>
   <.input field={f[:title]} type="text" label="Title" />
-  <.input field={f[:content]} type="text" label="Content" />
+  <.input field={f[:content]} type="textarea" label="Content" />
   <.input field={f[:published_on]} type="hidden" label="Published on" value={Date.utc_today()} />
   <.input field={f[:visibility]} type="checkbox" label="Visibility" />
   <.input field={f[:tag_ids]} type="select" label="Tags" multiple={true} options={@tags} />
