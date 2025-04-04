@@ -27,7 +27,9 @@
 <.list>
   <:item title="User">{@post.user_id}</:item>
   <:item title="Title">{@post.title}</:item>
-  <:item title="Content">{@post.content}</:item>
+  <:item title="Content">
+    <pre><%= @post.content %></pre>
+  </:item>
   <:item title="Published on">{@post.published_on}</:item>
   <:item title="Visibility">{@post.visibility}</:item>
   <:item title="Tags">
