@@ -31,7 +31,7 @@
     <pre><%= @post.content %></pre>
   </:item>
   <:item title="Published on">{@post.published_on}</:item>
-  <:item title="Visibility">{@post.visibility}</:item>
+  <%!-- <:item title="Visibility">{@post.visibility}</:item> --%>
   <:item title="Tags">
     {Enum.map(@post.tags, & &1.name) |> Enum.join(", ")}
   </:item>
