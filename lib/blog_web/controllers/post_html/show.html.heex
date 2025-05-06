@@ -24,22 +24,31 @@
   </:actions>
 </.header>
 
-<.list>
-  <:item title="User">{@post.user_id}</:item>
-  <:item title="Title">{@post.title}</:item>
-  <:item title="Content">
-    <pre><%= @post.content %></pre>
-  </:item>
-  <:item title="Published on">{@post.published_on}</:item>
-  <%!-- <:item title="Visibility">{@post.visibility}</:item> --%>
-  <:item title="Tags">
-    {Enum.map(@post.tags, & &1.name) |> Enum.join(", ")}
-  </:item>
-  <:item title="Image">
-    <%= if @post.cover_image do %>
-      <img src={@post.cover_image.url} />
-    <% end %>
-  </:item>
-</.list>
+<%!-- content of the post --%>
+<div>
+  <.list>
+    <:item title="User">{@post.user_id}</:item>
+    <:item title="Title">{@post.title}</:item>
+    <:item title="Content">
+      <pre class="whitespace-pre-wrap break-words"><%= @post.content %></pre>
+    </:item>
+    <:item title="Published on">{@post.published_on}</:item>
+    <:item title="Tags">
+      {Enum.map(@post.tags, & &1.name) |> Enum.join(", ")}
+    </:item>
+    <:item title="Image">
+      <%= if @post.cover_image do %>
+        <img src={@post.cover_image.url} />
+      <% end %>
+    </:item>
+  </.list>
+</div>
 
 <.back navigate={~p"/posts"}>Back to posts</.back>
+
+<style>
+.list {
+  max-w: .875rem;
+  text: red;
+}
+</style>

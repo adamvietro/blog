@@ -23,7 +23,11 @@
       <%= for post <- @posts do %>
         <tr>
           <!-- Title -->
-          <td><a class="title" href={~p"/posts/#{post.id}"} class="block w-full h-full">{post.title}</a></td>
+          <td>
+            <a class="title" href={~p"/posts/#{post.id}"} class="block w-full h-full">
+              {post.title}
+            </a>
+          </td>
           
 <!-- Content (truncated) -->
           <td>
@@ -81,10 +85,10 @@
       let hiddenPosts = Array.from(posts).filter(post => post.style.display === "none");
 
       // Show 5 more posts
-      hiddenPosts.slice(0, 5).forEach(post => (post.style.display = "table-row"));
+      hiddenPosts.slice(0, 10).forEach(post => (post.style.display = "table-row"));
 
       // Hide button if no more posts
-      if (hiddenPosts.length <= 5) loadMoreBtn.style.display = "none";
+      if (hiddenPosts.length <= 10) loadMoreBtn.style.display = "none";
     });
   });
 </script>
