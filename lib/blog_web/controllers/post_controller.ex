@@ -66,13 +66,15 @@ defmodule BlogWeb.PostController do
     post =
       Posts.get_post!(id)
       |> Repo.preload([:tags])
+      |> IO.inspect(label: "post")
 
     changeset = Posts.change_post(post)
+    selected_tags = Enum.map(post.tags, fn tag -> tag.id end)
 
     render(conn, :edit,
       post: post,
       changeset: changeset,
-      tags: tag_options()
+      tags: tag_options(selected_tags)
     )
   end
 
@@ -104,8 +106,9 @@ defmodule BlogWeb.PostController do
 
   @spec delete(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def delete(conn, %{"id" => id}) do
-    post = Posts.get_post!(id)
-    |> Repo.preload([:tags, :comments])
+    post =
+      Posts.get_post!(id)
+      |> Repo.preload([:tags, :comments])
 
     if conn.assigns[:current_user].id == post.user_id do
       {:ok, _post} = Posts.delete_post(post)
