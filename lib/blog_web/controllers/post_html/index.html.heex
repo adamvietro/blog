@@ -84,7 +84,7 @@
     loadMoreBtn.addEventListener("click", function () {
       let hiddenPosts = Array.from(posts).filter(post => post.style.display === "none");
 
-      // Show 5 more posts
+      // Show 10 more posts
       hiddenPosts.slice(0, 10).forEach(post => (post.style.display = "table-row"));
 
       // Hide button if no more posts
@@ -108,7 +108,9 @@
 
   /* Table Styles */
   table {
-    width: 40rem;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
     margin-top: 2.75rem; /* mt-11 */
   }
 

@@ -14,10 +14,7 @@
       <br /><br />
     </h1>
     <h1>
-      Thanks for stopping by the link to many of the key functions are below.<br />
-      TODO:<br />
-      Make sure that tags will be loaded on edit <br />
-      Make sure that the text box for the content of a post is only as long as the page itself <br />
+      Thanks for stopping by the link to many of the key functions are below.<br /> TODO:<br />
       CSS<br /><br />
     </h1>
   </head>
@@ -52,16 +49,25 @@
         Search through all the tags for a post with that tag
       </.link>
     </p>
+    <br /> <br />
   </body>
 
   <footer>
-    <br /><br /><br /><br />
-
-    <img
-      class="low_image"
-      src="https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fuuo9fxl96owi7avgzvhf.png"
-      style="width:700px;height:400px;"
-    />
+    <div class="flex items-center justify-center p-2 rounded-lg border-4 border-red-400">
+      <div class="p-2 rounded-lg border-4 border-yellow-400">
+        <div class="p-2 rounded-lg border-4 border-blue-400">
+          <div class="p-2 rounded-lg border-4 border-green-400">
+            <div class="p-2 rounded-lg border-4 border-pink-400">
+              <img
+                class="rounded-lg"
+                src="https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fuuo9fxl96owi7avgzvhf.png"
+                style="width:700px;height:400px;"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </footer>
 </html>
 
@@ -92,6 +98,15 @@
     max-width: 50%;
     margin-left:auto;
     margin-right:auto;
+  }
+
+  h2 {
+    margin: auto;
+    min-width: 50%;
+  }
+
+  focus:border-t {
+    min-width: 75;
   }
 
   .low_image{
