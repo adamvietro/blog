@@ -18,16 +18,6 @@
   end
 
   scope "/", BlogWeb do
-    pipe_through :browser
-
-    get "/", PageController, :home
-    get "/posts", PostController, :index
-    get "/search", PostController, :search
-    get "/tags", TagController, :index
-    get "/tags/search", TagController, :search
-  end
-
-  scope "/", BlogWeb do
     pipe_through [:browser, :require_authenticated_user]
 
     get "/tags/new", TagController, :new
@@ -41,7 +31,6 @@
 
     post "/posts", PostController, :create
     get "/posts/new", PostController, :new
-    get "/posts/:id", PostController, :show
     put "/posts/:id", PostController, :put
     get "/posts/:id/edit", PostController, :edit
     post "/posts/:id", PostController, :edit
@@ -52,6 +41,17 @@
     delete "/posts/:id/comments/:comment_id", CommentController, :delete
     get "/posts/:id/comments/:comment_id/edit", CommentController, :edit
     put "/posts/:id/comments/:comment_id/edit", CommentController, :update
+  end
+
+  scope "/", BlogWeb do
+    pipe_through :browser
+
+    get "/", PageController, :home
+    get "/posts", PostController, :index
+    get "/posts/:id", PostController, :show
+    get "/search", PostController, :search
+    get "/tags", TagController, :index
+    get "/tags/search", TagController, :search
   end
 
   # Other scopes may use custom stacks.
