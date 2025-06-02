@@ -1,7 +1,7 @@
 <.header>
   Listing Tags
   <:actions>
-    <%= if assigns[:current_user] do %>
+    <%= if @current_user && @current_user.admin do %>
       <.link href={~p"/tags/new"}>
         <.button>New Tag</.button>
       </.link>

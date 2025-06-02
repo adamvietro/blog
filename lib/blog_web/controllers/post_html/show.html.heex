@@ -1,6 +1,6 @@
 <.header>
   Post {@post.id}
-  <:subtitle>This is a post record from your database.</:subtitle>
+  <%!-- <:subtitle>This is a post record from your database.</:subtitle> --%>
   <:actions>
     <%= if assigns[:current_user] && @post.user_id == assigns[:current_user].id do %>
       <.link href={~p"/posts/#{@post}/edit"}>
@@ -25,30 +25,31 @@
 </.header>
 
 <%!-- content of the post --%>
-<div>
-  <.list>
-    <:item title="User">{@post.user_id}</:item>
-    <:item title="Title">{@post.title}</:item>
-    <:item title="Content">
-      <pre class="whitespace-pre-wrap break-words"><%= @post.content %></pre>
-    </:item>
-    <:item title="Published on">{@post.published_on}</:item>
-    <:item title="Tags">
-      {Enum.map(@post.tags, & &1.name) |> Enum.join(", ")}
-    </:item>
-    <:item title="Image">
-      <%= if @post.cover_image do %>
-        <img src={@post.cover_image.url} />
-      <% end %>
-    </:item>
-  </.list>
+<div class="max-w-6xl mx-auto p-8 bg-white shadow rounded">
+  <!-- Title -->
+  <div>
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">{@post.title}</h1>
+    <div class="text-sm text-gray-500 flex flex-wrap gap-4">
+      <span>Published on: <span class="text-gray-700">{@post.published_on}</span></span>
+      <span>Tags: 
+        <span class="text-gray-700">
+          <%= Enum.map(@post.tags, & &1.name) |> Enum.join(", ") %>
+        </span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="mt-6">
+    <pre class="whitespace-pre-wrap break-words text-gray-800 text-base leading-relaxed">{@post.content}</pre>
+  </div>
+
+  <!-- Image -->
+  <%= if @post.cover_image do %>
+    <div class="mt-6">
+      <img src={@post.cover_image.url} class="max-h-[30rem] w-full object-cover rounded shadow" />
+    </div>
+  <% end %>
 </div>
 
-<.back navigate={~p"/posts"}>Back to posts</.back>
-
-<style>
-.list {
-  max-w: .875rem;
-  text: red;
-}
-</style>
+<.back navigate={~p"/posts"} class="mt-8 inline-block text-blue-600 hover:underline">Back to posts</.back>
