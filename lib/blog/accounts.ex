@@ -215,6 +215,12 @@ defmodule Blog.Accounts do
     end
   end
 
+  def update_admin(%User{} = user) do
+    user
+    |> Ecto.Changeset.change(%{admin: true})
+    |> Repo.update()
+  end
+
   ## Session
 
   @doc """

@@ -8,7 +8,8 @@ defmodule BlogWeb.PostController do
   alias Blog.Posts
   alias Blog.Posts.Post
 
-  plug :require_user_owns_post when action in [:edit, :update, :delete]
+  plug :require_admin
+       when action in [:edit, :update, :delete, :new, :create]
 
   @spec index(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def index(conn, _params) do
@@ -134,6 +135,17 @@ defmodule BlogWeb.PostController do
       conn
       |> put_flash(:error, "You can only edit or delete your own posts.")
       |> redirect(to: ~p"/posts/#{post_id}")
+      |> halt()
+    end
+  end
+
+  defp require_admin(conn, _opts) do
+    if conn.assigns.current_user && conn.assigns.current_user.admin do
+      conn
+    else
+      conn
+      |> put_flash(:error, "Unauthorized")
+      |> redirect(to: ~p"/posts/")
       |> halt()
     end
   end

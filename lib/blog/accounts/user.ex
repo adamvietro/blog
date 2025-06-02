@@ -8,6 +8,7 @@ defmodule Blog.Accounts.User do
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
+    field :admin, :boolean
     has_many :posts, Blog.Posts.Post
     has_many :comments, Blog.Comments.Comment
 
@@ -39,7 +40,7 @@ defmodule Blog.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :admin])
     |> validate_email(opts)
     |> validate_password(opts)
   end

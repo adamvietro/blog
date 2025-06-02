@@ -61,14 +61,21 @@
       <.link navigate={~p"/tags/search"} class="link bg-gray-400 hover:bg-gray-200">
         Tag Search
       </.link>
-      <.link navigate={~p"/posts/new"} class="link bg-yellow-400 hover:bg-gray-200">New Post</.link>
-      <.link navigate={~p"/tags/new"} class="link bg-yellow-400 hover:bg-gray-200">New Tag</.link>
+      <%= if @current_user && @current_user.admin do %>
+        <.link navigate={~p"/posts/new"} class="link bg-yellow-400 hover:bg-gray-200">
+          New Post
+        </.link>
+        <.link navigate={~p"/tags/new"} class="link bg-yellow-400 hover:bg-gray-200">
+          New Tag
+        </.link>
+      <% end %>
     </div>
     {@inner_content}
   </body>
 </html>
 
-<script defer type="text/javascript" src={~p"/assets/app.js"}></script>
+<script defer type="text/javascript" src={~p"/assets/app.js"}>
+</script>
 
 <style>
   .topnavcontainer {

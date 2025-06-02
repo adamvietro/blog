@@ -6,6 +6,9 @@ defmodule BlogWeb.TagController do
   alias Blog.Posts
   alias Blog.Repo
 
+  plug :require_admin
+       when action in [:edit, :update, :delete, :new, :create]
+
   def index(conn, _params) do
     tags = Tags.list_tags()
     render(conn, :index, tags: tags)
@@ -86,6 +89,17 @@ defmodule BlogWeb.TagController do
 
   def search(conn, _params) do
     render(conn, :search, tag_options: tag_options())
+  end
+
+  defp require_admin(conn, _opts) do
+    if conn.assigns.current_user && conn.assigns.current_user.admin do
+      conn
+    else
+      conn
+      |> put_flash(:error, "Unauthorized")
+      |> redirect(to: ~p"/posts/")
+      |> halt()
+    end
   end
 
   defp tag_options(selected_ids \\ []) do
