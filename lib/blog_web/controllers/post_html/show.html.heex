@@ -31,25 +31,40 @@
     <h1 class="text-3xl font-bold text-gray-900 mb-2">{@post.title}</h1>
     <div class="text-sm text-gray-500 flex flex-wrap gap-4">
       <span>Published on: <span class="text-gray-700">{@post.published_on}</span></span>
-      <span>Tags: 
+      <span>
+        Tags:
         <span class="text-gray-700">
-          <%= Enum.map(@post.tags, & &1.name) |> Enum.join(", ") %>
+          {Enum.map(@post.tags, & &1.name) |> Enum.join(", ")}
         </span>
       </span>
     </div>
   </div>
-
-  <!-- Content -->
+  
+<!-- Content -->
   <div class="mt-6">
     <pre class="whitespace-pre-wrap break-words text-gray-800 text-base leading-relaxed">{@post.content}</pre>
   </div>
-
-  <!-- Image -->
+  
+<!-- Image -->
   <%= if @post.cover_image do %>
     <div class="mt-6">
-      <img src={@post.cover_image.url} class="max-h-[30rem] w-full object-cover rounded shadow" />
+      <img src={@post.cover_image.url} class="post-cover" />
     </div>
   <% end %>
 </div>
 
-<.back navigate={~p"/posts"} class="mt-8 inline-block text-blue-600 hover:underline">Back to posts</.back>
+<.back navigate={~p"/posts"} class="mt-8 inline-block text-blue-600 hover:underline">
+  Back to posts
+</.back>
+
+<style>
+  .post-cover {
+    max-width: 100%;
+    max-height: 30rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: block;
+    margin: 1rem auto;  /* center horizontally */
+  }
+</style>
