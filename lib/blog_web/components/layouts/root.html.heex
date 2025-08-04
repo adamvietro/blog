@@ -54,11 +54,11 @@
       />
     </image>
     <div class="topnavcontainer">
-      <.link navigate={~p"/"} class="link bg-gray-400 hover:bg-gray-200">Home</.link>
-      <.link navigate={~p"/posts"} class="link bg-gray-400 hover:bg-gray-200">Posts</.link>
-      <.link navigate={~p"/tags"} class="link bg-gray-400 hover:bg-gray-200">Tags</.link>
-      <.link navigate={~p"/search"} class="link bg-gray-400 hover:bg-gray-200">Post Search</.link>
-      <.link navigate={~p"/tags/search"} class="link bg-gray-400 hover:bg-gray-200">
+      <.link navigate={~p"/"} class="link">Home</.link>
+      <.link navigate={~p"/posts"} class="link">Posts</.link>
+      <.link navigate={~p"/tags"} class="link">Tags</.link>
+      <.link navigate={~p"/search"} class="link">Post Search</.link>
+      <.link navigate={~p"/tags/search"} class="link">
         Tag Search
       </.link>
       <%= if @current_user && @current_user.admin do %>
@@ -92,6 +92,12 @@
     padding:5px;
     margin:3px;
     color: #dfe4e7ff;
+    background: #9ca3af;
+  }
+
+  .link:hover {
+    background: #e5e7eb;
+    color: #1f2937;
   }
 
   font {
