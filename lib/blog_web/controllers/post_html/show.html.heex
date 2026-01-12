@@ -41,8 +41,8 @@
   </div>
   
 <!-- Content -->
-  <div class="mt-6">
-    <pre class="whitespace-pre-wrap break-words text-gray-800 text-base leading-relaxed">{@post.content}</pre>
+  <div class="mt-6 prose text-gray-800">
+    {raw(Earmark.as_html!(@post.content))}
   </div>
   
 <!-- Image -->

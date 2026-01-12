@@ -125,19 +125,19 @@ defmodule BlogWeb.PostController do
     end
   end
 
-  defp require_user_owns_post(conn, _params) do
-    post_id = String.to_integer(conn.path_params["id"])
-    post = Posts.get_post!(post_id)
+  # defp require_user_owns_post(conn, _params) do
+  #   post_id = String.to_integer(conn.path_params["id"])
+  #   post = Posts.get_post!(post_id)
 
-    if conn.assigns[:current_user].id == post.user_id do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You can only edit or delete your own posts.")
-      |> redirect(to: ~p"/posts/#{post_id}")
-      |> halt()
-    end
-  end
+  #   if conn.assigns[:current_user].id == post.user_id do
+  #     conn
+  #   else
+  #     conn
+  #     |> put_flash(:error, "You can only edit or delete your own posts.")
+  #     |> redirect(to: ~p"/posts/#{post_id}")
+  #     |> halt()
+  #   end
+  # end
 
   defp require_admin(conn, _opts) do
     if conn.assigns.current_user && conn.assigns.current_user.admin do
