@@ -1,6 +1,8 @@
-<h1> This is a page to search for a Blog post that matches or partially matches an entered title. </h1>
+<h1>
+  This is a page to search for a Blog post that matches or partially matches an entered title.
+</h1>
 
-<.simple_form :let={f} for={%{}} method={"get"} action={~p"/search/"}>
+<.simple_form :let={f} for={%{}} method="get" action={~p"/search/"}>
   <.input field={f[:title]} type="text" label="Search Posts" />
   <:actions>
     <.button>Search</.button>

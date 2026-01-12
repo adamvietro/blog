@@ -13,14 +13,14 @@ defmodule BlogWeb.PostController do
   @spec index(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def index(conn, _params) do
     posts = Posts.list_posts()
-    render(conn, :index, posts: posts)
+    render(conn, :index, posts: posts, page_title: "Posts")
   end
 
   @spec search(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def search(conn, %{"title" => title}) do
     matching_posts = Posts.search_posts(title)
 
-    render(conn, :search_results, posts: matching_posts)
+    render(conn, :search_results, posts: matching_posts, page_title: "Posts Search")
   end
 
   def search(conn, _param) do
@@ -33,7 +33,7 @@ defmodule BlogWeb.PostController do
       Posts.get_post!(id)
       |> Repo.preload([:tags, :cover_image])
 
-    render(conn, :show, post: post)
+    render(conn, :show, post: post, page_title: "Post")
   end
 
   @spec new(Plug.Conn.t(), any()) :: Plug.Conn.t()
@@ -41,7 +41,7 @@ defmodule BlogWeb.PostController do
     tags = tag_options()
     changeset = Posts.change_post(%Post{})
 
-    render(conn, :new, changeset: changeset, tags: tags)
+    render(conn, :new, changeset: changeset, tags: tags, page_title: "Create Post")
   end
 
   def create(conn, %{"post" => post_params}) do
@@ -74,7 +74,8 @@ defmodule BlogWeb.PostController do
     render(conn, :edit,
       post: post,
       changeset: changeset,
-      tags: tag_options(selected_tags)
+      tags: tag_options(selected_tags),
+      page_title: "Edit Post"
     )
   end
 

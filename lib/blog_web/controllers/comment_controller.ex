@@ -27,7 +27,7 @@ defmodule BlogWeb.CommentController do
   @spec new(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def new(conn, %{"id" => id}) do
     changeset = Comments.change_comment(%Comment{})
-    render(conn, :create, changeset: changeset, id: id)
+    render(conn, :create, changeset: changeset, id: id, page_title: "New Comment")
   end
 
   @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -46,7 +46,7 @@ defmodule BlogWeb.CommentController do
         }
       end)
 
-    render(conn, :show, comment: comment_list)
+    render(conn, :show, comment: comment_list, page_title: "Comment")
   end
 
   def delete(conn, %{"id" => id, "comment_id" => comment_id}) do
@@ -70,7 +70,7 @@ defmodule BlogWeb.CommentController do
   def edit(conn, %{"id" => _id, "comment_id" => comment_id}) do
     comment = Comments.get_comment!(comment_id)
     changeset = Comments.change_comment(comment)
-    render(conn, :edit, comment: comment, changeset: changeset)
+    render(conn, :edit, comment: comment, changeset: changeset, page_title: "Edit Comment")
   end
 
   @spec update(Plug.Conn.t(), map()) :: Plug.Conn.t()

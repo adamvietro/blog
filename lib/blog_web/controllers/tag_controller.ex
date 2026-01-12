@@ -11,12 +11,12 @@ defmodule BlogWeb.TagController do
 
   def index(conn, _params) do
     tags = Tags.list_tags()
-    render(conn, :index, tags: tags)
+    render(conn, :index, tags: tags, page_title: "Tags")
   end
 
   def new(conn, _params) do
     changeset = Tags.change_tag(%Tag{})
-    render(conn, :new, changeset: changeset)
+    render(conn, :new, changeset: changeset, page_title: "New Tag")
   end
 
   def create(conn, %{"tag" => tag_params}) do
@@ -33,13 +33,13 @@ defmodule BlogWeb.TagController do
 
   def show(conn, %{"id" => id}) do
     tag = Tags.get_tag!(id)
-    render(conn, :show, tag: tag)
+    render(conn, :show, tag: tag, page_title: "Tag")
   end
 
   def edit(conn, %{"id" => id}) do
     tag = Tags.get_tag!(id)
     changeset = Tags.change_tag(tag)
-    render(conn, :edit, tag: tag, changeset: changeset)
+    render(conn, :edit, tag: tag, changeset: changeset, page_title: "Edit Tag")
   end
 
   def update(conn, %{"id" => id, "tag" => tag_params}) do
@@ -84,7 +84,7 @@ defmodule BlogWeb.TagController do
       end)
       |> Enum.filter(&(&1 != nil))
 
-    render(conn, :search_results, posts: post)
+    render(conn, :search_results, posts: post, page_title: "Search Tags")
   end
 
   def search(conn, _params) do
