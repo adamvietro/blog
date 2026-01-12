@@ -1,7 +1,7 @@
 <h1>This is a page to search for a Blog post that contains a given tag.</h1>
 
 <.simple_form :let={f} for={%{}} method="get" action={~p"/tags/search/"}>
-  <.input field={f[:tag]} type="select" label="Tags" options={@tag_options} />
+  <.input field={f[:tag]} type="select" label="Tags" options={@tag_options} size="5" />
   <:actions>
     <.button>Search</.button>
   </:actions>

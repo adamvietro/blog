@@ -88,7 +88,7 @@ defmodule BlogWeb.TagController do
   end
 
   def search(conn, _params) do
-    render(conn, :search, tag_options: tag_options())
+    render(conn, :search, tag_options: tag_options(), page_title: "Search Tags")
   end
 
   defp require_admin(conn, _opts) do

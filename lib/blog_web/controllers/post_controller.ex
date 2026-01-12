@@ -24,7 +24,7 @@ defmodule BlogWeb.PostController do
   end
 
   def search(conn, _param) do
-    render(conn, :search_form)
+    render(conn, :search_form, page_title: "Posts Search")
   end
 
   @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
