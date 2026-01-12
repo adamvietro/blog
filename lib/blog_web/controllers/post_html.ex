@@ -26,9 +26,12 @@ defmodule BlogWeb.PostHTML do
       assigns.content
       |> Earmark.as_html!()
       |> String.replace(~r/class="elixir"/, "class=\"language-elixir\"")
+      |> Phoenix.HTML.raw()
+
+    assigns = assign(assigns, :html_content, html_content)
 
     ~H"""
-    <div class="prose text-gray-800">{Phoenix.HTML.raw(html_content)}</div>
+    <div class="prose text-gray-800">{@html_content}</div>
     """
   end
 end
