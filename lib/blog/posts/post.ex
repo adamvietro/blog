@@ -28,6 +28,5 @@ defmodule Blog.Posts.Post do
     |> validate_date(:published_on, before: :utc_today, message: "Shouldn't be in the Future")
     |> foreign_key_constraint(:user_id)
     |> put_assoc(:tags, tags)
-
   end
 end

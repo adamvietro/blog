@@ -23,8 +23,8 @@ defmodule Blog.CommentsTest do
 
     test "get_comment!/1 returns the comment with given id" do
       user = user_fixture()
-      post = post_fixture([user_id: user.id])
-      comment = comment_fixture([user_id: user.id, post_id: post.id])
+      post = post_fixture(user_id: user.id)
+      comment = comment_fixture(user_id: user.id, post_id: post.id)
 
       assert Comments.get_comment!(comment.id) == comment
     end

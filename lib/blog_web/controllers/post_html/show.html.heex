@@ -41,9 +41,7 @@
   </div>
   
 <!-- Content -->
-  <div class="mt-6 prose text-gray-800">
-    {raw(Earmark.as_html!(@post.content))}
-  </div>
+  <.markdown content={@post.content} />
   
 <!-- Image -->
   <%= if @post.cover_image do %>

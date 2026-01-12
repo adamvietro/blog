@@ -29,7 +29,7 @@ defmodule Blog.PostsFixtures do
         content: "some content",
         published_on: ~D[2025-02-15],
         title: "some title",
-        visibility: true,
+        visibility: true
       })
       |> Blog.Posts.create_post()
 

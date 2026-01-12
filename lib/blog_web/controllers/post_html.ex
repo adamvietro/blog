@@ -12,4 +12,23 @@ defmodule BlogWeb.PostHTML do
   attr :tags, :list
 
   def post_form(assigns)
+
+  @doc """
+  Render Markdown content safely, including triple-backtick code blocks.
+
+  Usage:
+      <.markdown content={@post.content} />
+  """
+  attr :content, :string, required: true
+
+  def markdown(assigns) do
+    html_content =
+      assigns.content
+      |> Earmark.as_html!()
+      |> String.replace(~r/class="elixir"/, "class=\"language-elixir\"")
+
+    ~H"""
+    <div class="prose text-gray-800">{Phoenix.HTML.raw(html_content)}</div>
+    """
+  end
 end

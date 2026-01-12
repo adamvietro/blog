@@ -4,7 +4,6 @@ defmodule BlogWeb.PostController do
   import Blog.Tags
 
   alias Blog.Repo
-  alias Blog.Tags
   alias Blog.Posts
   alias Blog.Posts.Post
 
@@ -46,7 +45,7 @@ defmodule BlogWeb.PostController do
   end
 
   def create(conn, %{"post" => post_params}) do
-    tags = Map.get(post_params, "tag_ids", []) |> Enum.map(&Tags.get_tag!/1)
+    tags = Map.get(post_params, "tag_ids", []) |> Enum.map(&get_tag!/1)
     post_params = Map.put(post_params, "user_id", conn.assigns[:current_user].id)
 
     case Posts.create_post(post_params, tags) do
@@ -85,7 +84,7 @@ defmodule BlogWeb.PostController do
       Posts.get_post!(id)
       |> Repo.preload([:tags])
 
-    tags = Map.get(post_params, "tag_ids", []) |> Enum.map(&Tags.get_tag!/1)
+    tags = Map.get(post_params, "tag_ids", []) |> Enum.map(&get_tag!/1)
 
     if conn.assigns[:current_user].id == post.user_id do
       case Posts.update_post(post, post_params, tags) do
@@ -125,20 +124,6 @@ defmodule BlogWeb.PostController do
     end
   end
 
-  # defp require_user_owns_post(conn, _params) do
-  #   post_id = String.to_integer(conn.path_params["id"])
-  #   post = Posts.get_post!(post_id)
-
-  #   if conn.assigns[:current_user].id == post.user_id do
-  #     conn
-  #   else
-  #     conn
-  #     |> put_flash(:error, "You can only edit or delete your own posts.")
-  #     |> redirect(to: ~p"/posts/#{post_id}")
-  #     |> halt()
-  #   end
-  # end
-
   defp require_admin(conn, _opts) do
     if conn.assigns.current_user && conn.assigns.current_user.admin do
       conn
@@ -156,4 +141,18 @@ defmodule BlogWeb.PostController do
       [key: tag.name, value: tag.id, selected: tag.id in selected_ids]
     end)
   end
+
+  # defp require_user_owns_post(conn, _params) do
+  #   post_id = String.to_integer(conn.path_params["id"])
+  #   post = Posts.get_post!(post_id)
+
+  #   if conn.assigns[:current_user].id == post.user_id do
+  #     conn
+  #   else
+  #     conn
+  #     |> put_flash(:error, "You can only edit or delete your own posts.")
+  #     |> redirect(to: ~p"/posts/#{post_id}")
+  #     |> halt()
+  #   end
+  # end
 end

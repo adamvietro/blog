@@ -19,7 +19,7 @@ defmodule Blog.Tags do
   """
   def list_tags do
     from(t in Tag,
-    order_by: [asc: :name]
+      order_by: [asc: :name]
     )
     |> Repo.all()
   end

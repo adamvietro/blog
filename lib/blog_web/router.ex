@@ -1,4 +1,4 @@
-  defmodule BlogWeb.Router do
+defmodule BlogWeb.Router do
   use BlogWeb, :router
 
   import BlogWeb.UserAuth
