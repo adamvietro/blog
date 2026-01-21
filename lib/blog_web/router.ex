@@ -18,17 +18,12 @@ defmodule BlogWeb.Router do
   end
 
   scope "/", BlogWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through [:browser, :require_authenticated_user, :require_admin]
 
     get "/tags/new", TagController, :new
     post "/tags", TagController, :create
     put "/tags/:id", TagController, :put
     delete "/tags/:id", TagController, :delete
-  end
-
-  scope "/", BlogWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
     post "/posts", PostController, :create
     get "/posts/new", PostController, :new
     put "/posts/:id", PostController, :put
