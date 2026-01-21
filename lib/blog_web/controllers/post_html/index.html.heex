@@ -1,92 +1,88 @@
-<.header>
-  Listing Posts
-  <:actions>
-    <%= if @current_user && @current_user.admin do %>
-      <.link href={~p"/posts/new"}>
-        <.button>New Post</.button>
-      </.link>
-    <% end %>
-  </:actions>
-</.header>
-<body>
-  <table id="posts">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Content</th>
-        <th>Published on</th>
+<div class="posts-page mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  <div class="posts-page">
+    <.header>
+      Listing Posts
+      <:actions>
         <%= if @current_user && @current_user.admin do %>
-          <th class="actions">Actions</th>
+          <.link href={~p"/posts/new"}>
+            <.button>New Post</.button>
+          </.link>
         <% end %>
-      </tr>
-    </thead>
-    <tbody>
-      <%= for post <- @posts do %>
+      </:actions>
+    </.header>
+    <table id="posts">
+      <thead>
         <tr>
-          <td>
-            <a class="title" href={~p"/posts/#{post.id}"}>
-              {post.title}
-            </a>
-          </td>
-          <td>
-            <a href={~p"/posts/#{post.id}"}>
-              {String.slice(post.content, 0, 50)}{if String.length(post.content) > 50, do: "..."}
-            </a>
-          </td>
-          <td>
-            <a href={~p"/posts/#{post.id}"}>{post.published_on}</a>
-          </td>
+          <th>Title</th>
+          <th>Content</th>
           <%= if @current_user && @current_user.admin do %>
-            <td class="actions">
-              <div class="sr-only">
-                <a href={~p"/posts/#{post.id}"} class="link">Show</a>
-              </div>
-              <%= if post.user_id == @current_user.id do %>
-                <a href={~p"/posts/#{post.id}/edit"} class="link">Edit</a>
-                <a
-                  href={~p"/posts/#{post.id}"}
-                  method="delete"
-                  data-confirm="Are you sure?"
-                  class="link"
-                >
-                  Delete
-                </a>
-              <% end %>
-            </td>
+            <th class="actions">Actions</th>
           <% end %>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <%= for post <- @posts do %>
+          <tr>
+            <td>
+              <a class="title" href={~p"/posts/#{post.id}"}>
+                {post.title}
+              </a>
+            </td>
+            <td>
+              <a class="content" href={~p"/posts/#{post.id}"}>
+                {String.slice(post.content, 0, 35)}{if String.length(post.content) > 35, do: "..."}
+              </a>
+            </td>
+            <%= if @current_user && @current_user.admin do %>
+              <td class="actions">
+                <div class="sr-only">
+                  <a href={~p"/posts/#{post.id}"} class="link">Show</a>
+                </div>
 
-  <button id="load-more-btn" class="mt-4 p-2 bg-blue-500 text-white rounded">More Posts</button>
-</body>
+                <div class="links">
+                  <a href={~p"/posts/#{post.id}/edit"} class="link">Edit</a>
+                  <a
+                    href={~p"/posts/#{post.id}"}
+                    method="delete"
+                    data-confirm="Are you sure?"
+                    class="link"
+                  >
+                    Delete
+                  </a>
+                </div>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <button id="load-more-btn" class="mt-4 p-2 bg-blue-500 text-white rounded">More Posts</button>
+  </div>
+</div>
 
 <style>
-  #posts {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: Arial, sans-serif;
-    font-size: 1rem;
-  }
-
+  /* Header */
   #posts thead tr {
-    background-color: #f3f4f6; /* light gray */
+    background-color: #f3f4f6;
     text-align: left;
   }
 
-  #posts th, #posts td {
+  #posts th,
+  #posts td {
     padding: 12px 15px;
     border-bottom: 1px solid #ddd;
   }
 
+  /* Row hover */
   #posts tbody tr:hover {
     background-color: #f9fafb;
   }
 
+  /* Title link */
   #posts a.title {
     font-weight: 600;
-    color: #2563eb; /* blue */
+    color: #2563eb;
     text-decoration: none;
   }
 
@@ -94,28 +90,59 @@
     text-decoration: underline;
   }
 
+  /* Content link */
+  #posts a.content:hover {
+    text-decoration: underline;
+  }
+
+  /* Action buttons */
+  #posts th.actions {
+    width: 120px;
+    text-align: right;
+  }
+
+  #posts td.actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 0.5rem;
+    white-space: nowrap;
+  }
+
+    /* Action links */
   #posts a.link {
-    color: #2563eb;
-    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 0.9rem;
+
+    color: #2563eb;
+    text-decoration: none;
   }
 
   #posts a.link:hover {
     background-color: #e0e7ff;
   }
 
-  /* Merge action columns into one for clarity */
-  #posts thead th.actions {
-    width: 120px;
+  #posts td a h1,
+  #posts td a h2,
+  #posts td a h3,
+  #posts td a h4,
+  #posts td a p {
+    margin: 0;
   }
 
-  #posts tbody td.actions {
-    display: flex;
-    gap: 10px;
+  .posts-page {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 1rem; /* optional */
   }
 
+  /* Load more button */
   #load-more-btn {
     margin-top: 20px;
     padding: 10px 20px;
@@ -125,7 +152,6 @@
     border: none;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
   }
 
   #load-more-btn:hover {

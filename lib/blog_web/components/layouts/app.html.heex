@@ -6,7 +6,7 @@
 </script>
 
 <main class="px-4 py-20 sm:px-6 lg:px-8">
-  <div class={if @conn.request_path =~ ~r|^/posts/\d+$|, do: "", else: "mx-auto max-w-2xl"}>
+  <div class="mx-auto max-w-6xl">
     <.flash_group flash={@flash} />
     {@inner_content}
   </div>
