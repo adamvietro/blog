@@ -27,7 +27,9 @@
     </tbody>
   </table>
 
-  <.load_more_button />
+  <%= if length(@posts) > 10 do %>
+    <.load_more_button />
+  <% end %>
 </div>
 
 <style>
