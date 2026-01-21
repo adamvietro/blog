@@ -18,8 +18,19 @@ defmodule BlogWeb.Router do
   end
 
   scope "/", BlogWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    post "/posts/:id/comments/new", CommentController, :create
+    get "/posts/:id/comments/new", CommentController, :new
+    delete "/posts/:id/comments/:comment_id", CommentController, :delete
+    get "/posts/:id/comments/:comment_id/edit", CommentController, :edit
+    put "/posts/:id/comments/:comment_id/edit", CommentController, :update
+  end
+
+  scope "/", BlogWeb do
     pipe_through [:browser, :require_authenticated_user, :require_admin]
 
+    get "/tags", TagController, :index
     get "/tags/new", TagController, :new
     post "/tags", TagController, :create
     put "/tags/:id", TagController, :put
@@ -30,12 +41,6 @@ defmodule BlogWeb.Router do
     get "/posts/:id/edit", PostController, :edit
     post "/posts/:id", PostController, :edit
     delete "/posts/:id", PostController, :delete
-    get "/posts/:id/comments", CommentController, :show
-    post "/posts/:id/comments/new", CommentController, :create
-    get "/posts/:id/comments/new", CommentController, :new
-    delete "/posts/:id/comments/:comment_id", CommentController, :delete
-    get "/posts/:id/comments/:comment_id/edit", CommentController, :edit
-    put "/posts/:id/comments/:comment_id/edit", CommentController, :update
   end
 
   scope "/", BlogWeb do
@@ -45,8 +50,8 @@ defmodule BlogWeb.Router do
     get "/posts", PostController, :index
     get "/posts/:id", PostController, :show
     get "/search", PostController, :search
-    get "/tags", TagController, :index
     get "/tags/search", TagController, :search
+    get "/posts/:id/comments", CommentController, :show
   end
 
   # Other scopes may use custom stacks.

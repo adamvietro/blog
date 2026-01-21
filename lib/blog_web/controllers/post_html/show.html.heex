@@ -8,11 +8,9 @@
     <% end %>
   </:actions>
   <:actions>
-    <%= if assigns[:current_user] do %>
-      <.link href={~p"/posts/#{@post}/comments"}>
-        <.button>Comments</.button>
-      </.link>
-    <% end %>
+    <.link href={~p"/posts/#{@post}/comments"}>
+      <.button>Comments</.button>
+    </.link>
   </:actions>
   <:actions>
     <%= if assigns[:current_user] do %>
