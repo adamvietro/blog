@@ -20,33 +20,35 @@ defmodule BlogWeb.CommentController do
 
       {:error, %Ecto.Changeset{} = comment_changeset} ->
         post = Posts.get_post!(post_id)
-        render(conn, :show, post: post, comment_changeset: comment_changeset)
+        render(conn, :create, post: post, comment_changeset: comment_changeset)
     end
   end
 
   @spec new(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def new(conn, %{"id" => id}) do
-    changeset = Comments.change_comment(%Comment{})
-    render(conn, :create, changeset: changeset, id: id, page_title: "New Comment")
+    post = Posts.get_post!(id)
+    changeset = Comments.change_comment(%Comment{post_id: post.id})
+
+    render(conn, :create,
+      post: post,
+      comment_changeset: changeset,
+      page_title: "New Comment"
+    )
   end
 
   @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
-    post =
-      Posts.get_post!(id)
-      |> Repo.preload(:comments)
+    post = Repo.get!(Posts.Post, id) |> Repo.preload(:comments)
+    changeset = Blog.Comments.Comment.changeset(%Blog.Comments.Comment{}, %{})
 
-    comment_list =
-      Enum.map(post.comments, fn comment ->
-        %{
-          "id" => comment.id,
-          "comment" => comment.content,
-          "user_id" => comment.user_id,
-          "post_id" => comment.post_id
-        }
-      end)
-
-    render(conn, :show, comment: comment_list, page_title: "Comment")
+    render(conn, "show.html",
+      post: post,
+      # <- list of comments
+      comments: post.comments,
+      # <- for the new comment form
+      comment_changeset: changeset,
+      current_user: conn.assigns.current_user
+    )
   end
 
   def delete(conn, %{"id" => id, "comment_id" => comment_id}) do
@@ -70,7 +72,13 @@ defmodule BlogWeb.CommentController do
   def edit(conn, %{"id" => _id, "comment_id" => comment_id}) do
     comment = Comments.get_comment!(comment_id)
     changeset = Comments.change_comment(comment)
-    render(conn, :edit, comment: comment, changeset: changeset, page_title: "Edit Comment")
+
+    render(conn, :edit,
+      comment: comment,
+      changeset: changeset,
+      post_id: comment.post_id,
+      page_title: "Edit Comment"
+    )
   end
 
   @spec update(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -90,7 +98,12 @@ defmodule BlogWeb.CommentController do
           |> redirect(to: ~p"/posts/#{comment.post_id}/comments/")
 
         {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, :edit, comment: comment, changeset: changeset)
+          render(conn, :edit,
+            comment: comment,
+            changeset: changeset,
+            post_id: comment.post_id,
+            page_title: "Edit Comment"
+          )
       end
     else
       conn

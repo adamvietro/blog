@@ -1,8 +1,12 @@
 <.header>
   New Comment
-  <:subtitle>Use this form to manage post records in your database.</:subtitle>
+  <:subtitle>Use this form to add a comment to this post.</:subtitle>
 </.header>
 
-<.comment_form changeset={@changeset} id={@id} action={~p"/posts/#{@id}/comments/new"} />
+<.comment_form
+  changeset={@comment_changeset}
+  post_id={@post.id}
+  action={~p"/posts/#{@post.id}/comments/new"}
+/>
 
 <.back navigate={~p"/posts"}>Back to posts</.back>

@@ -8,6 +8,7 @@ defmodule BlogWeb.CommentHTML do
   """
   attr :changeset, Ecto.Changeset, required: true
   attr :action, :string, required: true
+  attr :post_id, :any, required: true
   attr :id, :string
 
   def comment_form(assigns)

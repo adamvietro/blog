@@ -1,32 +1,36 @@
 <.header>
   <:actions>
     <%= if assigns[:current_user] do %>
-      <.link href={~p"/posts/#{@conn.params["id"]}/comments/new"}>
+      <.link href={~p"/posts/#{@post.id}/comments/new"}>
         <.button>Add Comment</.button>
       </.link>
     <% end %>
   </:actions>
 </.header>
 
-<.table id="comment" rows={@comment}>
-  <:col :let={comment} label="user">{comment["user_id"]}</:col>
-  <:col :let={comment} label="comment">{comment["comment"]}</:col>
-  <:action :let={comment}>
-    <%= if assigns[:current_user] && comment["user_id"] == assigns[:current_user].id do %>
-      <.link
-        href={~p"/posts/#{comment["post_id"]}/comments/#{comment["id"]}"}
-        method="delete"
-        data-confirm="Are you sure?"
-      >
-        Delete
-      </.link>
-    <% end %>
-    <%= if assigns[:current_user] && comment["user_id"] == assigns[:current_user].id do %>
-      <.link href={~p"/posts/#{comment["post_id"]}/comments/#{comment["id"]}/edit"}>
-        <.button>Edit</.button>
-      </.link>
-    <% end %>
-  </:action>
-</.table>
+<%= if @comments == [] do %>
+  <p>No comments yet.</p>
+<% else %>
+  <.table id="comment" rows={@comments}>
+    <:col :let={comment} label="Comment">{comment.content}</:col>
+    <:action :let={comment}>
+      <%= if assigns[:current_user] && comment.user_id == assigns[:current_user].id do %>
+        <.link
+          href={~p"/posts/#{comment.post_id}/comments/#{comment.id}"}
+          method="delete"
+          data-confirm="Are you sure?"
+        >
+          Delete
+        </.link>
+      <% end %>
 
-<.back navigate={~p"/posts/#{@conn.params["id"]}"}>Back to post</.back>
+      <%= if assigns[:current_user] && comment.user_id == assigns[:current_user].id do %>
+        <.link href={~p"/posts/#{comment.post_id}/comments/#{comment.id}/edit"}>
+          <.button>Edit</.button>
+        </.link>
+      <% end %>
+    </:action>
+  </.table>
+<% end %>
+
+<.back navigate={~p"/posts/#{@post.id}"}>Back to post</.back>

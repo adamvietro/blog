@@ -7,6 +7,7 @@
   changeset={@changeset}
   id={@comment.id}
   action={~p"/posts/#{@comment.post_id}/comments/#{@comment.id}/edit"}
+  post_id={@comment.post_id}
 />
 
 <.back navigate={~p"/posts/#{@comment.post_id}/comments/"}>Back to posts</.back>

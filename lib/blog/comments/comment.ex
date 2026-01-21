@@ -15,6 +15,7 @@ defmodule Blog.Comments.Comment do
     comment
     |> cast(attrs, [:content, :post_id, :user_id])
     |> validate_required([:content])
+    |> validate_length(:content, max: 150)
     |> foreign_key_constraint(:post_id)
     |> foreign_key_constraint(:user_id)
   end

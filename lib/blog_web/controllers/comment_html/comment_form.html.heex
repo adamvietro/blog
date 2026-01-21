@@ -1,6 +1,11 @@
 <.simple_form :let={f} for={@changeset} action={@action}>
   <.input field={f[:content]} type="text" label="Content" />
-  <.input field={f[:post_id]} type="hidden" value={@__given__.id} />
+  <.input
+    field={f[:post_id]}
+    type="hidden"
+    value={Ecto.Changeset.get_field(@changeset, :post_id)}
+  />
+
   <:actions>
     <.button>Commit</.button>
   </:actions>
