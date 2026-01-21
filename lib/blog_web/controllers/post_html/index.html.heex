@@ -1,162 +1,112 @@
 <div class="posts-page mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-  <div class="posts-page">
-    <.header>
-      Listing Posts
-      <:actions>
+  <.header>
+    Listing Posts
+    <:actions>
+      <%= if @current_user && @current_user.admin do %>
+        <.link href={~p"/posts/new"}>
+          <.button>New Post</.button>
+        </.link>
+      <% end %>
+    </:actions>
+  </.header>
+
+  <table id="posts" class="w-full">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Content</th>
         <%= if @current_user && @current_user.admin do %>
-          <.link href={~p"/posts/new"}>
-            <.button>New Post</.button>
-          </.link>
+          <th class="actions">Actions</th>
         <% end %>
-      </:actions>
-    </.header>
-    <table id="posts">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Content</th>
-          <%= if @current_user && @current_user.admin do %>
-            <th class="actions">Actions</th>
-          <% end %>
-        </tr>
-      </thead>
-      <tbody>
-        <%= for post <- @posts do %>
-          <tr>
-            <td>
-              <a class="title" href={~p"/posts/#{post.id}"}>
-                {post.title}
-              </a>
-            </td>
-            <td>
-              <a class="content" href={~p"/posts/#{post.id}"}>
-                {String.slice(post.content, 0, 35)}{if String.length(post.content) > 35, do: "..."}
-              </a>
-            </td>
-            <%= if @current_user && @current_user.admin do %>
-              <td class="actions">
-                <div class="sr-only">
-                  <a href={~p"/posts/#{post.id}"} class="link">Show</a>
-                </div>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for post <- @posts do %>
+        <.post_row post={post} current_user={@current_user} />
+      <% end %>
+    </tbody>
+  </table>
 
-                <div class="links">
-                  <a href={~p"/posts/#{post.id}/edit"} class="link">Edit</a>
-                  <a
-                    href={~p"/posts/#{post.id}"}
-                    method="delete"
-                    data-confirm="Are you sure?"
-                    class="link"
-                  >
-                    Delete
-                  </a>
-                </div>
-              </td>
-            <% end %>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-
-    <button id="load-more-btn" class="mt-4 p-2 bg-blue-500 text-white rounded">More Posts</button>
-  </div>
+  <.load_more_button />
 </div>
 
 <style>
-  /* Header */
-  #posts thead tr {
-    background-color: #f3f4f6;
-    text-align: left;
-  }
+    /* Header */
+    #posts thead tr {
+      background-color: #f3f4f6;
+      text-align: left;
+    }
 
-  #posts th,
-  #posts td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
-  }
+    #posts th,
+    #posts td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+    }
 
-  /* Row hover */
-  #posts tbody tr:hover {
-    background-color: #f9fafb;
-  }
+    /* Row hover */
+    #posts tbody tr:hover {
+      background-color: #f9fafb;
+    }
 
-  /* Title link */
-  #posts a.title {
-    font-weight: 600;
-    color: #2563eb;
-    text-decoration: none;
-  }
+    /* Title link */
+    #posts a.title {
+      font-weight: 600;
+      color: #2563eb;
+      text-decoration: none;
+    }
 
-  #posts a.title:hover {
-    text-decoration: underline;
-  }
+    #posts a.title:hover {
+      text-decoration: underline;
+    }
 
-  /* Content link */
-  #posts a.content:hover {
-    text-decoration: underline;
-  }
-
-  /* Action buttons */
-  #posts th.actions {
-    width: 120px;
-    text-align: right;
-  }
-
-  #posts td.actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-start;
-    gap: 0.5rem;
-    white-space: nowrap;
-  }
+    /* Content link */
+    #posts a.content:hover {
+      text-decoration: underline;
+    }
 
     /* Action links */
-  #posts a.link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    #posts a.link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
 
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.9rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.9rem;
 
-    color: #2563eb;
-    text-decoration: none;
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .posts-page {
+    margin: 0 auto;         /* center container */
+    padding: 0 1rem;        /* optional padding on sides */
+    width: 100%;            /* full width of parent container */
+    box-sizing: border-box;  /* include padding in width */
   }
 
-  #posts a.link:hover {
-    background-color: #e0e7ff;
-  }
-
-  #posts td a h1,
-  #posts td a h2,
-  #posts td a h3,
-  #posts td a h4,
-  #posts td a p {
-    margin: 0;
-  }
-
-  .posts-page {
+  /* Make table fill container */
+  #posts {
     width: 100%;
-    max-width: 100%;
-    margin: 0;
-    padding: 0 1rem; /* optional */
+    border-collapse: collapse;
+    table-layout: auto;
   }
 
-  /* Load more button */
-  #load-more-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #2563eb;
-    color: white;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-  }
+    /* Load more button */
+    #load-more-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #2563eb;
+      color: white;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
 
-  #load-more-btn:hover {
-    background-color: #1d4ed8;
-  }
+    #load-more-btn:hover {
+      background-color: #1d4ed8;
+    }
 </style>
 
 <script>
