@@ -1,8 +1,6 @@
 defmodule BlogWeb.PostHTML do
   use BlogWeb, :html
 
-  import Blog.Posts.Post
-
   embed_templates "post_html/*"
 
   @doc """
@@ -51,12 +49,12 @@ defmodule BlogWeb.PostHTML do
     <tr>
       <td>
         <a class="title" href={~p"/posts/#{@post.id}"}>
-          {@post.title}
+          {BlogWeb.PostHTML.preview_title(@post.title, 25)}
         </a>
       </td>
       <td>
         <a class="content" href={~p"/posts/#{@post.id}"}>
-          {BlogWeb.PostHTML.preview_content(@post.content, 50)}
+          {BlogWeb.PostHTML.preview_content(@post.content, 60)}
         </a>
       </td>
       <%= if @current_user && @current_user.admin do %>
@@ -114,6 +112,22 @@ defmodule BlogWeb.PostHTML do
       String.slice(content, 0, max_chars) <> "..."
     else
       content
+    end
+  end
+
+  @doc """
+  Renders the title within the title column of the post table.
+
+  Usage:
+    {BlogWeb.PostHTML.preview_title(@post.title, 25)}
+  """
+  def preview_title(title, max_chars \\ 25) do
+    title = String.trim(title)
+
+    if String.length(title) > max_chars do
+      String.slice(title, 0, max_chars) <> "..."
+    else
+      title
     end
   end
 end
