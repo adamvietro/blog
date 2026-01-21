@@ -233,7 +233,11 @@ defmodule BlogWeb.CoreComponents do
       class={[
         "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
         "text-sm font-semibold leading-6 text-white active:text-white/80",
-        @class
+        @class,
+        if(@rest[:disabled],
+          do: "bg-zinc-400 cursor-not-allowed",
+          else: "bg-zinc-900 hover:bg-zinc-700"
+        )
       ]}
       {@rest}
     >

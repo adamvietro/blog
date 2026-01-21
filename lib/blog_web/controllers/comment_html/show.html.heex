@@ -4,6 +4,10 @@
       <.link href={~p"/posts/#{@post.id}/comments/new"}>
         <.button>Add Comment</.button>
       </.link>
+    <% else %>
+      <.link href={~p"/posts/#{@post.id}/comments/new"}>
+        <.button disabled title="Must be logged in!!!">Add Comments</.button>
+      </.link>
     <% end %>
   </:actions>
 </.header>
