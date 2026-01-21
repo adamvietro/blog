@@ -1,5 +1,4 @@
 <.header>
-  Post {@post.id}
   <%!-- <:subtitle>This is a post record from your database.</:subtitle> --%>
   <:actions>
     <%= if assigns[:current_user] && @post.user_id == assigns[:current_user].id do %>
@@ -70,19 +69,19 @@
   h1 {
     font-size: 2.0rem;
     font-weight: bold;
-    text-align: center;
+    text-align: left;
   }
 
   h2 {
     font-size: 1.5rem;
     font-weight: bold;
-    text-align: center;
+    text-align: left;
   }
 
   h3 {
     font-size: 1.0rem;
     font-weight: bold;
-    text-align: center;
+    text-align: left;
   }
 
   .prose h1,
