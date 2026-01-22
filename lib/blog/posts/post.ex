@@ -12,6 +12,8 @@ defmodule Blog.Posts.Post do
     has_many :comments, Blog.Comments.Comment
     belongs_to :user, Blog.Accounts.User
     many_to_many :tags, Blog.Tags.Tag, join_through: "post_tags", on_replace: :delete
+    # New for Notifications
+    has_many :notifications, Blog.Notifications.Notification
     has_one :cover_image, Blog.Posts.CoverImage, on_replace: :update
 
     timestamps(type: :utc_datetime)

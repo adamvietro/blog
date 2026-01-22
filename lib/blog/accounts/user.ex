@@ -11,6 +11,8 @@ defmodule Blog.Accounts.User do
     field :admin, :boolean
     has_many :posts, Blog.Posts.Post
     has_many :comments, Blog.Comments.Comment
+    # New with Notifications
+    has_many :notifications, Blog.Notifications.Notification
 
     timestamps(type: :utc_datetime)
   end
