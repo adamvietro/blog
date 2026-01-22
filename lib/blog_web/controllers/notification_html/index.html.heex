@@ -1,0 +1,120 @@
+<div class="notification-mailbox">
+  <div class="header">
+    <h1>Notifications</h1>
+    <%= if @notifications != [] do %>
+      <.link href={~p"/notifications/mark_all_read"} method="post" class="mark-all-read">
+        Mark all as read
+      </.link>
+    <% end %>
+  </div>
+
+  <%= if @notifications == [] do %>
+    <div class="empty-state">
+      <p>No unread notifications</p>
+    </div>
+  <% else %>
+    <div class="notifications-list">
+      <%= for notification <- @notifications do %>
+        <div class="notification-item">
+          <div class="notification-content">
+            <p>
+              <strong>{notification.actor.email}</strong>
+              did something on
+              <.link href={~p"/posts/#{notification.post}"}>
+                {notification.post.title}
+              </.link>
+            </p>
+            <span class="timestamp">
+              {Calendar.strftime(notification.inserted_at, "%B %d, %Y at %I:%M %p")}
+            </span>
+          </div>
+
+          <.link
+            href={~p"/notifications/#{notification.id}/mark_read"}
+            method="post"
+            class="mark-read-btn"
+          >
+            Mark as read
+          </.link>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .notification-mailbox {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 1rem;
+  }
+
+  .mark-all-read {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 0.875rem;
+  }
+
+  .mark-all-read:hover {
+    text-decoration: underline;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6b7280;
+  }
+
+  .notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+  }
+
+  .notification-content {
+    flex: 1;
+  }
+
+  .notification-content p {
+    margin: 0 0 0.5rem 0;
+  }
+
+  .timestamp {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .mark-read-btn {
+    padding: 0.5rem 1rem;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+
+  .mark-read-btn:hover {
+    background: #1d4ed8;
+  }
+</style>

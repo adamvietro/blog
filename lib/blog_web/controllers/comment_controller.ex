@@ -14,6 +14,19 @@ defmodule BlogWeb.CommentController do
 
     case Comments.create_comment(comment_params) do
       {:ok, comment} ->
+        comment = Repo.preload(comment, :post)
+        post_author_id = comment.post.user_id
+        current_user_id = conn.assigns[:current_user].id
+
+        if post_author_id != current_user_id do
+          Blog.Notifications.create_notification(%{
+            user_id: post_author_id,
+            post_id: post_id,
+            actor_id: current_user_id,
+            read: false
+          })
+        end
+
         conn
         |> put_flash(:info, "Comment created successfully.")
         |> redirect(to: ~p"/posts/#{comment.post_id}/comments")

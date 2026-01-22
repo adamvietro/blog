@@ -33,6 +33,37 @@ defmodule Blog.Notifications do
     |> Repo.all()
   end
 
+  def get_unread_notifications(user_id) do
+    from(n in Notification,
+      where: n.user_id == ^user_id and n.read == false,
+      order_by: [desc: n.inserted_at],
+      preload: [:post, :actor]
+    )
+    |> Repo.all()
+  end
+
+  def mark_as_read(notification_id, user_id) do
+    from(n in Notification,
+      where: n.id == ^notification_id and n.user_id == ^user_id
+    )
+    |> Repo.update_all(set: [read: true])
+  end
+
+  def mark_all_as_read(user_id) do
+    from(n in Notification,
+      where: n.user_id == ^user_id and n.read == false
+    )
+    |> Repo.update_all(set: [read: true])
+  end
+
+  def unread_count(user_id) do
+    from(n in Notification,
+      where: n.user_id == ^user_id and n.read == false,
+      select: count(n.id)
+    )
+    |> Repo.one()
+  end
+
   def change_notification(%Notification{} = notification, attrs \\ %{}) do
     Notification.changeset(notification, attrs)
   end

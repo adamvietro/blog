@@ -97,6 +97,9 @@
       <.link navigate={~p"/tags/search"} class="link">
         Tag Search
       </.link>
+      <%= if @current_user do %>
+        <.link href={~p"/notifications"}> Notifications </.link>
+      <% end %>
       <%= if @current_user && @current_user.admin do %>
         <.link navigate={~p"/posts/new"} class="link bg-yellow-400 hover:bg-gray-200">
           New Post

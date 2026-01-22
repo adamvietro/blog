@@ -25,6 +25,9 @@ defmodule BlogWeb.Router do
     delete "/posts/:id/comments/:comment_id", CommentController, :delete
     get "/posts/:id/comments/:comment_id/edit", CommentController, :edit
     put "/posts/:id/comments/:comment_id/edit", CommentController, :update
+    get "/notifications", NotificationController, :index
+    post "/notifications/:id/mark_read", NotificationController, :mark_read
+    post "/notifications/mark_all_read", NotificationController, :mark_all_read
   end
 
   scope "/", BlogWeb do
@@ -32,7 +35,7 @@ defmodule BlogWeb.Router do
 
     get "/tags", TagController, :index
     get "/tags/new", TagController, :new
-    post "/tags", TagController, :create
+    post "/tags", TagController, :crfeate
     put "/tags/:id", TagController, :put
     delete "/tags/:id", TagController, :delete
     post "/posts", PostController, :create
