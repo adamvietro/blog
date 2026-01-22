@@ -28,7 +28,7 @@ defmodule Blog.PostsFixtures do
       |> Enum.into(%{
         content: "some content",
         published_on: ~D[2025-02-15],
-        title: "some title",
+        title: "some title #{System.unique_integer()}",
         visibility: true
       })
       |> Blog.Posts.create_post()

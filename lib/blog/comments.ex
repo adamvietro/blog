@@ -67,55 +67,57 @@ defmodule Blog.Comments do
   end
 
   defp send_comment_notification(comment) do
-  comment = Repo.preload(comment, [:post, :user])
-  post_author_id = comment.post.user_id
-  commenter_id = comment.user_id
+    comment = Repo.preload(comment, [:post, :user])
+    post_author_id = comment.post.user_id
+    commenter_id = comment.user_id
 
-  # Get all users who have commented on this post (excluding current commenter)
-  previous_commenters =
-    from(c in Blog.Comments.Comment,
-      where: c.post_id == ^comment.post_id and c.user_id != ^commenter_id,
-      distinct: c.user_id,
-      select: c.user_id
-    )
-    |> Repo.all()
-
-  # Combine post author and previous commenters, remove duplicates
-  users_to_notify =
-    [post_author_id | previous_commenters]
-    |> Enum.uniq()
-    |> Enum.reject(&(&1 == commenter_id))  # Don't notify the commenter
-
-  # Create/update notification for each user
-  Enum.each(users_to_notify, fn user_id ->
-    # Find any unread notification for this user/post combo
-    existing_notification =
-      from(n in Blog.Notifications.Notification,
-        where: n.user_id == ^user_id and
-               n.post_id == ^comment.post_id and
-               n.read == false
+    # Get all users who have commented on this post (excluding current commenter)
+    previous_commenters =
+      from(c in Blog.Comments.Comment,
+        where: c.post_id == ^comment.post_id and c.user_id != ^commenter_id,
+        distinct: c.user_id,
+        select: c.user_id
       )
-      |> Repo.one()
+      |> Repo.all()
 
-    case existing_notification do
-      nil ->
-        # Create new notification
-        Blog.Notifications.create_notification(%{
-          user_id: user_id,
-          post_id: comment.post_id,
-          actor_id: commenter_id,
-          read: false
-        })
+    # Combine post author and previous commenters, remove duplicates
+    users_to_notify =
+      [post_author_id | previous_commenters]
+      |> Enum.uniq()
+      # Don't notify the commenter
+      |> Enum.reject(&(&1 == commenter_id))
 
-      notification ->
-        # Update existing unread notification with latest commenter
-        Blog.Notifications.Notification.changeset(notification, %{
-          actor_id: commenter_id
-        })
-        |> Repo.update()
-    end
-  end)
-end
+    # Create/update notification for each user
+    Enum.each(users_to_notify, fn user_id ->
+      # Find any unread notification for this user/post combo
+      existing_notification =
+        from(n in Blog.Notifications.Notification,
+          where:
+            n.user_id == ^user_id and
+              n.post_id == ^comment.post_id and
+              n.read == false
+        )
+        |> Repo.one()
+
+      case existing_notification do
+        nil ->
+          # Create new notification
+          Blog.Notifications.create_notification(%{
+            user_id: user_id,
+            post_id: comment.post_id,
+            actor_id: commenter_id,
+            read: false
+          })
+
+        notification ->
+          # Update existing unread notification with latest commenter
+          Blog.Notifications.Notification.changeset(notification, %{
+            actor_id: commenter_id
+          })
+          |> Repo.update()
+      end
+    end)
+  end
 
   @doc """
   Updates a comment.

@@ -31,7 +31,7 @@ defmodule BlogWeb.PostControllerTest do
 
   describe "new post" do
     test "renders form", %{conn: conn} do
-      post_user = user_fixture()
+      post_user = admin_fixture()
       conn = conn |> log_in_user(post_user) |> get(~p"/posts/new")
       assert html_response(conn, 200) =~ "New Post"
     end
@@ -39,7 +39,7 @@ defmodule BlogWeb.PostControllerTest do
 
   describe "create post" do
     test "redirects to show when data is valid", %{conn: conn} do
-      post_user = user_fixture()
+      post_user = admin_fixture()
       conn = conn |> log_in_user(post_user)
       conn = post(conn, ~p"/posts", post: @create_attrs)
 
@@ -47,11 +47,11 @@ defmodule BlogWeb.PostControllerTest do
       assert redirected_to(conn) == ~p"/posts/#{id}"
 
       conn = get(conn, ~p"/posts/#{id}")
-      assert html_response(conn, 200) =~ "Post #{id}"
+      assert html_response(conn, 200) =~ "some content"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      post_user = user_fixture()
+      post_user = admin_fixture()
       conn = conn |> log_in_user(post_user)
       conn = post(conn, ~p"/posts", post: @invalid_attrs)
       assert html_response(conn, 200) =~ "New Post"
@@ -99,7 +99,7 @@ defmodule BlogWeb.PostControllerTest do
   end
 
   defp create_post(_) do
-    user = user_fixture()
+    user = admin_fixture()
     post = post_fixture(user_id: user.id)
     %{post: post, user: user}
   end
@@ -108,7 +108,7 @@ defmodule BlogWeb.PostControllerTest do
     alias Blog.Posts, as: Posts
 
     test "search_posts/1 filters posts by partial and case-sensitive title" do
-      user = user_fixture()
+      user = admin_fixture()
 
       post =
         post_fixture(user_id: user.id, title: "Title")
@@ -137,21 +137,21 @@ defmodule BlogWeb.PostControllerTest do
 
   describe "html request search" do
     test "search for posts - non-matching", %{conn: conn} do
-      user = user_fixture()
+      user = admin_fixture()
       post = post_fixture(user_id: user.id, title: "some title")
       conn = get(conn, ~p"/search", title: "Non-Matching")
       refute html_response(conn, 200) =~ post.title
     end
 
     test "search for posts - exact match", %{conn: conn} do
-      user = user_fixture()
+      user = admin_fixture()
       post = post_fixture(user_id: user.id, title: "some title")
       conn = get(conn, ~p"/search", title: "some title")
       assert html_response(conn, 200) =~ post.title
     end
 
     test "search for posts - partial match", %{conn: conn} do
-      user = user_fixture()
+      user = admin_fixture()
       post = post_fixture(user_id: user.id, title: "some title")
       conn = get(conn, ~p"/search", title: "itl")
       assert html_response(conn, 200) =~ post.title
@@ -165,7 +165,7 @@ defmodule BlogWeb.PostControllerTest do
     alias Blog.Comments.Comment
 
     test "create_post/1 with tags", %{conn: conn} do
-      user = user_fixture()
+      user = admin_fixture()
       tag1 = tag_fixture()
       tag2 = tag_fixture(%{name: "some other tag"})
 
@@ -202,13 +202,13 @@ defmodule BlogWeb.PostControllerTest do
     end
 
     test "a user cannot delete another user's post", %{conn: conn} do
-      post_user = user_fixture()
-      other_user = user_fixture()
+      post_user = admin_fixture()
+      other_user = admin_fixture()
       post = post_fixture(user_id: post_user.id)
       conn = conn |> log_in_user(other_user) |> delete(~p"/posts/#{post}")
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) =~
-               "You can only edit or delete your own posts."
+               "You can only delete your own posts."
 
       assert redirected_to(conn) == ~p"/posts/#{post}"
     end

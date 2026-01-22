@@ -66,7 +66,6 @@ defmodule BlogWeb.PostController do
     post =
       Posts.get_post!(id)
       |> Repo.preload([:tags])
-      |> IO.inspect(label: "post")
 
     changeset = Posts.change_post(post)
     selected_tags = Enum.map(post.tags, fn tag -> tag.id end)

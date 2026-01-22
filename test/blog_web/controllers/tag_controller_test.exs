@@ -12,15 +12,15 @@ defmodule BlogWeb.TagControllerTest do
   @invalid_attrs %{name: nil}
 
   describe "index" do
-    test "lists all tags", %{conn: conn} do
+    test "not an admin rerouted", %{conn: conn} do
       conn = get(conn, ~p"/tags")
-      assert html_response(conn, 200) =~ "Listing Tags"
+      assert html_response(conn, 302) =~ "You are being"
     end
   end
 
   describe "new tag" do
     test "renders form", %{conn: conn} do
-      user = user_fixture()
+      user = admin_fixture()
       conn = log_in_user(conn, user)
       conn = get(conn, ~p"/tags/new")
       assert html_response(conn, 200) =~ "New Tag"
@@ -29,14 +29,14 @@ defmodule BlogWeb.TagControllerTest do
 
   describe "create tag" do
     test "renders errors when data is invalid", %{conn: conn} do
-      user = user_fixture()
+      user = admin_fixture()
       conn = log_in_user(conn, user)
       conn = post(conn, ~p"/tags", tag: @invalid_attrs)
       assert html_response(conn, 200) =~ "New Tag"
     end
 
     test "creates new tag with valid data", %{conn: conn} do
-      user = user_fixture()
+      user = admin_fixture()
       conn = log_in_user(conn, user)
       conn = post(conn, ~p"/tags", tag: @create_attrs)
       assert redirected_to(conn) == ~p"/tags"
@@ -47,7 +47,7 @@ defmodule BlogWeb.TagControllerTest do
     setup [:create_tag]
 
     test "deletes chosen tag", %{conn: conn, tag: tag} do
-      user = user_fixture()
+      user = admin_fixture()
       conn = log_in_user(conn, user)
 
       conn = delete(conn, ~p"/tags/#{tag}")
@@ -57,7 +57,7 @@ defmodule BlogWeb.TagControllerTest do
 
   test "create post with tags", %{conn: conn} do
     # Arrange: Setup the necessary data
-    user = user_fixture()
+    user = admin_fixture()
     conn = log_in_user(conn, user)
 
     tag1 = tag_fixture(name: "tag 1 name")
