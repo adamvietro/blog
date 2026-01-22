@@ -35,7 +35,7 @@ defmodule BlogWeb.Router do
 
     get "/tags", TagController, :index
     get "/tags/new", TagController, :new
-    post "/tags", TagController, :crfeate
+    post "/tags", TagController, :create
     put "/tags/:id", TagController, :put
     delete "/tags/:id", TagController, :delete
     post "/posts", PostController, :create

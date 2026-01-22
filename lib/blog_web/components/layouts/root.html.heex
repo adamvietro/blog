@@ -98,7 +98,7 @@
         Tag Search
       </.link>
       <%= if assigns[:current_user] do %>
-        <.link href={~p"/notifications"} class="link">
+        <.link href={~p"/notifications"} class="link notification-link">
           Notifications
           <%= if (count = Blog.Notifications.unread_count(@current_user.id)) > 0 do %>
             <span class="notification-badge">{count}</span>
