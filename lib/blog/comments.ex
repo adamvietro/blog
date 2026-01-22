@@ -50,9 +50,56 @@ defmodule Blog.Comments do
 
   """
   def create_comment(attrs \\ %{}) do
-    %Comment{}
-    |> Comment.changeset(attrs)
-    |> Repo.insert()
+    result =
+      %Comment{}
+      |> Comment.changeset(attrs)
+      |> Repo.insert()
+
+    case result do
+      {:ok, comment} ->
+        # Send notification
+        send_comment_notification(comment)
+        {:ok, comment}
+
+      error ->
+        error
+    end
+  end
+
+  defp send_comment_notification(comment) do
+    comment = Repo.preload(comment, :post)
+    post_author_id = comment.post.user_id
+    commenter_id = comment.user_id
+
+    if post_author_id != commenter_id do
+      # Find any unread notification for this user/post combo
+      existing_notification =
+        from(n in Blog.Notifications.Notification,
+          where:
+            n.user_id == ^post_author_id and
+              n.post_id == ^comment.post_id and
+              n.read == false
+        )
+        |> Repo.one()
+
+      case existing_notification do
+        nil ->
+          # Create new notification
+          Blog.Notifications.create_notification(%{
+            user_id: post_author_id,
+            post_id: comment.post_id,
+            actor_id: commenter_id,
+            read: false
+          })
+
+        notification ->
+          # Update existing unread notification with latest commenter
+          Blog.Notifications.Notification.changeset(notification, %{
+            actor_id: commenter_id
+          })
+          |> Repo.update()
+      end
+    end
   end
 
   @doc """

@@ -19,8 +19,8 @@
           <div class="notification-content">
             <p>
               <strong>{notification.actor.email}</strong>
-              did something on
-              <.link href={~p"/posts/#{notification.post}"}>
+              commented on
+              <.link href={~p"/posts/#{notification.post}/comments"}>
                 {notification.post.title}
               </.link>
             </p>

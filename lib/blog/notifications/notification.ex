@@ -20,5 +20,6 @@ defmodule Blog.Notifications.Notification do
     |> foreign_key_constraint(:user_id)
     |> foreign_key_constraint(:post_id)
     |> foreign_key_constraint(:actor_id)
+    |> unique_constraint([:user_id, :post_id], name: "notifications_user_id_post_id_index")
   end
 end
