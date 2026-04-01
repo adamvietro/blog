@@ -47,7 +47,7 @@ defmodule BlogWeb.TagHTML do
     <tr>
       <td>
         <a class="title" href={~p"/posts/#{@post.id}"}>
-          {BlogWeb.PostHTML.preview_title(@post.title, 25)}
+          {BlogWeb.PostHTML.preview_title(@post.title, 100)}
         </a>
       </td>
       <%!-- <td>
