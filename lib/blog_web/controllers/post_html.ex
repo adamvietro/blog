@@ -49,14 +49,14 @@ defmodule BlogWeb.PostHTML do
     <tr>
       <td>
         <a class="title" href={~p"/posts/#{@post.id}"}>
-          {BlogWeb.PostHTML.preview_title(@post.title, 25)}
+          {BlogWeb.PostHTML.preview_title(@post.title, 100)}
         </a>
       </td>
-      <td>
+      <%!-- <td>
         <a class="content" href={~p"/posts/#{@post.id}"}>
           {BlogWeb.PostHTML.preview_content(@post.content, 60)}
         </a>
-      </td>
+      </td> --%>
       <%= if @current_user && @current_user.admin do %>
         <td class="actions">
           <.post_actions post={@post} />
