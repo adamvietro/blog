@@ -43,3 +43,21 @@ window.liveSocket = liveSocket // <- This makes it accessible in the console
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+import Prism from "prismjs"
+import "prismjs/components/prism-elixir"
+import "prismjs/components/prism-javascript"
+import "prismjs/components/prism-sql"
+import "prismjs/components/prism-rust"
+import "prismjs/components/prism-bash"
+import "prismjs/components/prism-python"
+import "prismjs/components/prism-erlang"
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("pre code[class]").forEach(function (block) {
+    var cls = block.className
+    if (!cls.startsWith("language-")) {
+      block.className = "language-" + cls
+    }
+  })
+  Prism.highlightAll()
+})
