@@ -1,35 +1,49 @@
 <.flash_group flash={@flash} />
-<html>
-  <body>
-    <div style="
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background: linear-gradient(135deg, #f0f4f8, #ffffff);
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: #333;
-        line-height: 1.6;
-        font-size: 1.1rem;
-      ">
-      <h2 style="margin-top: 0; font-size: 2rem; color: #222;">Welcome!</h2>
-      <p>
-        A technical blog documenting my journey through the Elixir ecosystem —
-        book notes, project deep-dives, and learnings from building real production
-        applications. Posts cover Phoenix LiveView, distributed systems, functional
-        programming, IoT with Nerves, and more.
-      </p>
-      <p>
-        Browse by tag or search by title to find what interests you. Everything
-        here reflects my commitment to clean, functional code and continuous learning.
-        Whether you're a company, recruiter, or fellow developer, I invite you to
-        explore my work and connect!
-      </p>
-      <p style="margin-top: 1.5rem;">
-        🔗 <a href="https://game-site.fly.dev/" target="_blank">Game Site</a>
-        <br /> 🔗 <a href="https://github.com/adamvietro" target="_blank">GitHub Profile</a>
-      </p>
-    </div>
-  </body>
-</html>
+
+<section class="mx-auto max-w-3xl py-8 sm:py-16">
+  <p class="font-mono text-sm text-brand">$ whoami</p>
+
+  <h1 class="mt-3 text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
+    Hey, I'm Adam. Welcome to my blog.
+  </h1>
+
+  <div class="prose mt-6">
+    <p>
+      A technical blog documenting my journey through the Elixir ecosystem —
+      book notes, project deep-dives, and learnings from building real production
+      applications. Posts cover Phoenix LiveView, distributed systems, functional
+      programming, IoT with Nerves, and more.
+    </p>
+    <p>
+      Browse by tag or search by title to find what interests you. Everything
+      here reflects my commitment to clean, functional code and continuous learning.
+      Whether you're a company, recruiter, or fellow developer, I invite you to
+      explore my work and connect!
+    </p>
+  </div>
+
+  <div class="mt-8 flex flex-wrap gap-3">
+    <.link
+      navigate={~p"/posts"}
+      class="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-brand/90"
+    >
+      Read the posts
+    </.link>
+    <a
+      href="https://github.com/adamvietro"
+      target="_blank"
+      rel="noopener"
+      class="rounded-md border border-zinc-700 px-4 py-2 text-sm font-medium text-zinc-300 transition-colors hover:border-brand hover:text-brand"
+    >
+      GitHub Profile
+    </a>
+    <a
+      href="https://game-site.fly.dev/"
+      target="_blank"
+      rel="noopener"
+      class="rounded-md border border-zinc-700 px-4 py-2 text-sm font-medium text-zinc-300 transition-colors hover:border-brand hover:text-brand"
+    >
+      Game Site
+    </a>
+  </div>
+</section>

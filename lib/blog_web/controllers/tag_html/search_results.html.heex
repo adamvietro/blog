@@ -10,22 +10,11 @@
     </:actions>
   </.header>
 
-  <table id="posts" class="w-full">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <%!-- <th>Content</th> --%>
-        <%= if @current_user && @current_user.admin do %>
-          <th class="actions">Actions</th>
-        <% end %>
-      </tr>
-    </thead>
-    <tbody>
-      <%= for post <- @posts do %>
-        <.post_row post={post} current_user={@current_user} />
-      <% end %>
-    </tbody>
-  </table>
+  <ul id="posts" class="w-full divide-y divide-zinc-800">
+    <%= for post <- @posts, post != nil do %>
+      <.post_row post={post} current_user={@current_user} />
+    <% end %>
+  </ul>
 
   <%= if length(@posts) > 10 do %>
     <.load_more_button />

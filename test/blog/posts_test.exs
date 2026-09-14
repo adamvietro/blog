@@ -16,9 +16,9 @@ defmodule Blog.PostsTest do
 
       post =
         post_fixture(user_id: user.id)
-        |> Repo.preload([:tags])
+        |> Repo.preload([:tags, :cover_image])
 
-      assert Posts.list_posts() |> Repo.preload([:tags]) == [post]
+      assert Posts.list_posts() == [post]
     end
 
     test "get_post!/1 returns the post with given id" do

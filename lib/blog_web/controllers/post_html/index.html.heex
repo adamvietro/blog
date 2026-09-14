@@ -1,6 +1,6 @@
-<div class="posts-page mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-  <.header>
-    Listing Posts
+<div class="mx-auto max-w-3xl">
+  <.header class="mb-2">
+    Posts
     <:actions>
       <%= if @current_user && @current_user.admin do %>
         <.link href={~p"/posts/new"}>
@@ -10,113 +10,29 @@
     </:actions>
   </.header>
 
-  <table id="posts" class="w-full">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <%= if @current_user && @current_user.admin do %>
-          <th class="actions">Actions</th>
-        <% end %>
-      </tr>
-    </thead>
-    <tbody>
+  <%= if @posts == [] do %>
+    <p class="mt-8 text-zinc-500">No posts yet.</p>
+  <% else %>
+    <ul id="posts" class="mt-6 divide-y divide-zinc-800">
       <%= for post <- @posts do %>
         <.post_row post={post} current_user={@current_user} />
       <% end %>
-    </tbody>
-  </table>
+    </ul>
 
-  <%= if length(@posts) > 10 do %>
-    <.load_more_button />
+    <%= if length(@posts) > 10 do %>
+      <.load_more_button />
+    <% end %>
   <% end %>
 </div>
 
-<style>
-    /* Header */
-    #posts thead tr {
-      background-color: #f3f4f6;
-      text-align: left;
-    }
-
-    #posts th,
-    #posts td {
-      padding: 12px 15px;
-      border-bottom: 1px solid #ddd;
-    }
-
-    /* Row hover */
-    #posts tbody tr:hover {
-      background-color: #f9fafb;
-    }
-
-    /* Title link */
-    #posts a.title {
-      font-weight: 600;
-      color: #2563eb;
-      text-decoration: none;
-    }
-
-    #posts a.title:hover {
-      text-decoration: underline;
-    }
-
-    /* Content link */
-    #posts a.content:hover {
-      text-decoration: underline;
-    }
-
-    /* Action links */
-    #posts a.link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.9rem;
-
-      color: #2563eb;
-      text-decoration: none;
-    }
-
-    .posts-page {
-    margin: 0 auto;         /* center container */
-    padding: 0 1rem;        /* optional padding on sides */
-    width: 100%;            /* full width of parent container */
-    box-sizing: border-box;  /* include padding in width */
-  }
-
-  /* Make table fill container */
-  #posts {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: auto;
-  }
-
-    /* Load more button */
-    #load-more-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #2563eb;
-      color: white;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    #load-more-btn:hover {
-      background-color: #1d4ed8;
-    }
-</style>
-
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    let posts = document.querySelectorAll("#posts tbody tr");
+    let posts = document.querySelectorAll("#posts > li");
     let loadMoreBtn = document.getElementById("load-more-btn");
-    let visibleCount = 10; // Show first 5 posts initially
+    if (!loadMoreBtn) return;
 
-    // Hide all posts beyond the first 5
+    let visibleCount = 10;
+
     posts.forEach((post, index) => {
       if (index >= visibleCount) post.style.display = "none";
     });
@@ -124,10 +40,8 @@
     loadMoreBtn.addEventListener("click", function () {
       let hiddenPosts = Array.from(posts).filter(post => post.style.display === "none");
 
-      // Show 10 more posts
-      hiddenPosts.slice(0, 10).forEach(post => (post.style.display = "table-row"));
+      hiddenPosts.slice(0, 10).forEach(post => (post.style.display = "flex"));
 
-      // Hide button if no more posts
       if (hiddenPosts.length <= 10) loadMoreBtn.style.display = "none";
     });
   });

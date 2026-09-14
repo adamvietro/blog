@@ -1,91 +1,45 @@
-<.header>
-  <%!-- <:subtitle>This is a post record from your database.</:subtitle> --%>
-  <:actions>
+<article class="mx-auto max-w-3xl">
+  <.back navigate={~p"/posts"} class="mb-8">Back to posts</.back>
+
+  <div :if={@post.tags != []} class="flex flex-wrap gap-1.5">
+    <span
+      :for={tag <- @post.tags}
+      class="rounded-full bg-zinc-800/80 px-2 py-0.5 text-xs text-zinc-400"
+    >
+      {tag.name}
+    </span>
+  </div>
+
+  <h1 class="mt-3 text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
+    {@post.title}
+  </h1>
+
+  <p class="mt-3 font-mono text-sm text-zinc-500">
+    Published {@post.published_on}
+  </p>
+
+  <div :if={@post.cover_image && @post.cover_image.url} class="mt-8">
+    <img
+      src={@post.cover_image.url}
+      class="max-h-[28rem] w-full rounded-lg border border-zinc-800 object-cover"
+    />
+  </div>
+
+  <.markdown content={@post.content} />
+
+  <div class="mt-12 flex flex-wrap items-center gap-3 border-t border-zinc-800 pt-6">
     <%= if assigns[:current_user] && @post.user_id == assigns[:current_user].id do %>
       <.link href={~p"/posts/#{@post}/edit"}>
         <.button>Edit post</.button>
       </.link>
     <% end %>
-  </:actions>
-  <:actions>
     <.link href={~p"/posts/#{@post}/comments"}>
-      <.button>Comments</.button>
+      <.button class="!bg-zinc-800 !text-zinc-200 hover:!bg-zinc-700">Comments</.button>
     </.link>
-  </:actions>
-  <:actions>
     <%= if assigns[:current_user] do %>
       <.link href={~p"/posts/#{@post}/comments/new"}>
-        <.button>Add Comment</.button>
+        <.button class="!bg-zinc-800 !text-zinc-200 hover:!bg-zinc-700">Add Comment</.button>
       </.link>
     <% end %>
-  </:actions>
-</.header>
-
-<%!-- content of the post --%>
-<div class="max-w-6xl mx-auto p-8 bg-white shadow rounded">
-  <!-- Title -->
-  <div>
-    <div class="post-title text-4xl font-bold mb-4">
-      {@post.title}
-    </div>
-    <div class="text-sm text-gray-500 flex flex-wrap gap-4">
-      <span>Published on: <span class="text-gray-700">{@post.published_on}</span></span>
-      <span>
-        Tags:
-        <span class="text-gray-700">
-          {Enum.map(@post.tags, & &1.name) |> Enum.join(", ")}
-        </span>
-      </span>
-    </div>
   </div>
-  
-<!-- Content -->
-  <.markdown content={@post.content} />
-  
-<!-- Image -->
-  <%= if @post.cover_image do %>
-    <div class="mt-6">
-      <img src={@post.cover_image.url} class="post-cover" />
-    </div>
-  <% end %>
-</div>
-
-<.back navigate={~p"/posts"} class="mt-8 inline-block text-blue-600 hover:underline">
-  Back to posts
-</.back>
-
-<style>
-  .post-cover {
-    max-width: 100%;
-    max-height: 30rem;
-    object-fit: cover;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    display: block;
-    margin: 1rem auto;  /* center horizontally */
-  }
-  h1 {
-    font-size: 2.0rem;
-    font-weight: bold;
-    text-align: left;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: left;
-  }
-
-  h3 {
-    font-size: 1.0rem;
-    font-weight: bold;
-    text-align: left;
-  }
-
-  .prose h1,
-  .prose h2,
-  .prose h3 {
-    margin-top: 1.5rem;   /* space above */
-    margin-bottom: 1rem;  /* space below */
-  }
-</style>
+</article>

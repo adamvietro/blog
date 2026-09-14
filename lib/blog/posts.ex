@@ -21,6 +21,7 @@ defmodule Blog.Posts do
     Post
     |> order_by(desc: :inserted_at)
     |> Repo.all()
+    |> Repo.preload([:tags, :cover_image])
   end
 
   @doc """

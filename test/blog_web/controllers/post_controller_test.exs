@@ -25,7 +25,7 @@ defmodule BlogWeb.PostControllerTest do
   describe "index" do
     test "lists all posts", %{conn: conn} do
       conn = get(conn, ~p"/posts")
-      assert html_response(conn, 200) =~ "Listing Posts"
+      assert html_response(conn, 200) =~ "Posts"
     end
   end
 
@@ -112,26 +112,26 @@ defmodule BlogWeb.PostControllerTest do
 
       post =
         post_fixture(user_id: user.id, title: "Title")
-        |> Repo.preload([:tags])
+        |> Repo.preload([:tags, :cover_image])
 
       # non-matching
       assert Posts.search_posts("Non-Matching") == []
       # exact match
-      assert Posts.search_posts("Title") |> Repo.preload([:tags]) == [post]
+      assert Posts.search_posts("Title") |> Repo.preload([:tags, :cover_image]) == [post]
       # partial match end
-      assert Posts.search_posts("tle") |> Repo.preload([:tags]) == [post]
+      assert Posts.search_posts("tle") |> Repo.preload([:tags, :cover_image]) == [post]
       # partial match front
-      assert Posts.search_posts("Titl") |> Repo.preload([:tags]) == [post]
+      assert Posts.search_posts("Titl") |> Repo.preload([:tags, :cover_image]) == [post]
       # partial match middle
-      assert Posts.search_posts("itl") |> Repo.preload([:tags]) == [post]
+      assert Posts.search_posts("itl") |> Repo.preload([:tags, :cover_image]) == [post]
       # case insensitive lower
-      assert Posts.search_posts("title") |> Repo.preload([:tags]) == [post]
+      assert Posts.search_posts("title") |> Repo.preload([:tags, :cover_image]) == [post]
       # case insensitive upper
-      assert Posts.search_posts("TITLE") |> Repo.preload([:tags]) == [post]
+      assert Posts.search_posts("TITLE") |> Repo.preload([:tags, :cover_image]) == [post]
       # case insensitive and partial match
-      assert Posts.search_posts("ITL") |> Repo.preload([:tags]) == [post]
+      assert Posts.search_posts("ITL") |> Repo.preload([:tags, :cover_image]) == [post]
       # empty
-      assert Posts.search_posts("") |> Repo.preload([:tags]) == [post]
+      assert Posts.search_posts("") |> Repo.preload([:tags, :cover_image]) == [post]
     end
   end
 

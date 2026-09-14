@@ -34,12 +34,12 @@ defmodule BlogWeb.PostHTML do
     assigns = assign(assigns, :html_content, html_content)
 
     ~H"""
-    <div class="prose text-gray-800">{@html_content}</div>
+    <div class="prose">{@html_content}</div>
     """
   end
 
   @doc """
-  Render the rows for a table of posts (index)
+  Render a post as a card list item (index / search results)
 
   Usage:
     <.post_row post={post} current_user={@current_user} />
@@ -49,23 +49,36 @@ defmodule BlogWeb.PostHTML do
 
   def post_row(assigns) do
     ~H"""
-    <tr>
-      <td>
-        <a class="title" href={~p"/posts/#{@post.id}"}>
+    <li class="group flex gap-4 py-5 first:pt-0 last:pb-0">
+      <%= if @post.cover_image && @post.cover_image.url do %>
+        <img
+          src={@post.cover_image.url}
+          class="h-16 w-16 flex-none rounded-md border border-zinc-800 object-cover sm:h-20 sm:w-20"
+        />
+      <% end %>
+      <div class="min-w-0 flex-1">
+        <a
+          href={~p"/posts/#{@post.id}"}
+          class="text-lg font-semibold text-zinc-100 transition-colors group-hover:text-brand"
+        >
           {BlogWeb.PostHTML.preview_title(@post.title, 100)}
         </a>
-      </td>
-      <%!-- <td>
-        <a class="content" href={~p"/posts/#{@post.id}"}>
-          {BlogWeb.PostHTML.preview_content(@post.content, 60)}
-        </a>
-      </td> --%>
+        <div class="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+          <span class="font-mono text-xs text-zinc-500">{@post.published_on}</span>
+          <div :if={@post.tags != []} class="flex flex-wrap gap-1.5">
+            <span
+              :for={tag <- @post.tags}
+              class="rounded-full bg-zinc-800/80 px-2 py-0.5 text-xs text-zinc-400"
+            >
+              {tag.name}
+            </span>
+          </div>
+        </div>
+      </div>
       <%= if @current_user && @current_user.admin do %>
-        <td class="actions">
-          <.post_actions post={@post} />
-        </td>
+        <.post_actions post={@post} />
       <% end %>
-    </tr>
+    </li>
     """
   end
 
@@ -79,9 +92,16 @@ defmodule BlogWeb.PostHTML do
 
   def post_actions(assigns) do
     ~H"""
-    <div class="links">
-      <a href={~p"/posts/#{@post.id}/edit"} class="link">Edit</a>
-      <a href={~p"/posts/#{@post.id}"} method="delete" data-confirm="Are you sure?" class="link">
+    <div class="flex flex-none items-start gap-3 text-sm">
+      <a href={~p"/posts/#{@post.id}/edit"} class="text-zinc-500 transition-colors hover:text-brand">
+        Edit
+      </a>
+      <a
+        href={~p"/posts/#{@post.id}"}
+        method="delete"
+        data-confirm="Are you sure?"
+        class="text-zinc-500 transition-colors hover:text-red-400"
+      >
         Delete
       </a>
     </div>
@@ -96,7 +116,10 @@ defmodule BlogWeb.PostHTML do
   """
   def load_more_button(assigns) do
     ~H"""
-    <button id="load-more-btn" class="mt-4 p-2 bg-blue-500 text-white rounded">
+    <button
+      id="load-more-btn"
+      class="mx-auto mt-8 block rounded-md border border-zinc-700 px-4 py-2 text-sm font-medium text-zinc-300 transition-colors hover:border-brand hover:text-brand"
+    >
       More Posts
     </button>
     """
