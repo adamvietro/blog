@@ -1,8 +1,7 @@
-<.header>
-  Edit Tag {@tag.id}
-  <:subtitle>Use this form to manage tag records in your database.</:subtitle>
-</.header>
+<div class="mx-auto max-w-sm">
+  <.header>Edit Tag</.header>
 
-<.tag_form changeset={@changeset} action={~p"/tags/#{@tag}"} />
+  <.tag_form changeset={@changeset} action={~p"/tags/#{@tag}"} />
 
-<.back navigate={~p"/tags"}>Back to tags</.back>
+  <.back navigate={~p"/tags"}>Back to tags</.back>
+</div>

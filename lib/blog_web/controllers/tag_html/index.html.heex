@@ -1,14 +1,36 @@
-<.header>
-  Listing Tags
-  <:actions>
-    <%= if @current_user && @current_user.admin do %>
-      <.link href={~p"/tags/new"}>
-        <.button>New Tag</.button>
-      </.link>
-    <% end %>
-  </:actions>
-</.header>
+<div class="mx-auto max-w-3xl">
+  <.header>
+    Tags
+    <:actions>
+      <%= if @current_user && @current_user.admin do %>
+        <.link href={~p"/tags/new"}>
+          <.button>New Tag</.button>
+        </.link>
+      <% end %>
+    </:actions>
+  </.header>
 
-<.table id="tags" rows={@tags}>
-  <:col :let={tag} label="Tag">{tag.name}</:col>
-</.table>
+  <%= if @tags == [] do %>
+    <p class="mt-8 text-zinc-500">No tags yet.</p>
+  <% else %>
+    <ul class="mt-6 flex flex-wrap gap-2">
+      <li :for={tag <- @tags} class="group flex items-center gap-2 rounded-full bg-zinc-900 py-1 pl-3 pr-1 text-sm text-zinc-300 ring-1 ring-inset ring-zinc-800">
+        <.link href={~p"/tags/#{tag}"} class="hover:text-brand">{tag.name}</.link>
+        <%= if @current_user && @current_user.admin do %>
+          <span class="flex items-center gap-1 border-l border-zinc-800 pl-2 text-xs text-zinc-500">
+            <.link href={~p"/tags/#{tag}/edit"} class="hover:text-brand">Edit</.link>
+            <span aria-hidden="true">&middot;</span>
+            <.link
+              href={~p"/tags/#{tag}"}
+              method="delete"
+              data-confirm="Are you sure?"
+              class="hover:text-red-400"
+            >
+              Delete
+            </.link>
+          </span>
+        <% end %>
+      </li>
+    </ul>
+  <% end %>
+</div>

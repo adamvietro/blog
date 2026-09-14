@@ -11,18 +11,25 @@ defmodule Blog.Posts do
   @doc """
   Returns the list of posts.
 
+  Unpublished (`visibility: false`) posts are excluded unless `current_user`
+  is an admin, who can see every post.
+
   ## Examples
 
       iex> list_posts()
       [%Post{}, ...]
 
   """
-  def list_posts do
+  def list_posts(current_user \\ nil) do
     Post
+    |> filter_visibility(current_user)
     |> order_by(desc: :inserted_at)
     |> Repo.all()
     |> Repo.preload([:tags, :cover_image])
   end
+
+  defp filter_visibility(query, %{admin: true}), do: query
+  defp filter_visibility(query, _current_user), do: where(query, [p], p.visibility == true)
 
   @doc """
   Gets a single post.

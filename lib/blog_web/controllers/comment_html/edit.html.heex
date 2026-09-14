@@ -1,13 +1,12 @@
-<.header>
-  Edit comment {@comment.id}
-  <:subtitle>Use this form to manage comment records in your database.</:subtitle>
-</.header>
+<div class="mx-auto max-w-lg">
+  <.header>Edit Comment</.header>
 
-<.comment_form
-  changeset={@changeset}
-  id={@comment.id}
-  action={~p"/posts/#{@comment.post_id}/comments/#{@comment.id}/edit"}
-  post_id={@comment.post_id}
-/>
+  <.comment_form
+    changeset={@changeset}
+    id={@comment.id}
+    action={~p"/posts/#{@comment.post_id}/comments/#{@comment.id}/edit"}
+    post_id={@comment.post_id}
+  />
 
-<.back navigate={~p"/posts/#{@comment.post_id}/comments/"}>Back to posts</.back>
+  <.back navigate={~p"/posts/#{@comment.post_id}/comments/"}>Back to comments</.back>
+</div>

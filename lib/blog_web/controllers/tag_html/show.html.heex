@@ -1,10 +1,11 @@
-<.header>
-  Tag {@tag.id}
-  <:subtitle>This is a tag record from your database.</:subtitle>
-</.header>
+<div class="mx-auto max-w-lg">
+  <.header>
+    {@tag.name}
+  </.header>
 
-<.list>
-  <:item title="Tag">{@tag.name}</:item>
-</.list>
+  <.list>
+    <:item title="Tag">{@tag.name}</:item>
+  </.list>
 
-<.back navigate={~p"/tags"}>Back to tags</.back>
+  <.back navigate={~p"/tags"}>Back to tags</.back>
+</div>

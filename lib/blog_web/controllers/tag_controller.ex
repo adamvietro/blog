@@ -67,7 +67,7 @@ defmodule BlogWeb.TagController do
 
   def search(conn, %{"tag" => search_tag}) do
     posts =
-      Posts.list_posts()
+      Posts.list_posts(conn.assigns[:current_user])
       |> Repo.preload([:tags])
 
     post =

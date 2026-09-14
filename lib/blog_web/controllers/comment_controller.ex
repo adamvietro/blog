@@ -38,7 +38,7 @@ defmodule BlogWeb.CommentController do
 
   @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
-    post = Repo.get!(Posts.Post, id) |> Repo.preload(:comments)
+    post = Repo.get!(Posts.Post, id) |> Repo.preload(comments: :user)
     changeset = Blog.Comments.Comment.changeset(%Blog.Comments.Comment{}, %{})
 
     render(conn, "show.html",

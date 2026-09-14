@@ -1,5 +1,5 @@
 <.simple_form :let={f} for={@changeset} action={@action}>
-  <.input field={f[:content]} type="text" label="Content" />
+  <.input field={f[:content]} type="textarea" label="Comment" />
   <.input
     field={f[:post_id]}
     type="hidden"
@@ -7,6 +7,6 @@
   />
 
   <:actions>
-    <.button>Commit</.button>
+    <.button>Save comment</.button>
   </:actions>
 </.simple_form>

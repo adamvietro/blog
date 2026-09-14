@@ -1,10 +1,12 @@
-<h1>This is a page to search for a Blog post that contains a given tag.</h1>
+<div class="mx-auto max-w-sm">
+  <.header>Search by tag</.header>
 
-<.simple_form :let={f} for={%{}} method="get" action={~p"/tags/search/"}>
-  <.input field={f[:tag]} type="select" label="Tags" options={@tag_options} size="5" />
-  <:actions>
-    <.button>Search</.button>
-  </:actions>
-</.simple_form>
+  <.simple_form :let={f} for={%{}} method="get" action={~p"/tags/search/"}>
+    <.input field={f[:tag]} type="select" label="Tags" options={@tag_options} size="5" />
+    <:actions>
+      <.button>Search</.button>
+    </:actions>
+  </.simple_form>
 
-<.back navigate={~p"/tags"}>Back to tags</.back>
+  <.back navigate={~p"/tags"}>Back to tags</.back>
+</div>

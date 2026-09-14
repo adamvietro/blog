@@ -57,6 +57,15 @@ defmodule BlogWeb.Router do
     get "/posts/:id/comments", CommentController, :show
   end
 
+  # These must come after the "/tags/search" route above, since ":id" would
+  # otherwise greedily match the literal path segment "search" first.
+  scope "/", BlogWeb do
+    pipe_through [:browser, :require_authenticated_user, :require_admin]
+
+    get "/tags/:id", TagController, :show
+    get "/tags/:id/edit", TagController, :edit
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", BlogWeb do
   #   pipe_through :api

@@ -1,12 +1,11 @@
-<.header>
-  New Comment
-  <:subtitle>Use this form to add a comment to this post.</:subtitle>
-</.header>
+<div class="mx-auto max-w-lg">
+  <.header>New Comment</.header>
 
-<.comment_form
-  changeset={@comment_changeset}
-  post_id={@post.id}
-  action={~p"/posts/#{@post.id}/comments/new"}
-/>
+  <.comment_form
+    changeset={@comment_changeset}
+    post_id={@post.id}
+    action={~p"/posts/#{@post.id}/comments/new"}
+  />
 
-<.back navigate={~p"/posts"}>Back to posts</.back>
+  <.back navigate={~p"/posts/#{@post.id}/comments"}>Back to comments</.back>
+</div>

@@ -11,7 +11,7 @@ defmodule BlogWeb.PostController do
 
   @spec index(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def index(conn, _params) do
-    posts = Posts.list_posts()
+    posts = Posts.list_posts(conn.assigns[:current_user])
     render(conn, :index, posts: posts, page_title: "Posts")
   end
 
