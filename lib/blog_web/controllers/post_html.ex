@@ -9,7 +9,8 @@ defmodule BlogWeb.PostHTML do
   attr :changeset, Ecto.Changeset, required: true
   attr :action, :string, required: true
   attr :id, :string
-  attr :tags, :list
+  attr :tag_names, :string, default: ""
+  attr :all_tags, :list, default: []
 
   def post_form(assigns)
 

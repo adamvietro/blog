@@ -1,11 +1,10 @@
 defmodule BlogWeb.PostController do
   use BlogWeb, :controller
 
-  import Blog.Tags
-
   alias Blog.Repo
   alias Blog.Posts
   alias Blog.Posts.Post
+  alias Blog.Tags
 
   plug :require_admin
        when action in [:edit, :update, :delete, :new, :create]
@@ -38,14 +37,18 @@ defmodule BlogWeb.PostController do
 
   @spec new(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def new(conn, _params) do
-    tags = tag_options()
     changeset = Posts.change_post(%Post{})
 
-    render(conn, :new, changeset: changeset, tags: tags, page_title: "Create Post")
+    render(conn, :new,
+      changeset: changeset,
+      tag_names: "",
+      all_tags: Tags.list_tags(),
+      page_title: "Create Post"
+    )
   end
 
   def create(conn, %{"post" => post_params}) do
-    tags = Map.get(post_params, "tag_ids", []) |> Enum.map(&get_tag!/1)
+    tags = Tags.find_or_create_tags(Map.get(post_params, "tag_names"))
     post_params = Map.put(post_params, "user_id", conn.assigns[:current_user].id)
 
     case Posts.create_post(post_params, tags) do
@@ -57,7 +60,8 @@ defmodule BlogWeb.PostController do
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new,
           changeset: changeset,
-          tags: tag_options()
+          tag_names: Map.get(post_params, "tag_names", ""),
+          all_tags: Tags.list_tags()
         )
     end
   end
@@ -68,12 +72,13 @@ defmodule BlogWeb.PostController do
       |> Repo.preload([:tags])
 
     changeset = Posts.change_post(post)
-    selected_tags = Enum.map(post.tags, fn tag -> tag.id end)
+    tag_names = post.tags |> Enum.map(& &1.name) |> Enum.join(", ")
 
     render(conn, :edit,
       post: post,
       changeset: changeset,
-      tags: tag_options(selected_tags),
+      tag_names: tag_names,
+      all_tags: Tags.list_tags(),
       page_title: "Edit Post"
     )
   end
@@ -84,7 +89,7 @@ defmodule BlogWeb.PostController do
       Posts.get_post!(id)
       |> Repo.preload([:tags])
 
-    tags = Map.get(post_params, "tag_ids", []) |> Enum.map(&get_tag!/1)
+    tags = Tags.find_or_create_tags(Map.get(post_params, "tag_names"))
 
     if conn.assigns[:current_user].id == post.user_id do
       case Posts.update_post(post, post_params, tags) do
@@ -94,7 +99,12 @@ defmodule BlogWeb.PostController do
           |> redirect(to: ~p"/posts/#{post}")
 
         {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, :edit, post: post, changeset: changeset, tags: tag_options())
+          render(conn, :edit,
+            post: post,
+            changeset: changeset,
+            tag_names: Map.get(post_params, "tag_names", ""),
+            all_tags: Tags.list_tags()
+          )
       end
     else
       conn
@@ -133,13 +143,6 @@ defmodule BlogWeb.PostController do
       |> redirect(to: ~p"/posts/")
       |> halt()
     end
-  end
-
-  defp tag_options(selected_ids \\ []) do
-    list_tags()
-    |> Enum.map(fn tag ->
-      [key: tag.name, value: tag.id, selected: tag.id in selected_ids]
-    end)
   end
 
   # defp require_user_owns_post(conn, _params) do

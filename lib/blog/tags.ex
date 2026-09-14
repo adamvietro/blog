@@ -104,4 +104,36 @@ defmodule Blog.Tags do
   def change_tag(%Tag{} = tag, attrs \\ %{}) do
     Tag.changeset(tag, attrs)
   end
+
+  @doc """
+  Given a comma-separated string of tag names, returns the matching `%Tag{}`
+  for each name, creating any that don't already exist.
+
+  ## Examples
+
+      iex> find_or_create_tags("elixir, phoenix")
+      [%Tag{name: "elixir"}, %Tag{name: "phoenix"}]
+
+  """
+  def find_or_create_tags(nil), do: []
+
+  def find_or_create_tags(tag_names) when is_binary(tag_names) do
+    tag_names
+    |> String.split(",")
+    |> Enum.map(&String.trim/1)
+    |> Enum.reject(&(&1 == ""))
+    |> Enum.uniq()
+    |> Enum.map(&find_or_create_tag/1)
+  end
+
+  defp find_or_create_tag(name) do
+    case Repo.get_by(Tag, name: name) do
+      nil ->
+        {:ok, tag} = create_tag(%{name: name})
+        tag
+
+      tag ->
+        tag
+    end
+  end
 end

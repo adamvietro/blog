@@ -69,7 +69,7 @@ defmodule BlogWeb.TagControllerTest do
       visible: true,
       published_on: Date.utc_today(),
       user_id: user.id,
-      tag_ids: [tag1.id, tag2.id]
+      tag_names: "#{tag1.name}, #{tag2.name}"
     }
 
     # Act: send the HTTP POST request

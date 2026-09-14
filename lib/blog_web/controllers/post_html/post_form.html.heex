@@ -11,14 +11,20 @@
     value={f.data.published_on || Date.utc_today()}
   />
   <.input field={f[:visibility]} type="checkbox" label="Visibility" />
-  <.input
-    field={f[:tag_ids]}
-    type="select"
-    label="Tags"
-    multiple={true}
-    options={@tags}
-    class="h-64"
-  />
+  <div>
+    <.input
+      type="text"
+      name="post[tag_names]"
+      value={@tag_names}
+      label="Tags"
+      placeholder="elixir, phoenix, testing"
+      list="tag-suggestions"
+    />
+    <datalist id="tag-suggestions">
+      <option :for={tag <- @all_tags} value={tag.name} />
+    </datalist>
+    <p class="mt-1 text-xs text-zinc-500">Separate tags with commas.</p>
+  </div>
   <.inputs_for :let={cover_image} field={f[:cover_image]}>
     <.input type="text" field={cover_image[:url]} label="Cover Image URL" />
   </.inputs_for>
