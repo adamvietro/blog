@@ -43,21 +43,17 @@ window.liveSocket = liveSocket // <- This makes it accessible in the console
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
-import Prism from "prismjs"
-import "prismjs/components/prism-elixir"
-import "prismjs/components/prism-javascript"
-import "prismjs/components/prism-sql"
-import "prismjs/components/prism-rust"
-import "prismjs/components/prism-bash"
-import "prismjs/components/prism-python"
-import "prismjs/components/prism-erlang"
+// Vendored (see assets/vendor/) rather than `import "prismjs"`, since this
+// project has no assets/package.json for esbuild to resolve an npm package
+// from during the production build. Core bundle + autoloader plugin: any
+// language Prism supports gets its grammar fetched on demand, instead of us
+// having to import each language's component up front.
+import "../vendor/prism-core.js"
+import "../vendor/prism-autoloader.js"
+
+window.Prism.plugins.autoloader.languages_path =
+  "https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/components/"
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("pre code[class]").forEach(function (block) {
-    var cls = block.className
-    if (!cls.startsWith("language-")) {
-      block.className = "language-" + cls
-    }
-  })
-  Prism.highlightAll()
+  window.Prism.highlightAll()
 })

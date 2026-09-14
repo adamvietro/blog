@@ -104,6 +104,24 @@ defmodule BlogWeb.PostControllerTest do
     %{post: post, user: user}
   end
 
+  describe "show" do
+    test "highlights a fenced code block in any language, not just a hardcoded list", %{
+      conn: conn
+    } do
+      user = admin_fixture()
+
+      post =
+        post_fixture(
+          user_id: user.id,
+          content: "```ruby\nputs 1\n```"
+        )
+
+      conn = get(conn, ~p"/posts/#{post}")
+
+      assert html_response(conn, 200) =~ ~s(<code class="language-ruby">)
+    end
+  end
+
   describe "search" do
     alias Blog.Posts, as: Posts
 
