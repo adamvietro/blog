@@ -52,6 +52,8 @@ defmodule BlogWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/feed.xml", FeedController, :index
+    get "/sitemap.xml", SitemapController, :index
     get "/posts", PostController, :index
     get "/posts/:id", PostController, :show
     get "/search", PostController, :search

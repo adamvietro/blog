@@ -124,6 +124,29 @@ defmodule BlogWeb.PostHTML do
   end
 
   @doc """
+  Strips basic markdown syntax down to plain text and truncates it, for use
+  in <meta name="description"> / Open Graph / Twitter Card tags.
+
+  Usage:
+    {BlogWeb.PostHTML.meta_description(@post.content)}
+  """
+  def meta_description(content, max_chars \\ 160) do
+    plain_text =
+      content
+      |> String.replace(~r/```.*?```/s, " ")
+      |> String.replace(~r/\[([^\]]*)\]\([^)]*\)/, "\\1")
+      |> String.replace(~r/[#*_`>~]/, "")
+      |> String.replace(~r/\s+/, " ")
+      |> String.trim()
+
+    if String.length(plain_text) > max_chars do
+      String.slice(plain_text, 0, max_chars) <> "…"
+    else
+      plain_text
+    end
+  end
+
+  @doc """
   Renders the content within the content column of the post table.
 
   Usage:

@@ -150,6 +150,38 @@ defmodule BlogWeb.PostControllerTest do
 
       assert html_response(conn, 200) =~ ~s(<code class="language-ruby">)
     end
+
+    test "renders per-post social preview tags, including its own cover image", %{conn: conn} do
+      user = admin_fixture()
+
+      post =
+        post_fixture(
+          user_id: user.id,
+          title: "A Specific Post Title",
+          content: "Some **interesting** content about Elixir.",
+          cover_image: %{url: "https://example.com/cover.jpg"}
+        )
+
+      response = get(conn, ~p"/posts/#{post}") |> html_response(200)
+
+      assert response =~ ~s(<title>Blog | A Specific Post Title</title>)
+      assert response =~ ~s(property="og:title" content="A Specific Post Title")
+      assert response =~ ~s(property="og:image" content="https://example.com/cover.jpg")
+      assert response =~ ~s(property="og:type" content="article")
+      assert response =~ "interesting content about Elixir"
+      assert response =~ ~s(property="article:published_time")
+    end
+
+    test "falls back to the site default image when a post has no usable cover image", %{
+      conn: conn
+    } do
+      user = admin_fixture()
+      post = post_fixture(user_id: user.id)
+
+      response = get(conn, ~p"/posts/#{post}") |> html_response(200)
+
+      assert response =~ ~s(property="og:image" content="https://media2.dev.to/)
+    end
   end
 
   describe "search" do

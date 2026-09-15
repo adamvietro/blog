@@ -46,8 +46,22 @@ defmodule BlogWeb.PostController do
       Posts.get_post!(id)
       |> Repo.preload([:tags, :cover_image])
 
-    render(conn, :show, post: post, page_title: "Post")
+    render(conn, :show,
+      post: post,
+      page_title: post.title,
+      meta_description: BlogWeb.PostHTML.meta_description(post.content),
+      meta_image: post_meta_image(post),
+      meta_url: url(~p"/posts/#{post}"),
+      meta_type: "article",
+      meta_published_time: "#{post.published_on}T00:00:00Z"
+    )
   end
+
+  # Social crawlers (Twitter, Facebook, Slack, ...) fetch og:image themselves
+  # and can't do anything with an inline data: URI, so only use a post's own
+  # cover image when it's a real, fetchable http(s) URL.
+  defp post_meta_image(%{cover_image: %{url: "http" <> _ = image_url}}), do: image_url
+  defp post_meta_image(_post), do: nil
 
   @spec new(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def new(conn, _params) do

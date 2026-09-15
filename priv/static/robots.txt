@@ -1,5 +1,16 @@
 # See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
-#
-# To ban all spiders from the entire site uncomment the next two lines:
-# User-agent: *
-# Disallow: /
+
+User-agent: *
+Allow: /
+
+# Admin-only sections (crawlers would just hit a login redirect) and pages
+# that don't offer content beyond what /sitemap.xml already lists directly.
+Disallow: /dev/
+Disallow: /users/
+Disallow: /notifications
+Disallow: /tags/
+Disallow: /posts/new
+Disallow: /posts/preview
+Disallow: /search
+
+Sitemap: https://blog-wild-leaf-1554.fly.dev/sitemap.xml
