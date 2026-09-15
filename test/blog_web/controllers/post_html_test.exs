@@ -122,4 +122,21 @@ defmodule BlogWeb.PostHTMLTest do
       assert html =~ "Delete"
     end
   end
+
+  describe "post_row/1" do
+    test "renders each tag as a link to that tag's search results" do
+      post = %Blog.Posts.Post{
+        id: 7,
+        title: "A post",
+        published_on: ~D[2026-01-01],
+        tags: [%Blog.Tags.Tag{id: 3, name: "elixir"}],
+        cover_image: nil
+      }
+
+      html = render_component(&PostHTML.post_row/1, post: post, current_user: nil)
+
+      assert html =~ ~s(href="/tags/search?tag=3")
+      assert html =~ "elixir"
+    end
+  end
 end

@@ -64,12 +64,13 @@ defmodule BlogWeb.PostHTML do
         <div class="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
           <span class="font-mono text-xs text-zinc-500">{@post.published_on}</span>
           <div :if={@post.tags != []} class="flex flex-wrap gap-1.5">
-            <span
+            <.link
               :for={tag <- @post.tags}
-              class="rounded-full bg-zinc-800/80 px-2 py-0.5 text-xs text-zinc-400"
+              navigate={~p"/tags/search?tag=#{tag.id}"}
+              class="rounded-full bg-zinc-800/80 px-2 py-0.5 text-xs text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-brand"
             >
               {tag.name}
-            </span>
+            </.link>
           </div>
         </div>
       </div>

@@ -192,6 +192,19 @@ defmodule BlogWeb.PostControllerTest do
 
       assert response =~ ~s(property="og:image" content="https://media2.dev.to/)
     end
+
+    test "each tag links to that tag's search results", %{conn: conn} do
+      user = admin_fixture()
+      post = post_fixture(user_id: user.id)
+      tag = tag_fixture(name: "elixir")
+
+      {:ok, post} = Blog.Posts.update_post(post, %{}, [tag])
+
+      response = get(conn, ~p"/posts/#{post}") |> html_response(200)
+
+      assert response =~ ~s(href="/tags/search?tag=#{tag.id}")
+      assert response =~ "elixir"
+    end
   end
 
   describe "search" do
