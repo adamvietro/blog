@@ -280,5 +280,71 @@ defmodule Blog.NotificationsTest do
       [notification] = Notifications.get_unread_notifications(post_author.id)
       assert notification.actor_id == commenter2.id
     end
+
+    test "get_notifications_by_user/1 returns both read and unread notifications" do
+      user = user_fixture()
+      other_user = user_fixture()
+      post1 = post_fixture(user_id: user.id)
+      post2 = post_fixture(user_id: user.id)
+
+      {:ok, notif1} =
+        Notifications.create_notification(%{
+          user_id: user.id,
+          post_id: post1.id,
+          actor_id: other_user.id,
+          read: false
+        })
+
+      {:ok, notif2} =
+        Notifications.create_notification(%{
+          user_id: user.id,
+          post_id: post2.id,
+          actor_id: other_user.id,
+          read: false
+        })
+
+      Notifications.mark_as_read(notif1.id, user.id)
+
+      notifications = Notifications.get_notifications_by_user(user.id)
+
+      assert length(notifications) == 2
+      assert Enum.map(notifications, & &1.id) |> Enum.sort() == Enum.sort([notif1.id, notif2.id])
+    end
+
+    test "update_notification/1 marks every notification for a given user/post pair as read" do
+      user = user_fixture()
+      other_user = user_fixture()
+      post = post_fixture(user_id: user.id)
+
+      {:ok, _} =
+        Notifications.create_notification(%{
+          user_id: user.id,
+          post_id: post.id,
+          actor_id: other_user.id,
+          read: false
+        })
+
+      assert Notifications.unread_count(user.id) == 1
+
+      Notifications.update_notification(%{user_id: user.id, post_id: post.id})
+
+      assert Notifications.unread_count(user.id) == 0
+    end
+
+    test "change_notification/2 returns a notification changeset" do
+      user = user_fixture()
+      other_user = user_fixture()
+      post = post_fixture(user_id: user.id)
+
+      {:ok, notification} =
+        Notifications.create_notification(%{
+          user_id: user.id,
+          post_id: post.id,
+          actor_id: other_user.id,
+          read: false
+        })
+
+      assert %Ecto.Changeset{} = Notifications.change_notification(notification)
+    end
   end
 end

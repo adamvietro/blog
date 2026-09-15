@@ -76,6 +76,36 @@ defmodule Blog.CommentsTest do
       comment = comment_fixture(user_id: user.id, post_id: post.id)
       assert %Ecto.Changeset{} = Comments.change_comment(comment)
     end
+
+    test "create_comment/1 rejects an empty comment" do
+      user = user_fixture()
+      post = post_fixture(user_id: user.id)
+
+      assert {:error, changeset} =
+               Comments.create_comment(%{content: "", post_id: post.id, user_id: user.id})
+
+      assert %{content: ["can't be blank"]} = errors_on(changeset)
+    end
+
+    test "create_comment/1 rejects a comment longer than 150 characters" do
+      user = user_fixture()
+      post = post_fixture(user_id: user.id)
+      too_long = String.duplicate("a", 151)
+
+      assert {:error, changeset} =
+               Comments.create_comment(%{content: too_long, post_id: post.id, user_id: user.id})
+
+      assert %{content: ["should be at most 150 character(s)"]} = errors_on(changeset)
+    end
+
+    test "create_comment/1 rejects a comment on a non-existent post" do
+      user = user_fixture()
+
+      assert {:error, changeset} =
+               Comments.create_comment(%{content: "hi", post_id: -1, user_id: user.id})
+
+      assert %{post_id: ["does not exist"]} = errors_on(changeset)
+    end
   end
 
   describe "Post and comments" do

@@ -113,6 +113,16 @@ defmodule BlogWeb.PostControllerTest do
       conn = conn |> log_in_user(user) |> put(~p"/posts/#{post}", post: @invalid_attrs)
       assert html_response(conn, 200) =~ "Edit Post"
     end
+
+    test "an admin who doesn't own the post cannot update it", %{conn: conn, post: post} do
+      other_admin = admin_fixture()
+
+      conn = conn |> log_in_user(other_admin) |> put(~p"/posts/#{post}", post: @update_attrs)
+
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) =~ "You can only edit your own posts"
+      assert redirected_to(conn) == ~p"/posts/#{post}"
+      assert Blog.Posts.get_post!(post.id).title == post.title
+    end
   end
 
   describe "delete post" do
@@ -216,6 +226,13 @@ defmodule BlogWeb.PostControllerTest do
   end
 
   describe "html request search" do
+    test "GET /search with no title param renders the search form", %{conn: conn} do
+      response = get(conn, ~p"/search") |> html_response(200)
+
+      assert response =~ "Search"
+      assert response =~ ~s(name="title")
+    end
+
     test "search for posts - non-matching", %{conn: conn} do
       user = admin_fixture()
       post = post_fixture(user_id: user.id, title: "some title")

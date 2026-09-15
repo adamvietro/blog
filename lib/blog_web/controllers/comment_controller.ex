@@ -87,7 +87,8 @@ defmodule BlogWeb.CommentController do
       Comments.get_comment!(comment_id)
 
     comment_params =
-      Map.update!(comment_params, "post_id", fn _existing -> id end)
+      comment_params
+      |> Map.put("post_id", id)
       |> Map.put("id", comment_id)
 
     if conn.assigns[:current_user].id == comment.user_id do

@@ -103,6 +103,36 @@ defmodule Blog.PostsTest do
                Posts.create_post(%{content: "some content", title: post.title})
     end
 
+    test "create_post/1 rejects a published_on date in the future" do
+      user = user_fixture()
+      future_date = Date.add(Date.utc_today(), 1)
+
+      attrs = %{
+        title: "A future post",
+        content: "some content",
+        published_on: future_date,
+        visibility: true,
+        user_id: user.id
+      }
+
+      assert {:error, changeset} = Posts.create_post(attrs)
+      assert %{published_on: ["Shouldn't be in the Future"]} = errors_on(changeset)
+    end
+
+    test "create_post/1 accepts today's date for published_on" do
+      user = user_fixture()
+
+      attrs = %{
+        title: "A post published today",
+        content: "some content",
+        published_on: Date.utc_today(),
+        visibility: true,
+        user_id: user.id
+      }
+
+      assert {:ok, %Post{}} = Posts.create_post(attrs)
+    end
+
     test "create_post/1 with image" do
       valid_attrs = %{
         content: "some content",
