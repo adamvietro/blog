@@ -23,6 +23,11 @@ config :blog, BlogWeb.Endpoint,
   secret_key_base: "ZLUGVvlTqlZIPfbVzydF6d6fuULEOvNFVSPxCfcTWFkLy2lMT2lCexzxXoZl9nfV",
   server: false
 
+# Visit tracking and the periodic app-stats measurement both query/write the
+# DB from processes outside any test's sandboxed connection — disable both
+# in tests.
+config :blog, :analytics_enabled, false
+
 # In test we don't send emails
 config :blog, Blog.Mailer, adapter: Swoosh.Adapters.Test
 

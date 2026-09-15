@@ -9,7 +9,8 @@ import Config
 
 config :blog,
   ecto_repos: [Blog.Repo],
-  generators: [timestamp_type: :utc_datetime]
+  generators: [timestamp_type: :utc_datetime],
+  analytics_enabled: true
 
 # Configures the endpoint
 config :blog, BlogWeb.Endpoint,
