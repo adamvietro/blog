@@ -37,6 +37,36 @@ defmodule BlogWeb.PostControllerTest do
     end
   end
 
+  describe "preview" do
+    test "renders the given content through the same markdown pipeline as a real post", %{
+      conn: conn
+    } do
+      admin = admin_fixture()
+
+      conn =
+        conn
+        |> log_in_user(admin)
+        |> post(~p"/posts/preview", content: "# Hello\n\n```ruby\nputs 1\n```")
+
+      response = html_response(conn, 200)
+      assert response =~ "<h1>"
+      assert response =~ ~s(<code class="language-ruby">)
+      # layout: false — no site nav/footer in the fragment
+      refute response =~ "adam.log"
+    end
+
+    test "requires an admin", %{conn: conn} do
+      user = user_fixture()
+
+      conn =
+        conn
+        |> log_in_user(user)
+        |> post(~p"/posts/preview", content: "hi")
+
+      assert redirected_to(conn) == ~p"/"
+    end
+  end
+
   describe "create post" do
     test "redirects to show when data is valid", %{conn: conn} do
       post_user = admin_fixture()

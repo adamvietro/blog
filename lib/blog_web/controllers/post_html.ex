@@ -25,7 +25,7 @@ defmodule BlogWeb.PostHTML do
   def markdown(assigns) do
     html_content =
       assigns.content
-      |> Earmark.as_html!()
+      |> Earmark.as_html!(%Earmark.Options{breaks: true})
       |> String.replace(~r/<code class="([\w-]+)">/, "<code class=\"language-\\1\">")
       |> Phoenix.HTML.raw()
 

@@ -3,10 +3,26 @@
     Oops, something went wrong! Please check the errors below.
   </.error>
   <.input field={f[:title]} type="text" label="Title" />
-  <.input field={f[:content]} type="textarea" label="Content" />
+  <div>
+    <.input field={f[:content]} type="textarea" label="Content" rows="20" id="post-content-input" />
+    <button
+      type="button"
+      id="content-preview-toggle"
+      data-preview-url={~p"/posts/preview"}
+      class="mt-1 text-xs font-semibold text-brand hover:underline"
+    >
+      Preview
+    </button>
+    <div
+      id="content-preview"
+      style="display: none"
+      class="prose mt-2 rounded-lg border border-zinc-800 bg-zinc-900 p-4"
+    >
+    </div>
+  </div>
   <.input
     field={f[:published_on]}
-    type="hidden"
+    type="date"
     label="Published on"
     value={f.data.published_on || Date.utc_today()}
   />
@@ -33,3 +49,46 @@
     <.button>Save Post</.button>
   </:actions>
 </.simple_form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("content-preview-toggle");
+    const textarea = document.getElementById("post-content-input");
+    const previewPane = document.getElementById("content-preview");
+    if (!toggleBtn || !textarea || !previewPane) return;
+
+    const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+    let previewing = false;
+
+    toggleBtn.addEventListener("click", function () {
+      if (previewing) {
+        previewPane.style.display = "none";
+        textarea.style.display = "";
+        toggleBtn.textContent = "Preview";
+        previewing = false;
+        return;
+      }
+
+      fetch(toggleBtn.dataset.previewUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "x-csrf-token": csrfToken
+        },
+        body: "content=" + encodeURIComponent(textarea.value)
+      })
+        .then(function (response) { return response.text(); })
+        .then(function (html) {
+          previewPane.innerHTML = html;
+          textarea.style.display = "none";
+          previewPane.style.display = "block";
+          toggleBtn.textContent = "Edit";
+          previewing = true;
+          if (window.Prism) window.Prism.highlightAll();
+        })
+        .catch(function () {
+          alert("Couldn't load the preview. Please try again.");
+        });
+    });
+  });
+</script>

@@ -32,5 +32,18 @@ defmodule BlogWeb.PostHTMLTest do
       assert html =~ "Hello"
       assert html =~ "<strong>bold</strong>"
     end
+
+    test "a single newline renders as a line break, without needing a literal <br/>" do
+      html = render_component(&PostHTML.markdown/1, content: "Line one\nLine two")
+
+      assert html =~ "<br"
+    end
+
+    test "a blank line still starts a new paragraph, same as before" do
+      html = render_component(&PostHTML.markdown/1, content: "First paragraph.\n\nSecond paragraph.")
+
+      assert html =~ ~r{<p>\s*First paragraph\.\s*</p>}
+      assert html =~ ~r{<p>\s*Second paragraph\.\s*</p>}
+    end
   end
 end

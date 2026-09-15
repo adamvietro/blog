@@ -15,6 +15,20 @@ defmodule BlogWeb.PostController do
     render(conn, :index, posts: posts, page_title: "Posts")
   end
 
+  @doc """
+  Renders the given markdown content through the same pipeline a real post
+  uses, for the "Preview" toggle on the post form. Returns a bare HTML
+  fragment (no layout) so it can be dropped straight into the page via JS.
+  """
+  def preview(conn, params) do
+    content = Map.get(params, "content", "")
+
+    conn
+    |> put_layout(false)
+    |> put_root_layout(false)
+    |> render(:preview, content: content)
+  end
+
   @spec search(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def search(conn, %{"title" => title}) do
     matching_posts = Posts.search_posts(title)

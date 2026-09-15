@@ -41,6 +41,7 @@ defmodule BlogWeb.Router do
     delete "/tags/:id", TagController, :delete
     post "/posts", PostController, :create
     get "/posts/new", PostController, :new
+    post "/posts/preview", PostController, :preview
     put "/posts/:id", PostController, :put
     get "/posts/:id/edit", PostController, :edit
     post "/posts/:id", PostController, :edit
