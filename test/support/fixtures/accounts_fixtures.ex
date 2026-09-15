@@ -29,9 +29,9 @@ defmodule Blog.AccountsFixtures do
       |> valid_user_attributes()
       |> Blog.Accounts.register_user()
 
-    Blog.Accounts.update_admin(user)
+    {:ok, admin} = Blog.Accounts.update_admin(user)
 
-    user
+    admin
   end
 
   def extract_user_token(fun) do

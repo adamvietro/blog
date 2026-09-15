@@ -11,25 +11,65 @@ defmodule Blog.Posts do
   @doc """
   Returns the list of posts.
 
-  Unpublished (`visibility: false`) posts are excluded unless `current_user`
-  is an admin, who can see every post.
+  Unpublished (`visibility: false`) posts and posts scheduled for a future
+  `published_on` date are excluded unless `current_user` is an admin, who
+  can see every post regardless of either.
+
+  Pass `page:` (1-based) and optionally `per_page:` (default 10) in `opts`
+  to get one page of results instead of everything — see `count_posts/1` to
+  compute how many pages there are.
 
   ## Examples
 
       iex> list_posts()
       [%Post{}, ...]
 
+      iex> list_posts(current_user, page: 2, per_page: 10)
+      [%Post{}, ...]
+
   """
-  def list_posts(current_user \\ nil) do
+  def list_posts(current_user \\ nil, opts \\ []) do
     Post
     |> filter_visibility(current_user)
+    |> filter_scheduled(current_user)
     |> order_by(desc: :inserted_at)
+    |> paginate(opts)
     |> Repo.all()
     |> Repo.preload([:tags, :cover_image])
   end
 
+  @doc """
+  Counts the posts `list_posts/2` would return for this `current_user`,
+  ignoring pagination — use this to compute a total page count.
+  """
+  def count_posts(current_user \\ nil) do
+    Post
+    |> filter_visibility(current_user)
+    |> filter_scheduled(current_user)
+    |> Repo.aggregate(:count)
+  end
+
   defp filter_visibility(query, %{admin: true}), do: query
   defp filter_visibility(query, _current_user), do: where(query, [p], p.visibility == true)
+
+  defp filter_scheduled(query, %{admin: true}), do: query
+
+  defp filter_scheduled(query, _current_user),
+    do: where(query, [p], p.published_on <= ^Date.utc_today())
+
+  defp paginate(query, opts) do
+    case Keyword.get(opts, :page) do
+      nil ->
+        query
+
+      page ->
+        per_page = Keyword.get(opts, :per_page, 10)
+
+        query
+        |> limit(^per_page)
+        |> offset(^((page - 1) * per_page))
+    end
+  end
 
   @doc """
   Gets a single post.

@@ -1,7 +1,6 @@
 defmodule Blog.Posts.Post do
   use Ecto.Schema
   import Ecto.Changeset
-  import EctoCommons.DateValidator
 
   schema "posts" do
     field :title, :string
@@ -27,7 +26,6 @@ defmodule Blog.Posts.Post do
     |> validate_required([:title, :content, :published_on, :visibility])
     |> unsafe_validate_unique(:title, Blog.Repo)
     |> unique_constraint(:title, message: "Unique titles only")
-    |> validate_date(:published_on, before: :utc_today, message: "Shouldn't be in the Future")
     |> foreign_key_constraint(:user_id)
     |> put_assoc(:tags, tags)
   end

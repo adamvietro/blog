@@ -9,10 +9,33 @@ defmodule BlogWeb.PostController do
   plug :require_admin
        when action in [:edit, :update, :delete, :new, :create]
 
+  @per_page 10
+
   @spec index(Plug.Conn.t(), any()) :: Plug.Conn.t()
-  def index(conn, _params) do
-    posts = Posts.list_posts(conn.assigns[:current_user])
-    render(conn, :index, posts: posts, page_title: "Posts")
+  def index(conn, params) do
+    current_user = conn.assigns[:current_user]
+
+    total_posts = Posts.count_posts(current_user)
+    total_pages = max(1, ceil(total_posts / @per_page))
+    page = params |> Map.get("page") |> parse_page() |> max(1) |> min(total_pages)
+
+    posts = Posts.list_posts(current_user, page: page, per_page: @per_page)
+
+    render(conn, :index,
+      posts: posts,
+      page: page,
+      total_pages: total_pages,
+      page_title: "Posts"
+    )
+  end
+
+  defp parse_page(nil), do: 1
+
+  defp parse_page(page_param) do
+    case Integer.parse(page_param) do
+      {page, _rest} when page > 0 -> page
+      _ -> 1
+    end
   end
 
   @doc """

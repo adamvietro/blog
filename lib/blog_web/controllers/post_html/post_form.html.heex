@@ -20,12 +20,17 @@
     >
     </div>
   </div>
-  <.input
-    field={f[:published_on]}
-    type="date"
-    label="Published on"
-    value={f.data.published_on || Date.utc_today()}
-  />
+  <div>
+    <.input
+      field={f[:published_on]}
+      type="date"
+      label="Published on"
+      value={f.data.published_on || Date.utc_today()}
+    />
+    <p class="mt-1 text-xs text-zinc-500">
+      A future date schedules the post — it stays hidden from everyone but admins until then.
+    </p>
+  </div>
   <.input field={f[:visibility]} type="checkbox" label="Visibility" />
   <div>
     <.input

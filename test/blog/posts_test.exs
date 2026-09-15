@@ -21,6 +21,41 @@ defmodule Blog.PostsTest do
       assert Posts.list_posts() == [post]
     end
 
+    test "list_posts/2 with a :page option returns only that page's posts" do
+      user = user_fixture()
+      all_posts = for i <- 1..15, do: post_fixture(user_id: user.id, title: "Post #{i}")
+      all_ids = MapSet.new(all_posts, & &1.id)
+
+      page1 = Posts.list_posts(nil, page: 1, per_page: 10)
+      page2 = Posts.list_posts(nil, page: 2, per_page: 10)
+      page1_ids = MapSet.new(page1, & &1.id)
+      page2_ids = MapSet.new(page2, & &1.id)
+
+      assert length(page1) == 10
+      assert length(page2) == 5
+      # No overlap between pages...
+      assert MapSet.disjoint?(page1_ids, page2_ids)
+      # ...and together they account for every post, none missing or duplicated.
+      assert MapSet.union(page1_ids, page2_ids) == all_ids
+    end
+
+    test "list_posts/2 without a :page option returns everything, unpaginated" do
+      user = user_fixture()
+      for i <- 1..15, do: post_fixture(user_id: user.id, title: "Post #{i}")
+
+      assert length(Posts.list_posts()) == 15
+    end
+
+    test "count_posts/1 counts what list_posts/2 would return, ignoring pagination" do
+      user = user_fixture()
+      for i <- 1..3, do: post_fixture(user_id: user.id, title: "Post #{i}", visibility: true)
+      post_fixture(user_id: user.id, title: "A draft", visibility: false)
+
+      assert Posts.count_posts(nil) == 3
+      assert Posts.count_posts(user) == 3
+      assert Posts.count_posts(admin_fixture()) == 4
+    end
+
     test "get_post!/1 returns the post with given id" do
       user = user_fixture()
 
@@ -103,20 +138,19 @@ defmodule Blog.PostsTest do
                Posts.create_post(%{content: "some content", title: post.title})
     end
 
-    test "create_post/1 rejects a published_on date in the future" do
+    test "create_post/1 allows a published_on date in the future, for scheduling" do
       user = user_fixture()
-      future_date = Date.add(Date.utc_today(), 1)
+      future_date = Date.add(Date.utc_today(), 7)
 
       attrs = %{
-        title: "A future post",
+        title: "A scheduled post",
         content: "some content",
         published_on: future_date,
         visibility: true,
         user_id: user.id
       }
 
-      assert {:error, changeset} = Posts.create_post(attrs)
-      assert %{published_on: ["Shouldn't be in the Future"]} = errors_on(changeset)
+      assert {:ok, %Post{published_on: ^future_date}} = Posts.create_post(attrs)
     end
 
     test "create_post/1 accepts today's date for published_on" do

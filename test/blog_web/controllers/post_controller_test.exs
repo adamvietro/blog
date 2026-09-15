@@ -27,6 +27,48 @@ defmodule BlogWeb.PostControllerTest do
       conn = get(conn, ~p"/posts")
       assert html_response(conn, 200) =~ "Posts"
     end
+
+    test "paginates instead of rendering every post at once", %{conn: conn} do
+      user = admin_fixture()
+      # zero-padded so no title is a substring of another (e.g. "Post 1" of "Post 10")
+      titles = for i <- 1..12, do: "Paginated Post #{String.pad_leading("#{i}", 2, "0")}"
+      for title <- titles, do: post_fixture(user_id: user.id, title: title)
+
+      page1 = get(conn, ~p"/posts") |> html_response(200)
+      page2 = get(conn, ~p"/posts?page=2") |> html_response(200)
+
+      assert page1 =~ "Page 1 of 2"
+      assert page2 =~ "Page 2 of 2"
+      # every post title should show up on exactly one of the two pages
+      for title <- titles do
+        assert (page1 =~ title) != (page2 =~ title)
+      end
+    end
+
+    test "an out-of-range page number clamps to the last page instead of erroring", %{
+      conn: conn
+    } do
+      user = admin_fixture()
+      post = post_fixture(user_id: user.id)
+
+      # Only one page exists, so pagination controls don't render at all
+      # (same as the "everything fits on one page" case below) — the real
+      # assertion here is just that this doesn't error, and still shows
+      # page 1's content rather than an empty/out-of-bounds result.
+      response = get(conn, ~p"/posts?page=999") |> html_response(200)
+
+      assert response =~ post.title
+    end
+
+    test "a page of 0 or a non-numeric page both fall back to page 1", %{conn: conn} do
+      assert get(conn, ~p"/posts?page=0") |> html_response(200) =~ "Page"
+      assert get(conn, ~p"/posts?page=nonsense") |> html_response(200)
+    end
+
+    test "no pagination controls are shown when everything fits on one page", %{conn: conn} do
+      response = get(conn, ~p"/posts") |> html_response(200)
+      refute response =~ "Page 1 of"
+    end
   end
 
   describe "new post" do

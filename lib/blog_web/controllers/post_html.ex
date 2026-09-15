@@ -108,19 +108,37 @@ defmodule BlogWeb.PostHTML do
   end
 
   @doc """
-  Renders a load more posts button.
+  Renders Previous/Next pagination controls for the post index.
 
   Usage:
-    <.load_more_button />
+    <.pagination page={@page} total_pages={@total_pages} />
   """
-  def load_more_button(assigns) do
+  attr :page, :integer, required: true
+  attr :total_pages, :integer, required: true
+
+  def pagination(assigns) do
     ~H"""
-    <button
-      id="load-more-btn"
-      class="mx-auto mt-8 block rounded-md border border-zinc-700 px-4 py-2 text-sm font-medium text-zinc-300 transition-colors hover:border-brand hover:text-brand"
-    >
-      More Posts
-    </button>
+    <nav :if={@total_pages > 1} class="mt-8 flex items-center justify-between text-sm">
+      <.link
+        :if={@page > 1}
+        href={~p"/posts?page=#{@page - 1}"}
+        class="rounded-md border border-zinc-700 px-4 py-2 font-medium text-zinc-300 transition-colors hover:border-brand hover:text-brand"
+      >
+        &larr; Previous
+      </.link>
+      <span :if={@page <= 1}></span>
+
+      <span class="font-mono text-xs text-zinc-500">Page {@page} of {@total_pages}</span>
+
+      <.link
+        :if={@page < @total_pages}
+        href={~p"/posts?page=#{@page + 1}"}
+        class="rounded-md border border-zinc-700 px-4 py-2 font-medium text-zinc-300 transition-colors hover:border-brand hover:text-brand"
+      >
+        Next &rarr;
+      </.link>
+      <span :if={@page >= @total_pages}></span>
+    </nav>
     """
   end
 

@@ -19,30 +19,6 @@
       <% end %>
     </ul>
 
-    <%= if length(@posts) > 10 do %>
-      <.load_more_button />
-    <% end %>
+    <.pagination :if={Map.get(assigns, :total_pages)} page={@page} total_pages={@total_pages} />
   <% end %>
 </div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    let posts = document.querySelectorAll("#posts > li");
-    let loadMoreBtn = document.getElementById("load-more-btn");
-    if (!loadMoreBtn) return;
-
-    let visibleCount = 10;
-
-    posts.forEach((post, index) => {
-      if (index >= visibleCount) post.style.display = "none";
-    });
-
-    loadMoreBtn.addEventListener("click", function () {
-      let hiddenPosts = Array.from(posts).filter(post => post.style.display === "none");
-
-      hiddenPosts.slice(0, 10).forEach(post => (post.style.display = "flex"));
-
-      if (hiddenPosts.length <= 10) loadMoreBtn.style.display = "none";
-    });
-  });
-</script>
