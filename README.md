@@ -2,7 +2,7 @@
 
 A personal technical blog built with **Elixir** and **Phoenix** — documenting my ongoing journey through the Elixir ecosystem, functional programming, distributed systems, and LiveView architecture.
 
-Live: [blog-wild-leaf-1554.fly.dev](https://blog-wild-leaf-1554.fly.dev)
+Live: [blog.adamsites.com](https://blog.adamsites.com)
 
 ---
 

@@ -8,11 +8,34 @@
   background-color: rgb(253 79 0 / 0.35);
 }
 
+/* Nav links + theme toggle (root.html.heex). These live here, not in a <style> block in
+   the .heex file, because Tailwind's CLI only processes this file -- @apply in an inline
+   <style> tag in a template is never compiled and silently does nothing in the browser. */
+.nav-link {
+  @apply rounded-md px-3 py-1.5 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/60 dark:hover:text-zinc-100;
+}
+
+.nav-link-accent {
+  @apply rounded-md border border-brand/40 px-2.5 py-1.5 text-brand transition-colors hover:bg-brand/10;
+}
+
+.theme-toggle-btn {
+  @apply rounded p-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-500 dark:hover:text-zinc-100;
+}
+
+.theme-toggle-btn[data-active="true"] {
+  @apply bg-brand text-zinc-950 hover:text-zinc-950 dark:hover:text-zinc-950;
+}
+
 /* Article typography for rendered markdown content (.prose wraps post bodies) */
 .prose {
-  color: rgb(228 228 231); /* zinc-200 */
+  color: rgb(63 63 70); /* zinc-700 */
   font-size: 1.0625rem;
   line-height: 1.75;
+}
+
+.dark .prose {
+  color: rgb(228 228 231); /* zinc-200 */
 }
 
 .prose > :first-child {
@@ -23,11 +46,18 @@
 .prose h2,
 .prose h3,
 .prose h4 {
-  color: rgb(244 244 245); /* zinc-100 */
+  color: rgb(24 24 27); /* zinc-900 */
   font-weight: 700;
   letter-spacing: -0.01em;
   margin-top: 2rem;
   margin-bottom: 1rem;
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4 {
+  color: rgb(244 244 245); /* zinc-100 */
 }
 
 .prose h1 {
@@ -68,9 +98,13 @@
 }
 
 .prose a {
-  color: rgb(253 164 116); /* warm accent tint for readability on dark bg */
+  color: rgb(194 65 12); /* warm accent, readable on light bg */
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+.dark .prose a {
+  color: rgb(253 164 116); /* warm accent tint for readability on dark bg */
 }
 
 .prose a:hover {
@@ -78,20 +112,32 @@
 }
 
 .prose strong {
-  color: rgb(244 244 245);
+  color: rgb(24 24 27); /* zinc-900 */
   font-weight: 600;
+}
+
+.dark .prose strong {
+  color: rgb(244 244 245); /* zinc-100 */
 }
 
 .prose blockquote {
   border-left: 3px solid rgb(253 79 0 / 0.5);
   padding-left: 1rem;
-  color: rgb(161 161 170); /* zinc-400 */
+  color: rgb(82 82 91); /* zinc-600 */
   font-style: italic;
 }
 
+.dark .prose blockquote {
+  color: rgb(161 161 170); /* zinc-400 */
+}
+
 .prose hr {
-  border-color: rgb(39 39 42); /* zinc-800 */
+  border-color: rgb(228 228 231); /* zinc-200 */
   margin: 2.5rem 0;
+}
+
+.dark .prose hr {
+  border-color: rgb(39 39 42); /* zinc-800 */
 }
 
 .prose img {
@@ -102,13 +148,19 @@
 .prose :not(pre) > code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.875em;
-  color: rgb(253 186 116);
-  background: rgb(39 39 42 / 0.8);
+  color: rgb(154 52 18);
+  background: rgb(228 228 231 / 0.6);
   padding: 0.15em 0.4em;
   border-radius: 0.3em;
 }
 
-/* Let the imported Prism theme own block code colors; just keep it tidy */
+.dark .prose :not(pre) > code {
+  color: rgb(253 186 116);
+  background: rgb(39 39 42 / 0.8);
+}
+
+/* Code blocks always render with the (dark) Prism "tomorrow" theme, regardless of
+   site theme -- keeps syntax highlighting readable without maintaining two Prism themes. */
 .prose pre {
   border-radius: 0.5rem;
   border: 1px solid rgb(39 39 42);

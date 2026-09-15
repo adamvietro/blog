@@ -202,7 +202,7 @@ defmodule BlogWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="mt-10 space-y-8 rounded-lg border border-zinc-800 bg-zinc-900 p-6 sm:p-8">
+      <div class="mt-10 space-y-8 rounded-lg border border-zinc-200 bg-zinc-50 p-6 sm:p-8 dark:border-zinc-800 dark:bg-zinc-900">
         {render_slot(@inner_block, f)}
         <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
           {render_slot(action, f)}
@@ -235,7 +235,7 @@ defmodule BlogWeb.CoreComponents do
         "text-sm font-semibold leading-6 text-zinc-950 active:text-zinc-950/80",
         @class,
         if(@rest[:disabled],
-          do: "bg-zinc-700 text-zinc-400 cursor-not-allowed",
+          do: "bg-zinc-300 text-zinc-500 cursor-not-allowed dark:bg-zinc-700 dark:text-zinc-400",
           else: "bg-brand hover:bg-brand/90"
         )
       ]}
@@ -314,7 +314,7 @@ defmodule BlogWeb.CoreComponents do
 
     ~H"""
     <div>
-      <label class="flex items-center gap-4 text-sm leading-6 text-zinc-400">
+      <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
         <input type="hidden" name={@name} value="false" disabled={@rest[:disabled]} />
         <input
           type="checkbox"
@@ -322,7 +322,7 @@ defmodule BlogWeb.CoreComponents do
           name={@name}
           value="true"
           checked={@checked}
-          class="rounded border-zinc-700 bg-zinc-950 text-brand focus:ring-0"
+          class="rounded border-zinc-300 bg-white text-brand focus:ring-0 dark:border-zinc-700 dark:bg-zinc-950"
           {@rest}
         />
         {@label}
@@ -339,7 +339,7 @@ defmodule BlogWeb.CoreComponents do
       <select
         id={@id}
         name={@name}
-        class="mt-2 block w-full h-48 rounded-md border border-zinc-700 bg-zinc-950 text-zinc-100 shadow-sm focus:border-brand focus:ring-0 sm:text-sm"
+        class="mt-2 block w-full h-48 rounded-md border border-zinc-300 bg-white text-zinc-900 shadow-sm focus:border-brand focus:ring-0 sm:text-sm dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
         multiple={@multiple}
         {@rest}
       >
@@ -359,8 +359,8 @@ defmodule BlogWeb.CoreComponents do
         id={@id}
         name={@name}
         class={[
-          "mt-2 block w-full rounded-lg bg-zinc-950 text-zinc-100 placeholder:text-zinc-600 focus:ring-0 sm:text-sm sm:leading-6 min-h-[6rem]",
-          @errors == [] && "border-zinc-700 focus:border-brand",
+          "mt-2 block w-full rounded-lg bg-white text-zinc-900 placeholder:text-zinc-400 focus:ring-0 sm:text-sm sm:leading-6 min-h-[6rem] dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder:text-zinc-600",
+          @errors == [] && "border-zinc-300 focus:border-brand dark:border-zinc-700",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
         {@rest}
@@ -381,8 +381,8 @@ defmodule BlogWeb.CoreComponents do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "mt-2 block w-full rounded-lg bg-zinc-950 text-zinc-100 placeholder:text-zinc-600 focus:ring-0 sm:text-sm sm:leading-6",
-          @errors == [] && "border-zinc-700 focus:border-brand",
+          "mt-2 block w-full rounded-lg bg-white text-zinc-900 placeholder:text-zinc-400 focus:ring-0 sm:text-sm sm:leading-6 dark:bg-zinc-950 dark:text-zinc-100 dark:placeholder:text-zinc-600",
+          @errors == [] && "border-zinc-300 focus:border-brand dark:border-zinc-700",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
         {@rest}
@@ -400,7 +400,7 @@ defmodule BlogWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-200">
+    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-700 dark:text-zinc-200">
       {render_slot(@inner_block)}
     </label>
     """
@@ -433,10 +433,10 @@ defmodule BlogWeb.CoreComponents do
     ~H"""
     <header class={[@actions != [] && "flex items-center justify-between gap-6", @class]}>
       <div>
-        <h1 class="text-lg font-semibold leading-8 text-zinc-100">
+        <h1 class="text-lg font-semibold leading-8 text-zinc-900 dark:text-zinc-100">
           {render_slot(@inner_block)}
         </h1>
-        <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-400">
+        <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-500 dark:text-zinc-400">
           {render_slot(@subtitle)}
         </p>
       </div>
@@ -566,7 +566,7 @@ defmodule BlogWeb.CoreComponents do
     <div class="mt-16">
       <.link
         navigate={@navigate}
-        class={"text-sm font-semibold leading-6 text-zinc-300 hover:text-brand #{@class || ""}"}
+        class={"text-sm font-semibold leading-6 text-zinc-600 hover:text-brand dark:text-zinc-300 #{@class || ""}"}
       >
         <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
         {render_slot(@inner_block)}

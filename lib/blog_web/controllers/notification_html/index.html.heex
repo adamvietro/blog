@@ -20,11 +20,11 @@
     <ul class="mt-6 space-y-3">
       <li
         :for={notification <- @notifications}
-        class="flex items-center justify-between gap-4 rounded-lg border border-zinc-800 bg-zinc-900 p-4"
+        class="flex items-center justify-between gap-4 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900"
       >
         <div>
-          <p class="text-sm text-zinc-200">
-            <strong class="font-semibold text-zinc-100">{notification.actor.email}</strong>
+          <p class="text-sm text-zinc-700 dark:text-zinc-200">
+            <strong class="font-semibold text-zinc-900 dark:text-zinc-100">{notification.actor.email}</strong>
             commented on
             <.link
               href={~p"/posts/#{notification.post}/comments"}
@@ -41,7 +41,7 @@
         <.link
           href={~p"/notifications/#{notification.id}/mark_read"}
           method="post"
-          class="flex-none rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:border-brand hover:text-brand"
+          class="flex-none rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:border-brand hover:text-brand dark:border-zinc-700 dark:text-zinc-300"
         >
           Mark as read
         </.link>

@@ -7,7 +7,7 @@ defmodule BlogWeb.RobotsTest do
     conn = get(conn, "/robots.txt")
 
     body = response(conn, 200)
-    assert body =~ "Sitemap: https://blog-wild-leaf-1554.fly.dev/sitemap.xml"
+    assert body =~ "Sitemap: https://blog.adamsites.com/sitemap.xml"
     assert body =~ "Disallow: /dev/"
     assert body =~ "Disallow: /users/"
     assert body =~ "Disallow: /tags/"

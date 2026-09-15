@@ -6,7 +6,7 @@
   <%= if @posts == [] do %>
     <p class="mt-8 text-zinc-500">No posts matched your search.</p>
   <% else %>
-    <ul class="mt-6 divide-y divide-zinc-800">
+    <ul class="mt-6 divide-y divide-zinc-200 dark:divide-zinc-800">
       <%= for post <- @posts do %>
         <.post_row post={post} current_user={@current_user} />
       <% end %>

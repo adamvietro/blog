@@ -13,4 +13,4 @@ Disallow: /posts/new
 Disallow: /posts/preview
 Disallow: /search
 
-Sitemap: https://blog-wild-leaf-1554.fly.dev/sitemap.xml
+Sitemap: https://blog.adamsites.com/sitemap.xml

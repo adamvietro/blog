@@ -51,13 +51,13 @@ defmodule BlogWeb.PostHTML do
       <%= if @post.cover_image && @post.cover_image.url do %>
         <img
           src={@post.cover_image.url}
-          class="h-16 w-16 flex-none rounded-md border border-zinc-800 object-cover sm:h-20 sm:w-20"
+          class="h-16 w-16 flex-none rounded-md border border-zinc-200 object-cover sm:h-20 sm:w-20 dark:border-zinc-800"
         />
       <% end %>
       <div class="min-w-0 flex-1">
         <a
           href={~p"/posts/#{@post.id}"}
-          class="text-lg font-semibold text-zinc-100 transition-colors group-hover:text-brand"
+          class="text-lg font-semibold text-zinc-900 transition-colors group-hover:text-brand dark:text-zinc-100"
         >
           {BlogWeb.PostHTML.preview_title(@post.title, 100)}
         </a>
@@ -67,7 +67,7 @@ defmodule BlogWeb.PostHTML do
             <.link
               :for={tag <- @post.tags}
               navigate={~p"/tags/search?tag=#{tag.id}"}
-              class="rounded-full bg-zinc-800/80 px-2 py-0.5 text-xs text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-brand"
+              class="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-brand dark:bg-zinc-800/80 dark:text-zinc-400 dark:hover:bg-zinc-700"
             >
               {tag.name}
             </.link>
@@ -122,7 +122,7 @@ defmodule BlogWeb.PostHTML do
       <.link
         :if={@page > 1}
         href={~p"/posts?page=#{@page - 1}"}
-        class="rounded-md border border-zinc-700 px-4 py-2 font-medium text-zinc-300 transition-colors hover:border-brand hover:text-brand"
+        class="rounded-md border border-zinc-300 px-4 py-2 font-medium text-zinc-600 transition-colors hover:border-brand hover:text-brand dark:border-zinc-700 dark:text-zinc-300"
       >
         &larr; Previous
       </.link>
@@ -133,7 +133,7 @@ defmodule BlogWeb.PostHTML do
       <.link
         :if={@page < @total_pages}
         href={~p"/posts?page=#{@page + 1}"}
-        class="rounded-md border border-zinc-700 px-4 py-2 font-medium text-zinc-300 transition-colors hover:border-brand hover:text-brand"
+        class="rounded-md border border-zinc-300 px-4 py-2 font-medium text-zinc-600 transition-colors hover:border-brand hover:text-brand dark:border-zinc-700 dark:text-zinc-300"
       >
         Next &rarr;
       </.link>

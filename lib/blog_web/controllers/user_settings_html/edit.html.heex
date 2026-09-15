@@ -4,7 +4,7 @@
     <:subtitle>Manage your account email address and password settings</:subtitle>
   </.header>
 
-  <div class="mt-10 space-y-12 divide-y divide-zinc-800">
+  <div class="mt-10 space-y-12 divide-y divide-zinc-200 dark:divide-zinc-800">
     <div>
       <.simple_form :let={f} for={@email_changeset} action={~p"/users/settings"} id="update_email">
         <.error :if={@email_changeset.action}>

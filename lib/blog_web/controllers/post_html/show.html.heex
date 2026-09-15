@@ -5,13 +5,13 @@
     <.link
       :for={tag <- @post.tags}
       navigate={~p"/tags/search?tag=#{tag.id}"}
-      class="rounded-full bg-zinc-800/80 px-2 py-0.5 text-xs text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-brand"
+      class="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-brand dark:bg-zinc-800/80 dark:text-zinc-400 dark:hover:bg-zinc-700"
     >
       {tag.name}
     </.link>
   </div>
 
-  <h1 class="mt-3 text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
+  <h1 class="mt-3 text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
     {@post.title}
   </h1>
 
@@ -22,24 +22,28 @@
   <div :if={@post.cover_image && @post.cover_image.url} class="mt-8">
     <img
       src={@post.cover_image.url}
-      class="max-h-[28rem] w-full rounded-lg border border-zinc-800 object-cover"
+      class="max-h-[28rem] w-full rounded-lg border border-zinc-200 object-cover dark:border-zinc-800"
     />
   </div>
 
   <.markdown content={@post.content} />
 
-  <div class="mt-12 flex flex-wrap items-center gap-3 border-t border-zinc-800 pt-6">
+  <div class="mt-12 flex flex-wrap items-center gap-3 border-t border-zinc-200 pt-6 dark:border-zinc-800">
     <%= if assigns[:current_user] && @post.user_id == assigns[:current_user].id do %>
       <.link href={~p"/posts/#{@post}/edit"}>
         <.button>Edit post</.button>
       </.link>
     <% end %>
     <.link href={~p"/posts/#{@post}/comments"}>
-      <.button class="!bg-zinc-800 !text-zinc-200 hover:!bg-zinc-700">Comments</.button>
+      <.button class="!bg-zinc-200 !text-zinc-700 hover:!bg-zinc-300 dark:!bg-zinc-800 dark:!text-zinc-200 dark:hover:!bg-zinc-700">
+        Comments
+      </.button>
     </.link>
     <%= if assigns[:current_user] do %>
       <.link href={~p"/posts/#{@post}/comments/new"}>
-        <.button class="!bg-zinc-800 !text-zinc-200 hover:!bg-zinc-700">Add Comment</.button>
+        <.button class="!bg-zinc-200 !text-zinc-700 hover:!bg-zinc-300 dark:!bg-zinc-800 dark:!text-zinc-200 dark:hover:!bg-zinc-700">
+          Add Comment
+        </.button>
       </.link>
     <% end %>
   </div>

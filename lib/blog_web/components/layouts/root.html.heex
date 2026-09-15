@@ -3,8 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="csrf-token" content={get_csrf_token()} />
+
+<!-- Applies the saved/system theme before first paint, to avoid a flash of the wrong theme -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var isDark =
+            stored === "dark" ||
+            (stored !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.classList.toggle("dark", isDark);
+        } catch (e) {}
+      })();
+    </script>
 
 <!-- Page Title -->
     <title>Blog | {Map.get(assigns, :page_title, "My Blog")}</title>
@@ -34,7 +47,7 @@
     <meta property="og:type" content={Map.get(assigns, :meta_type, "website")} />
     <meta
       property="og:url"
-      content={Map.get(assigns, :meta_url, "https://blog-wild-leaf-1554.fly.dev/")}
+      content={Map.get(assigns, :meta_url, "https://blog.adamsites.com/")}
     />
 
 <!-- Twitter Card -->
@@ -69,10 +82,10 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
-  <body class="min-h-screen bg-zinc-950 text-zinc-200 antialiased">
-    <header class="sticky top-0 z-40 border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur">
+  <body class="min-h-screen bg-white text-zinc-700 antialiased dark:bg-zinc-950 dark:text-zinc-200">
+    <header class="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/90 backdrop-blur dark:border-zinc-800/80 dark:bg-zinc-950/90">
       <div class="mx-auto flex w-full max-w-none flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4 sm:px-6 lg:px-8 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
-        <.link navigate={~p"/"} class="flex items-center gap-1.5 font-mono text-base font-semibold text-zinc-100 hover:text-white">
+        <.link navigate={~p"/"} class="flex items-center gap-1.5 font-mono text-base font-semibold text-zinc-900 hover:text-black dark:text-zinc-100 dark:hover:text-white">
           <span class="text-brand">~/</span>adam.log
         </.link>
 
@@ -94,12 +107,31 @@
           <% end %>
 
           <%= if @current_user && @current_user.admin do %>
-            <span class="mx-1 h-4 w-px bg-zinc-800" aria-hidden="true"></span>
+            <span class="mx-1 h-4 w-px bg-zinc-300 dark:bg-zinc-800" aria-hidden="true"></span>
             <.link navigate={~p"/posts/new"} class="nav-link-accent">New Post</.link>
             <.link navigate={~p"/tags/new"} class="nav-link-accent">New Tag</.link>
           <% end %>
 
-          <span class="mx-1 h-4 w-px bg-zinc-800" aria-hidden="true"></span>
+          <span class="mx-1 h-4 w-px bg-zinc-300 dark:bg-zinc-800" aria-hidden="true"></span>
+
+          <div
+            class="flex items-center gap-0.5 rounded-md border border-zinc-300 p-0.5 dark:border-zinc-700"
+            role="group"
+            aria-label="Theme"
+            id="theme-toggle"
+          >
+            <button type="button" data-theme-choice="light" class="theme-toggle-btn" aria-label="Light theme">
+              <.icon name="hero-sun-mini" class="h-4 w-4" />
+            </button>
+            <button type="button" data-theme-choice="system" class="theme-toggle-btn" aria-label="System theme">
+              <.icon name="hero-computer-desktop-mini" class="h-4 w-4" />
+            </button>
+            <button type="button" data-theme-choice="dark" class="theme-toggle-btn" aria-label="Dark theme">
+              <.icon name="hero-moon-mini" class="h-4 w-4" />
+            </button>
+          </div>
+
+          <span class="mx-1 h-4 w-px bg-zinc-300 dark:bg-zinc-800" aria-hidden="true"></span>
 
           <%= if @current_user do %>
             <span class="hidden font-mono text-xs text-zinc-500 sm:inline">{@current_user.email}</span>
@@ -117,8 +149,8 @@
       {@inner_content}
     </main>
 
-    <footer class="mt-16 border-t border-zinc-800/80 py-8">
-      <div class="mx-auto flex w-full max-w-none flex-col items-center gap-2 px-4 text-center font-mono text-xs text-zinc-600 sm:px-6 lg:px-8 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
+    <footer class="mt-16 border-t border-zinc-200/80 py-8 dark:border-zinc-800/80">
+      <div class="mx-auto flex w-full max-w-none flex-col items-center gap-2 px-4 text-center font-mono text-xs text-zinc-500 sm:px-6 lg:px-8 xl:max-w-screen-xl 2xl:max-w-screen-2xl dark:text-zinc-600">
         <p>Built with Elixir &amp; Phoenix.</p>
         <div class="flex items-center gap-3">
           <a href="https://github.com/adamvietro" target="_blank" rel="noopener" class="hover:text-brand">
@@ -131,13 +163,3 @@
     </footer>
   </body>
 </html>
-
-<style>
-  .nav-link {
-    @apply rounded-md px-3 py-1.5 text-zinc-400 transition-colors hover:bg-zinc-800/60 hover:text-zinc-100;
-  }
-
-  .nav-link-accent {
-    @apply rounded-md border border-brand/40 px-2.5 py-1.5 text-brand transition-colors hover:bg-brand/10;
-  }
-</style>
